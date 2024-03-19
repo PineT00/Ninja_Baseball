@@ -9,7 +9,9 @@ class Button : public SpriteGo
 public :
 	enum class ButtonIdentifier
 	{
-		loadAtlas
+		loadAtlas,
+		play,
+		stop,
 	};
 
 protected:

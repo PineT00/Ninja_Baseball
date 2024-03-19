@@ -2,6 +2,8 @@
 #include "SceneAnimationTool.h"
 #include "Button.h"
 #include "SpriteGo.h"
+#include "InputField.h"
+#include "TextGo.h"
 
 SceneAnimationTool::SceneAnimationTool(SceneIDs id)
     : Scene(id)
@@ -21,13 +23,34 @@ void SceneAnimationTool::Init()
 
     buttonLoadAtlas = new Button(Button::ButtonIdentifier::loadAtlas);
     buttonLoadAtlas->SetStringValue(atlasPath);
-    buttonLoadAtlas->SetButton({ 200.f,80.f }, { windowSize.x / 2, windowSize.y / 2 }, sf::Color::Black, Origins::MC);
-    buttonLoadAtlas->SetButtonText(font, "Button", 40.f, sf::Color::White, buttonLoadAtlas->GetPosition(), Origins::MC);
+    buttonLoadAtlas->SetButton({ 60.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.2f }, sf::Color::White, Origins::MC);
+    buttonLoadAtlas->SetButtonText(font, "Load\nSprite Atlas", 12.f, sf::Color::Black, { windowSize.x * 0.1f, windowSize.y * 0.2f }, Origins::MC);
+    AddGameObject(buttonLoadAtlas, Layers::Ui);
 
     spriteSheet = new SpriteGo("spritesheet");
     spriteSheet->Init();
 
-    AddGameObject(buttonLoadAtlas, Layers::Ui);
+    textFPS = new TextGo("textfps");
+    textFPS->Set(font, "FPS", 20, sf::Color::White);
+    textFPS->SetPosition(windowSize.x * 0.1f, windowSize.y * 0.25f);
+    textFPS->SetOrigin(Origins::MR);
+    AddGameObject(textFPS, Layers::Ui);
+
+    inputfieldFPS = new InputField("inputfieldfps");
+    inputfieldFPS->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
+    inputfieldFPS->SetOrigin(Origins::ML);
+    AddGameObject(inputfieldFPS, Layers::Ui);
+
+    buttonStop = new Button(Button::ButtonIdentifier::stop, "buttonstop");
+    buttonStop->SetButton({ 30.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.5f }, sf::Color::White, Origins::MC);
+    buttonStop->SetButtonText(font, "Stop", 12.f, sf::Color::Black, { windowSize.x * 0.1f, windowSize.y * 0.5f }, Origins::MC);
+    AddGameObject(buttonStop, Layers::Ui);
+
+    buttonPlay = new Button(Button::ButtonIdentifier::play, "buttonplay");
+    buttonPlay->SetButton({ 30.f,30.f }, { windowSize.x * 0.15f, windowSize.y * 0.5f }, sf::Color::White, Origins::MC);
+    buttonPlay->SetButtonText(font, "Play", 12.f, sf::Color::Black, { windowSize.x * 0.15f, windowSize.y * 0.5f }, Origins::MC);
+    AddGameObject(buttonPlay, Layers::Ui);
+
 
     Scene::Init();
 }
@@ -78,9 +101,29 @@ void SceneAnimationTool::Update(float dt)
     }
 }
 
+void SceneAnimationTool::UpdateEvent(const sf::Event& event)
+{
+    Scene::UpdateEvent(event);
+    switch (event.type)
+    {
+    case  sf::Event::MouseWheelScrolled:
+        if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+        {
+            float zoomAmount = 0.1f;
+            if (event.mouseWheelScroll.delta > 0)
+            {
+                worldView.zoom(1.f - zoomAmount);
+            }
+            else
+            {
+                worldView.zoom(1.f + zoomAmount);
+            }
+        }
+    }
+}
+
 void SceneAnimationTool::UpdateAwake(float dt)
 {
-
 }
 
 void SceneAnimationTool::UpdateGame(float dt)
@@ -93,6 +136,8 @@ void SceneAnimationTool::UpdateGame(float dt)
         spriteSheet->SetOrigin(Origins::MC);
         AddGameObject(spriteSheet);
     }
+
+
 }
 
 void SceneAnimationTool::UpdateGameover(float dt)

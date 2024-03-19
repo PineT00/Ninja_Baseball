@@ -3,6 +3,8 @@
 
 class Button;
 class SpriteGo;
+class TextGo;
+class InputField;
 
 class SceneAnimationTool : public Scene
 {
@@ -13,11 +15,16 @@ protected:
 	SceneAnimationTool& operator=(SceneAnimationTool&&) = delete;
 
 	Button* buttonLoadAtlas = nullptr;
+	Button* buttonSaveAnimation = nullptr;
+	Button* buttonStop = nullptr;
+	Button* buttonPlay = nullptr;
+
 	SpriteGo* spriteSheet = nullptr;
+	TextGo* textFPS;
+	InputField* inputfieldFPS = nullptr;
 
 	std::wstring atlasPath;
-
-	sf::View workingView;
+	
 	sf::Font font;
 	sf::Vector2f windowSize;
 
@@ -33,12 +40,15 @@ public:
 	void Enter() override;
 	void Exit() override;
 	void Update(float dt) override;
+	void UpdateEvent(const sf::Event& event) override;
 	void UpdateAwake(float dt);
 	void UpdateGame(float dt);
 	void UpdateGameover(float dt);
 	void UpdatePause(float dt);
 	void Draw(sf::RenderWindow& window);
 
+	bool IsAtlasPath() const { return isAtlasPath; }
+	void SetIsAtlasPath(bool isAtlasPath) { this->isAtlasPath = isAtlasPath; }
 	void SetAtlasPath(const std::wstring& str);
 
 	GameStatus GetStatus() const { return this->status; }

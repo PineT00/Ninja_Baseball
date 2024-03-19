@@ -153,6 +153,7 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 	if (GetOpenFileNameW(&ofn)) {
 		filePath = filename;
 
+		sceneAnimationTool->SetIsAtlasPath(false);
 		sceneAnimationTool->SetAtlasPath(filePath);
 		return filePath;
 	}
