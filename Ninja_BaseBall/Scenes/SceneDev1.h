@@ -19,7 +19,7 @@ protected :
 	
 	Stage1* stage = nullptr;
 	Player* player = nullptr;
-
+	UiHUD* hud = nullptr;
 
 	sf::Vector2f windowSize;
 

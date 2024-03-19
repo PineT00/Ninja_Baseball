@@ -13,6 +13,7 @@ protected:
 	SpriteGo& operator=(const SpriteGo&) = delete;
 	SpriteGo& operator=(SpriteGo&&) = delete;
 
+	bool hasHitBox = false;
 public:
 	sf::Shader* shader;
 

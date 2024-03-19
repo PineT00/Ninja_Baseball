@@ -18,6 +18,7 @@ protected:
 	bool isGrounded = true;
 
 	SceneDev1* sceneDev1 = nullptr;
+
 public:
 	Player(const std::string& name = "");
 	~Player();

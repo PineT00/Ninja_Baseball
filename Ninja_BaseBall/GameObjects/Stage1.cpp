@@ -35,9 +35,10 @@ void Stage1::Reset()
 	stageBoss.SetPosition({ 1760,-480 });
 	stageBoss.SetOrigin(Origins::TL);
 
-	groundBound.setFillColor(sf::Color::Red);
+	groundBound.setFillColor(sf::Color::Green);
 	groundBound.setSize({ 1120.f,104.f });
 	groundBound.setPosition({ 0.f, 136.f });
+
 }
 
 void Stage1::Update(float dt)

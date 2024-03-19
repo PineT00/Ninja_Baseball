@@ -29,6 +29,8 @@ void Player::Init()
 	//animator.AddClip(RES_MGR_ANI_CLIP.Get("Animations/Run.csv"));
 
 	animator.SetTarget(&sprite);
+
+	hasHitBox = true;
 }
 
 void Player::Reset()

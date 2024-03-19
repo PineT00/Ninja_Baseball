@@ -34,8 +34,10 @@ void SceneDev1::Init()
 
     player = new Player();
     player->SetPosition({ 0.f, 300.f });
-
     AddGameObject(player);
+
+    hud = new UiHUD();
+    AddGameObject(hud, Ui);
 
     Scene::Init();
 }
