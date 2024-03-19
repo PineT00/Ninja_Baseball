@@ -20,8 +20,11 @@ void SceneDev1::Init()
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
+
     stage = new Stage1();
     AddGameObject(stage);
+
+    AddGameObject(new Player());
 
     Scene::Init();
 }

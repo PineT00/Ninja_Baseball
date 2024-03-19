@@ -35,7 +35,7 @@ public:
 
 	void Init() override;
 	void Reset() override;
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window) override;
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;
