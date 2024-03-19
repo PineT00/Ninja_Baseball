@@ -11,9 +11,10 @@ struct AnimationFrame
 {
 	std::string textureId;
 	sf::IntRect textureCoord;
+	Origins pivot = Origins::CUSTOM;
 
-	AnimationFrame(const std::string& id, const sf::IntRect& coord)
-		: textureId(id), textureCoord(coord)
+	AnimationFrame(const std::string& id, const sf::IntRect& coord, Origins origin)
+		: textureId(id), textureCoord(coord), pivot(origin)
 	{
 	}
 
