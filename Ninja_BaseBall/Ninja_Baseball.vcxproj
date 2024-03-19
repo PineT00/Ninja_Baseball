@@ -149,6 +149,7 @@
     <ClCompile Include="GameObjects\InputField.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
+    <ClCompile Include="GameObjects\Stage1.cpp" />
     <ClCompile Include="Utils\MyMath.cpp" />
     <ClCompile Include="Utils\Origin.cpp" />
     <ClCompile Include="Framework\pch.cpp">
@@ -183,6 +184,7 @@
     <ClInclude Include="rapidcsv.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />
     <ClInclude Include="Scenes\SceneTitle.h" />
+    <ClInclude Include="GameObjects\Stage1.h" />
     <ClInclude Include="Utils\MyMath.h" />
     <ClInclude Include="Utils\Origin.h" />
     <ClInclude Include="Framework\pch.h" />

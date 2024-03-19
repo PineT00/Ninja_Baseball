@@ -6,6 +6,7 @@ class UiHUD;
 class SpriteGo;
 class TextGo;
 class InputField;
+class Stage1;
 
 class SceneDev1 : public Scene
 {
@@ -15,6 +16,7 @@ protected :
 	SceneDev1& operator=(const SceneDev1&)	= delete;
 	SceneDev1& operator=(SceneDev1&&)		= delete;	
 	
+	Stage1* stage = nullptr;
 	sf::Vector2f windowSize;
 
 public :

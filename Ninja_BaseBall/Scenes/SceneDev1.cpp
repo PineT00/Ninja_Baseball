@@ -5,6 +5,7 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 #include "InputField.h"
+#include "Stage1.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
     : Scene(id)
@@ -14,11 +15,13 @@ SceneDev1::SceneDev1(SceneIDs id)
 
 void SceneDev1::Init()
 {
-
     worldView.setSize(windowSize);
     worldView.setCenter(0, 0);
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
+
+    stage = new Stage1();
+    AddGameObject(stage);
 
     Scene::Init();
 }
