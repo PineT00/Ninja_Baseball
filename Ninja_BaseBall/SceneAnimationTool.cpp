@@ -58,13 +58,13 @@ void SceneAnimationTool::Init()
 
     editorBorder.setOutlineColor(sf::Color::Red);
     editorBorder.setFillColor(sf::Color::Transparent);
-    editorBorder.setOutlineThickness(1.f);
+    editorBorder.setOutlineThickness(2.f);
     editorBorder.setPosition(windowSize.x * 0.2f, windowSize.y * 0.2f);
     editorBorder.setSize({ windowSize.x * 0.6f, windowSize.y * 0.6f });
 
     textureBorder.setOutlineColor(sf::Color::Cyan);
     textureBorder.setFillColor(sf::Color::Transparent);
-    textureBorder.setOutlineThickness(1.f);
+    textureBorder.setOutlineThickness(5.f);
 
 
 
@@ -168,8 +168,8 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
                 sf::FloatRect selectedArea(leftDragStartPos, endPos - leftDragStartPos);
                 selectedAreas.push_back(selectedArea);
 
-                std::cout << selectedArea.left + spriteSheet->GetTexture()->getSize().x * 0.5f
-                    << " : " << selectedArea.top + spriteSheet->GetTexture()->getSize().y * 0.5f
+                std::cout << selectedArea.left
+                    << " : " << selectedArea.top
                     << " : " << selectedArea.width
                     << " : " << selectedArea.height << std::endl;
             }
@@ -234,13 +234,13 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 {
     Scene::Draw(window);
 
+    const sf::View& saveView = window.getView();
+    window.setView(uiView);
     window.draw(editorBorder);
-
-    const sf::View& originalView = window.getView();
-
+    
     window.setView(worldView);
     window.draw(textureBorder);
-    window.setView(originalView);
+    window.setView(saveView);
 
     for (const auto& area : selectedAreas)
     {
