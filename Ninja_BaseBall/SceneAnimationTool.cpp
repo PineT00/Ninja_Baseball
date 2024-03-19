@@ -51,6 +51,22 @@ void SceneAnimationTool::Init()
     buttonPlay->SetButtonText(font, "Play", 12.f, sf::Color::Black, { windowSize.x * 0.15f, windowSize.y * 0.5f }, Origins::MC);
     AddGameObject(buttonPlay, Layers::Ui);
 
+    buttonSaveAnimation = new Button(Button::ButtonIdentifier::save, "buttonsave");
+    buttonSaveAnimation->SetButton({ 80.f,40.f }, { windowSize.x * 0.8f, windowSize.y * 0.85f }, sf::Color::White, Origins::MC);
+    buttonSaveAnimation->SetButtonText(font, "Save\nAnimation", 15.f, sf::Color::Black, { windowSize.x * 0.8f, windowSize.y * 0.85f }, Origins::MC);
+    AddGameObject(buttonSaveAnimation, Layers::Ui);
+
+    editorBorder.setOutlineColor(sf::Color::Red);
+    editorBorder.setFillColor(sf::Color::Transparent);
+    editorBorder.setOutlineThickness(1.f);
+    editorBorder.setPosition(windowSize.x * 0.2f, windowSize.y * 0.2f);
+    editorBorder.setSize({ windowSize.x * 0.6f, windowSize.y * 0.6f });
+
+    textureBorder.setOutlineColor(sf::Color::Cyan);
+    textureBorder.setFillColor(sf::Color::Transparent);
+    textureBorder.setOutlineThickness(1.f);
+
+
 
     Scene::Init();
 }
@@ -126,8 +142,12 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
     {
         if (event.mouseButton.button == sf::Mouse::Left)
         {
-            isLeftDragging = true;
-            leftDragStartPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+            sf::Vector2f mouseWorldPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+            if (IsWithinWorldView(mouseWorldPos))
+            {
+                isLeftDragging = true;
+                leftDragStartPos = mouseWorldPos;
+            }
         }
         else if (event.mouseButton.button == sf::Mouse::Right)
         {
@@ -143,14 +163,16 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
         {
             isLeftDragging = false;
             sf::Vector2f endPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
-            sf::FloatRect selectedArea(leftDragStartPos, endPos - leftDragStartPos);
-            selectedAreas.push_back(selectedArea);
+            if (IsWithinWorldView(endPos))
+            {
+                sf::FloatRect selectedArea(leftDragStartPos, endPos - leftDragStartPos);
+                selectedAreas.push_back(selectedArea);
 
-            std::cout <<  selectedArea.left + spriteSheet->GetTexture()->getSize().x * 0.5f
-                << " : " << selectedArea.top + spriteSheet->GetTexture()->getSize().y * 0.5f
-                << " : " << selectedArea.width 
-                << " : " << selectedArea.height << std::endl;
-
+                std::cout << selectedArea.left + spriteSheet->GetTexture()->getSize().x * 0.5f
+                    << " : " << selectedArea.top + spriteSheet->GetTexture()->getSize().y * 0.5f
+                    << " : " << selectedArea.width
+                    << " : " << selectedArea.height << std::endl;
+            }
         }
         else if (event.mouseButton.button == sf::Mouse::Right)
         {
@@ -158,6 +180,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
         }
     }
     break;
+
     case sf::Event::MouseMoved:
     {
         if (isRightDragging)
@@ -183,9 +206,11 @@ void SceneAnimationTool::UpdateGame(float dt)
         isAtlasPath = true;
         spriteSheet->SetTexture(Utils::MyString::WideStringToString(atlasPath));
         spriteSheet->SetPosition({ 0,0 });
-        spriteSheet->SetOrigin(Origins::MC);
-        worldView.zoom(1.f - zoom);
-        zoom = 0.f;
+        spriteSheet->SetOrigin(Origins::TL);
+        selectedAreas.clear();
+
+        textureBorder.setPosition(0, 0);
+        textureBorder.setSize((sf::Vector2f)spriteSheet->GetTexture()->getSize());
 
         if (firstTextureLoad)
         {
@@ -208,6 +233,27 @@ void SceneAnimationTool::UpdatePause(float dt)
 void SceneAnimationTool::Draw(sf::RenderWindow& window)
 {
     Scene::Draw(window);
+
+    window.draw(editorBorder);
+
+    const sf::View& originalView = window.getView();
+
+    window.setView(worldView);
+    window.draw(textureBorder);
+    window.setView(originalView);
+
+    for (const auto& area : selectedAreas)
+    {
+        sf::RectangleShape rectangle;
+        rectangle.setPosition(sf::Vector2f(area.left, area.top));
+        rectangle.setSize(sf::Vector2f(area.width, area.height));
+        rectangle.setFillColor(sf::Color::Transparent);
+        rectangle.setOutlineColor(sf::Color::Green);
+        rectangle.setOutlineThickness(2.0f);
+
+        window.setView(worldView);
+        window.draw(rectangle);
+    }
 }
 
 
@@ -237,4 +283,10 @@ void SceneAnimationTool::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(0.f);
         break;
     }
+}
+
+bool SceneAnimationTool::IsWithinWorldView(const sf::Vector2f& point)
+{
+    sf::FloatRect viewBounds(worldView.getCenter() - worldView.getSize() / 2.f, worldView.getSize());
+    return viewBounds.contains(point);
 }

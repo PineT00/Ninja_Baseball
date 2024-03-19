@@ -23,24 +23,21 @@ protected:
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
 
+	std::vector<sf::FloatRect> selectedAreas;
 	std::wstring atlasPath;
 	
 	sf::Font font;
+	sf::RectangleShape editorBorder;
+	sf::RectangleShape textureBorder;
 	sf::Vector2f windowSize;
-
-	bool isAtlasPath = false;
-	bool firstTextureLoad = true;
-
-	// 드래그 처리를 위한 멤버 변수 추가
-	bool isLeftDragging = false;
 	sf::Vector2f leftDragStartPos;
-	std::vector<sf::FloatRect> selectedAreas;
-
-	bool isRightDragging = false;
 	sf::Vector2f rightDragStartPos;
 	sf::Vector2f lastMousePos;
 
-	float zoom = 0.f;
+	bool isAtlasPath = false;
+	bool firstTextureLoad = true;
+	bool isLeftDragging = false;
+	bool isRightDragging = false;
 
 public:
 	SceneAnimationTool(SceneIDs id);
@@ -65,4 +62,5 @@ public:
 
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
+	bool IsWithinWorldView(const sf::Vector2f& point);
 };

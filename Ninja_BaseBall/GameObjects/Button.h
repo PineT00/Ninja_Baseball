@@ -12,6 +12,7 @@ public :
 		loadAtlas,
 		play,
 		stop,
+		save
 	};
 
 protected:
