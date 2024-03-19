@@ -194,6 +194,19 @@ void Scene::Draw(sf::RenderWindow& window)
 	}
 
 	window.setView(saveView);
+
+
+	sf::Vector2u windowSize = window.getSize();
+	// 창의 비율을 유지하면서 크기를 조절
+	float aspectRatio = 640.f / 480.f; // 원하는 가로 세로 비율
+	if (windowSize.x / static_cast<float>(windowSize.y) > aspectRatio)
+	{
+		window.setSize(sf::Vector2u(static_cast<unsigned int>(windowSize.y * aspectRatio), windowSize.y));
+	}
+	else
+	{
+		window.setSize(sf::Vector2u(windowSize.x, static_cast<unsigned int>(windowSize.x / aspectRatio)));
+	}
 }
 
 GameObject* Scene::FindGameObject(const std::string& name, Layers layer)
