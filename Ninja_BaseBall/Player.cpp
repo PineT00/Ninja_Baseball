@@ -24,11 +24,6 @@ void Player::Init()
 	SpriteGo::Init();
 
 	animator.SetTarget(&sprite);
-}
-
-void Player::Reset()
-{
-	animator.ClearEvent();
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("animations/Jump.csv", 5, funcInstance);
@@ -36,9 +31,15 @@ void Player::Reset()
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("animations/Idle.csv", 5, funcStatic);
 
-	animator.Play("animations/Idle.csv");
+}
+
+void Player::Reset()
+{
+	animator.ClearEvent();
+
 	SetOrigin(Origins::BC);
-	SetPosition({ 0.f, 0.f });
+	SetPosition({ 0.f, 300.f });
+	animator.Play("animations/Idle.csv");
 }
 
 void Player::Update(float dt)
@@ -52,11 +53,9 @@ void Player::Update(float dt)
 	{
 		isGrounded = false;
 		animator.Play("animations/Jump.csv");
-		velocity.y = -500.f;
 	}
 
 	velocity.x = h * speed;
-	velocity.y += gravity * dt;
 
 	position += velocity * dt;
 
@@ -66,6 +65,7 @@ void Player::Update(float dt)
 		position.y = 0.f;
 		velocity.y = 0.f;
 	}
+
 	SetPosition(position);
 
 	if (h != 0.f)
@@ -73,23 +73,24 @@ void Player::Update(float dt)
 		SetFlipX(h < 0);
 	}
 
-	if (animator.GetCurrentClipId() == "animations/Idle.csv")
+	if (animator.GetCurrentClipId() == "Animations/Idle.csv")
 	{
 		if (h != 0.f)
 		{
-			animator.Play("animations/Run.csv");
+			animator.Play("Animations/Run.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "animations/Run.csv")
+	else if (animator.GetCurrentClipId() == "Animations/Run.csv")
 	{
 		if (h == 0.f)
 		{
-			animator.Play("animations/Idle.csv");
+			animator.Play("Animations/Idle.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "animations/Jump.csv" && isGrounded)
+	else if (animator.GetCurrentClipId() == "Animations/Jump.csv" && isGrounded)
 	{
-		animator.Play("animations/Idle.csv");
+		//animator.Play("Animations/Idle.csv");
 	}
 
+	
 }

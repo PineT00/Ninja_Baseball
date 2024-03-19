@@ -6,7 +6,7 @@
 #include "TextGo.h"
 #include "InputField.h"
 #include "Stage1.h"
-#include ""
+#include "Player.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
     : Scene(id)
@@ -25,7 +25,10 @@ void SceneDev1::Init()
     stage = new Stage1();
     AddGameObject(stage);
 
-    AddGameObject(new Player());
+    player = new Player();
+    player->SetPosition({ 0.f, 80.f });
+
+    AddGameObject(player);
 
     Scene::Init();
 }
@@ -83,6 +86,13 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+    sf::Vector2f worldViewCenter = worldView.getCenter();
+
+    worldViewCenter.x = player->GetPosition().x;
+
+    worldView.setCenter(worldViewCenter);
+
+    //backGround->SetPosition(worldViewCenter);
 
 }
 

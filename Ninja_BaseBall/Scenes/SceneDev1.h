@@ -7,6 +7,7 @@ class SpriteGo;
 class TextGo;
 class InputField;
 class Stage1;
+class Player;
 
 class SceneDev1 : public Scene
 {
@@ -17,6 +18,9 @@ protected :
 	SceneDev1& operator=(SceneDev1&&)		= delete;	
 	
 	Stage1* stage = nullptr;
+	Player* player = nullptr;
+
+
 	sf::Vector2f windowSize;
 
 public :

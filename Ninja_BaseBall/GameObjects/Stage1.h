@@ -6,9 +6,11 @@ class Stage1 :
 public:
 	SpriteGo stageStart;
 	SpriteGo stageNormal;
+	SpriteGo stageNormal2;
 	SpriteGo stageBroken;
 	SpriteGo transition;
 	SpriteGo stagePlane;
+	SpriteGo stageBoss;
 
 private:
 
