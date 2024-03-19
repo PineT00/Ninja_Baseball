@@ -15,6 +15,8 @@
 #include <functional>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <memory>
 
 // SFML
 #include <SFML/Graphics.hpp>

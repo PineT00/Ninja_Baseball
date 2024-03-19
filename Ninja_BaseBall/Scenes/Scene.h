@@ -56,6 +56,6 @@ public:
 	sf::Vector2f ScreenToUi(sf::Vector2i screenPosition);
 	sf::Vector2i UiToScreen(sf::Vector2f uiPosition);
 
-	GameStatus GetStatus() const { return this->status; }
+	virtual GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 };

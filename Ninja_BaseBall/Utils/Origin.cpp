@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Origin.h"
 
+#include "Animator.h"
+
 namespace Utils
 {
 	sf::Vector2f Origin::SetOrigin(sf::Transformable& obj, Origins originPreset, const sf::FloatRect& rect)
@@ -28,4 +30,6 @@ namespace Utils
 	{
 		return SetOrigin(obj, originPreset, obj.getLocalBounds());
 	}
+
+	
 }

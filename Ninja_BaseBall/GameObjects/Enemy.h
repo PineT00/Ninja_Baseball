@@ -4,9 +4,7 @@
 
 class Enemy:public SpriteGo
 {
-private:
-    
-protected:
+public:
     //Enemy Type
     enum class EnemyType
     {
@@ -19,7 +17,23 @@ protected:
         BOSS
     };
     EnemyType type=EnemyType::NONE;
-    
+
+    static Enemy* Create(EnemyType enemyType);
+private:
+    struct ClipInfo
+    {
+        std::string idle;
+        std::string move;
+        std::string attack;
+        std::string dead;
+        bool flipX=false;
+        sf::Vector2f point;
+        ClipInfo()
+        = default;
+        ClipInfo(std::string idle, std::string move, std::string attack, std::string dead, bool flipX, const sf::Vector2f& point)
+            :idle(std::move(idle)), move(std::move(move)), attack(std::move(attack)), dead(std::move(dead)), flipX(flipX), point(point) {}
+    };
+protected:
     //Enemy State
     enum class EnemyState
     {
@@ -30,14 +44,14 @@ protected:
     };
     EnemyState state;
 
-    static Enemy* Create(EnemyType enemyType);
+    
     
     //Enemy Attack Type
     enum class EnemyAttackType
     {
         SINGLE,
         COMBO,
-        CHARGE
+        BACKJUMP
     };
     EnemyAttackType attackType;
     Animator animator;
@@ -53,7 +67,8 @@ public:
     void LateUpdate(float dt) override;
     void FixedUpdate(float dt) override;
     void Draw(sf::RenderWindow& window) override;
-
+    void EnemyMovement(float dt);
+    void EnemyPattern(float dt);
 protected:
     float attackCoolTime;
     float monsterHp;

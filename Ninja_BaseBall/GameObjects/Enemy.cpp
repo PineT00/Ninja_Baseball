@@ -8,24 +8,44 @@ Enemy* Enemy::Create(EnemyType enemyType)
     switch (enemyType)
     {
     case EnemyType::BASEBALL_YELLOW:
-        enemy->textureId = "graphics/baseball_yellow.png";
         enemy->monsterMaxHp = 100;
         enemy->monsterHp = enemy->monsterMaxHp;
         enemy->monsterSpeed = 100;
         enemy->monsterDamage = 10;
         enemy->monsterAttackRange = 50;
         enemy->monsterAttackSpeed = 1.f;
-        enemy->animator.Play("BaseballYellow_Idle");
+        enemy->animator.Play("animations/BaseballYellow_Idle.csv");
         enemy->attackType = EnemyAttackType::SINGLE;
         break;
     case EnemyType::BASEBALL_GREEN:
-        
+        // enemy->monsterMaxHp = 150;
+        // enemy->monsterHp = enemy->monsterMaxHp;
+        // enemy->monsterSpeed = 150;
+        // enemy->monsterDamage = 20;
+        // enemy->monsterAttackRange = 50;
+        // enemy->monsterAttackSpeed = 1.f;
+        // enemy->animator.Play("BaseballGreen_Idle");
+        // enemy->attackType = EnemyAttackType::SINGLE;
         break;
     case EnemyType::BASEBALL_BLUE:
-        
+        // enemy->monsterMaxHp = 100;
+        // enemy->monsterHp = enemy->monsterMaxHp;
+        // enemy->monsterSpeed = 100;
+        // enemy->monsterDamage = 10;
+        // enemy->monsterAttackRange = 50;
+        // enemy->monsterAttackSpeed = 1.f;
+        // enemy->animator.Play("BaseballBlue_Idle");
+        // enemy->attackType = EnemyAttackType::COMBO;
         break;
     case EnemyType::BASEBALL_WHITE:
-        
+        // enemy->monsterMaxHp = 100;
+        // enemy->monsterHp = enemy->monsterMaxHp;
+        // enemy->monsterSpeed = 100;
+        // enemy->monsterDamage = 10;
+        // enemy->monsterAttackRange = 50;
+        // enemy->monsterAttackSpeed = 1.f;
+        // enemy->animator.Play("BaseballWhite_Idle");
+        // enemy->attackType = EnemyAttackType::BACKJUMP;
         break;
     case EnemyType::ELITE:
         
@@ -33,8 +53,8 @@ Enemy* Enemy::Create(EnemyType enemyType)
     case EnemyType::BOSS:
         
         break;
-        case 
-    default: ;
+    default:
+        break;
     }
     return enemy;
 }
@@ -53,7 +73,11 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
     SpriteGo::Init();
+    animator.SetTarget(&sprite);
     SetOrigin(Origins::MC);
+    //SetPosition(sf::Vector2f(100, 100));
+    //SetScale(sf::Vector2f(1, 1));
+    
 }
 
 void Enemy::Release()
@@ -71,6 +95,8 @@ void Enemy::Reset()
 void Enemy::Update(float dt)
 {
     SpriteGo::Update(dt);
+    EnemyMovement(dt);
+    EnemyPattern(dt);
     
 }
 
@@ -87,4 +113,39 @@ void Enemy::FixedUpdate(float dt)
 void Enemy::Draw(sf::RenderWindow& window)
 {
     SpriteGo::Draw(window);
+}
+
+void Enemy::EnemyMovement(float dt)
+{
+    switch (state)
+    {
+        case EnemyState::IDLE:
+            
+            break;
+        case EnemyState::MOVE:
+            
+            break;
+        case EnemyState::ATTACK:
+            
+            break;
+        case EnemyState::DEAD:
+            
+            break;
+    }
+}
+
+void Enemy::EnemyPattern(float dt)
+{
+    switch (attackType)
+    {
+        case EnemyAttackType::SINGLE:
+            
+            break;
+        case EnemyAttackType::COMBO:
+            
+            break;
+        case EnemyAttackType::BACKJUMP:
+            
+            break;
+    }
 }
