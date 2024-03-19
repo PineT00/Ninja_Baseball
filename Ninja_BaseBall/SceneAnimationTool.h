@@ -12,14 +12,14 @@ protected:
 	SceneAnimationTool& operator=(const SceneAnimationTool&) = delete;
 	SceneAnimationTool& operator=(SceneAnimationTool&&) = delete;
 
-	Button* buttonLoadAtlas;
+	Button* buttonLoadAtlas = nullptr;
+	SpriteGo* spriteSheet = nullptr;
 
 	std::wstring atlasPath;
 
+	sf::View workingView;
 	sf::Font font;
 	sf::Vector2f windowSize;
-
-	SpriteGo* spriteSheet = nullptr;
 
 	bool isAtlasPath = false;
 

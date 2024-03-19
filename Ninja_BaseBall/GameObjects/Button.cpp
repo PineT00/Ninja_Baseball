@@ -25,7 +25,7 @@ void Button::Update(float dt)
 
 	if (InputManager::GetMouseButtonDown(sf::Mouse::Left))
 	{
-		if (GetGlobalBounds().contains(InputManager::GetMousePos()))
+		if (GetGlobalBounds().contains(sceneAnimationTool->ScreenToUi((sf::Vector2i)InputManager::GetMousePos())))
 		{
 			isButtonPressed = true;
 			SetButtonColor(buttonColorPressed);
@@ -33,7 +33,7 @@ void Button::Update(float dt)
 	}
 	else if (InputManager::GetMouseButtonUp(sf::Mouse::Left))
 	{
-		if (GetGlobalBounds().contains(InputManager::GetMousePos()))
+		if (GetGlobalBounds().contains(sceneAnimationTool->ScreenToUi((sf::Vector2i)InputManager::GetMousePos())))
 		{
 			if (isButtonPressed)
 			{
@@ -45,7 +45,7 @@ void Button::Update(float dt)
 	}
 	else
 	{
-		if (GetGlobalBounds().contains(InputManager::GetMousePos()))
+		if (GetGlobalBounds().contains(sceneAnimationTool->ScreenToUi((sf::Vector2i)InputManager::GetMousePos())))
 		{
 			SetButtonColor(buttonColorFocused);
 		}

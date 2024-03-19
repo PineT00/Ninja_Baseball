@@ -15,6 +15,7 @@ void SceneAnimationTool::Init()
 
     worldView.setSize(windowSize);
     worldView.setCenter(0, 0);
+    worldView.setViewport(sf::FloatRect(0.2f, 0.2f, 0.6f, 0.6f));
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
@@ -22,6 +23,9 @@ void SceneAnimationTool::Init()
     buttonLoadAtlas->SetStringValue(atlasPath);
     buttonLoadAtlas->SetButton({ 200.f,80.f }, { windowSize.x / 2, windowSize.y / 2 }, sf::Color::Black, Origins::MC);
     buttonLoadAtlas->SetButtonText(font, "Button", 40.f, sf::Color::White, buttonLoadAtlas->GetPosition(), Origins::MC);
+
+    spriteSheet = new SpriteGo("spritesheet");
+    spriteSheet->Init();
 
     AddGameObject(buttonLoadAtlas, Layers::Ui);
 
@@ -84,7 +88,6 @@ void SceneAnimationTool::UpdateGame(float dt)
     if (atlasPath != L"" && !isAtlasPath)
     {
         isAtlasPath = true;
-        spriteSheet = new SpriteGo("spritesheet");
         spriteSheet->SetTexture(Utils::MyString::WideStringToString(atlasPath));
         spriteSheet->SetPosition({ 0,0 });
         spriteSheet->SetOrigin(Origins::MC);
