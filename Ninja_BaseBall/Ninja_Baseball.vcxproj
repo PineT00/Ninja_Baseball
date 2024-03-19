@@ -147,6 +147,8 @@
     <ClCompile Include="GameObjects\Tilemap.cpp" />
     <ClCompile Include="GameObjects\UiHUD.cpp" />
     <ClCompile Include="GameObjects\InputField.cpp" />
+    <ClCompile Include="Utils\MyString.cpp" />
+    <ClCompile Include="SceneAnimationTool.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="Utils\MyMath.cpp" />
@@ -180,7 +182,9 @@
     <ClInclude Include="GameObjects\Tilemap.h" />
     <ClInclude Include="GameObjects\UiHUD.h" />
     <ClInclude Include="GameObjects\InputField.h" />
+    <ClInclude Include="Utils\MyString.h" />
     <ClInclude Include="rapidcsv.h" />
+    <ClInclude Include="SceneAnimationTool.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />
     <ClInclude Include="Scenes\SceneTitle.h" />
     <ClInclude Include="Utils\MyMath.h" />

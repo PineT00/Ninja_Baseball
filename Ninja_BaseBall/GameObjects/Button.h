@@ -2,17 +2,14 @@
 #include "SpriteGo.h"
 
 class TextGo;
-class SceneUpgrade;
+class SceneAnimationTool;
 
 class Button : public SpriteGo
 {
 public :
 	enum class ButtonIdentifier
 	{
-		StartGame,
-		PowerUp,
-		ExtraLife,
-		Bomb,
+		loadAtlas
 	};
 
 protected:
@@ -21,9 +18,11 @@ protected:
 	Button& operator=(const Button&) = delete;
 	Button& operator=(Button&&) = delete;
 
+	SceneAnimationTool* sceneAnimationTool = nullptr;
 	ButtonIdentifier buttonIdentifier;
 
-	SceneUpgrade* sceneUpgrade = nullptr;
+	std::wstring stringValue;
+
 	sf::Text buttonText;
 	sf::RectangleShape shape;
 
@@ -54,12 +53,10 @@ public:
 	void SetButtonColorFocused(sf::Color color);
 	void SetButtonColorPressed(sf::Color color);
 
-	//void ExecuteButtonAction();
+	void ExecuteButtonAction(ButtonIdentifier id);
 
-	//void UpgradePowerLevel();
-	//void UpgradeExtraLifes();
-	//void UpgradeExtraBombs();
-	//void SaveGold();
+	std::wstring OpenFileDialog(std::wstring& filePath);
+	void SetStringValue(std::wstring& wstr) { stringValue = wstr; }
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

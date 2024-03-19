@@ -20,6 +20,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+// Window API
+#include <windows.h>
+#include <commdlg.h>
+
 // Framework
 #include "Defines.h"
 #include "Singleton.h"
@@ -36,4 +40,5 @@
 #include "Origin.h"
 #include "Vector2.h"
 #include "Random.h"
+#include "MyString.h"
 #include "Sort.h"

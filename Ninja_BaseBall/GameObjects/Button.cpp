@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Button.h"
 #include "TextGo.h"
+#include "SceneAnimationTool.h"
 
 Button::Button(ButtonIdentifier identifier, const std::string& name)
 	: SpriteGo(name), buttonIdentifier(identifier)
@@ -14,7 +15,7 @@ void Button::Init()
 
 void Button::Reset()
 {
-	//sceneUpgrade = dynamic_cast<SceneUpgrade*>(SCENE_MANAGER.GetCurrentScene());
+	sceneAnimationTool = dynamic_cast<SceneAnimationTool*>(SCENE_MANAGER.GetScene(SceneIDs::SceneAnimationTool));
 }
 
 void Button::Update(float dt)
@@ -36,7 +37,7 @@ void Button::Update(float dt)
 		{
 			if (isButtonPressed)
 			{
-				//ExecuteButtonAction();
+				ExecuteButtonAction(buttonIdentifier);
 				isButtonPressed = false;
 			}
 			SetButtonColor(buttonColor);
@@ -55,25 +56,15 @@ void Button::Update(float dt)
 	}
 }
 
-//void Button::ExecuteButtonAction()
-//{
-//	switch (buttonIdentifier)
-//	{
-//	case ButtonIdentifier::StartGame:
-//		SaveGold();
-//		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
-//		break;
-//	case ButtonIdentifier::PowerUp:
-//		UpgradePowerLevel();
-//		break;
-//	case ButtonIdentifier::ExtraLife:
-//		UpgradeExtraLifes();
-//		break;
-//	case ButtonIdentifier::Bomb:
-//		UpgradeExtraBombs();
-//		break;
-//	}
-//}
+void Button::ExecuteButtonAction(ButtonIdentifier id)
+{
+	switch (id)
+	{
+	case ButtonIdentifier::loadAtlas:
+		OpenFileDialog(stringValue);
+		break;
+	}
+}
 
 void Button::Draw(sf::RenderWindow& window)
 {
@@ -145,6 +136,29 @@ void Button::SetButtonColorPressed(sf::Color color)
 	buttonColorPressed = color;
 }
 
+std::wstring Button::OpenFileDialog(std::wstring& filePath)
+{
+	wchar_t filename[MAX_PATH] = L"";
+
+	OPENFILENAMEW ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(OPENFILENAMEW);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = L"Image Files\0*.png;*.jpg;*.jpeg\0All Files\0*.*\0";
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = L"";
+
+	if (GetOpenFileNameW(&ofn)) {
+		filePath = filename;
+
+		sceneAnimationTool->SetAtlasPath(filePath);
+		return filePath;
+	}
+	return L"";
+}
+
 sf::FloatRect Button::GetLocalBounds()
 {
 	return shape.getLocalBounds();
@@ -154,40 +168,3 @@ sf::FloatRect Button::GetGlobalBounds()
 {
 	return shape.getGlobalBounds();
 }
-//
-//void Button::UpgradePowerLevel()
-//{
-//	if (sceneUpgrade->GetCurrentGold() < 2000) return;
-//	if (sceneUpgrade->GetExtraPowerLevel() >= 3) return;
-//
-//	sceneUpgrade->AddExtraPowerLevel(1);
-//	sceneUpgrade->AddCurrentGold(-2000);
-//}
-//
-//void Button::UpgradeExtraLifes()
-//{
-//	if (sceneUpgrade->GetCurrentGold() < 4000) return;
-//	if (sceneUpgrade->GetExtraLifes() >= 7) return;
-//
-//	sceneUpgrade->AddExtraLifes(1);
-//	sceneUpgrade->AddCurrentGold(-4000);
-//}
-//
-//void Button::UpgradeExtraBombs()
-//{
-//	if (sceneUpgrade->GetCurrentGold() < 2000) return;
-//	if (sceneUpgrade->GetExtraBombs() >= 7) return;
-//
-//	sceneUpgrade->SetExtraBombs(1);
-//	sceneUpgrade->AddCurrentGold(-2000);
-//}
-//
-//void Button::SaveGold()
-//{
-//	std::ofstream input;
-//	input.open("gold.txt");
-//	if (input.is_open())
-//	{
-//		input << sceneUpgrade->GetCurrentGold();
-//	}
-//}
