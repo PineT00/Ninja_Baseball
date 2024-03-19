@@ -63,6 +63,9 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::loadAtlas:
 		OpenFileDialog(stringValue);
 		break;
+	case ButtonIdentifier::save :
+		SaveSelectedAreasWithDialog();
+		break;
 	}
 }
 
@@ -158,6 +161,46 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 		return filePath;
 	}
 	return L"";
+}
+
+void Button::SaveSelectedAreasWithDialog()
+{
+	OPENFILENAME ofn;       // 공통 대화 상자 구조체
+	wchar_t  szFileName[MAX_PATH] = L""; // 파일 이름을 저장할 배열
+
+	// OPENFILENAME 구조체 초기화
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;  // 현재 창의 핸들, NULL이면 부모 창 없음
+	ofn.lpstrFilter = L"CSV Files (*.csv)\0*.csv\0All Files (*.*)\0*.*\0";
+	ofn.lpstrFile = szFileName;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
+	ofn.lpstrDefExt = L"csv";
+
+	// 파일 저장 대화 상자 표시
+	if (GetSaveFileName(&ofn))
+	{
+		std::ofstream outFile(szFileName); // 사용자가 선택한 이름으로 파일 열기
+
+		if (!outFile.is_open())
+		{
+			MessageBox(NULL, L"File could not be opened.", L"Error", MB_OK);
+			return;
+		}
+
+		outFile << "Left,Top,Width,Height\n";
+
+		for (const auto& area : sceneAnimationTool->GetSelectedAreas())
+		{
+			outFile << area.left << ","
+				<< area.top << ","
+				<< area.width << ","
+				<< area.height << "\n";
+		}
+
+		outFile.close(); // 파일 닫기
+	}
 }
 
 sf::FloatRect Button::GetLocalBounds()

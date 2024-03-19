@@ -61,6 +61,8 @@ public:
 	std::wstring OpenFileDialog(std::wstring& filePath);
 	void SetStringValue(std::wstring& wstr) { stringValue = wstr; }
 
+	void SaveSelectedAreasWithDialog();
+
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;
 };

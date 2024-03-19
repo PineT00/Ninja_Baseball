@@ -59,6 +59,7 @@ public:
 	bool IsAtlasPath() const { return isAtlasPath; }
 	void SetIsAtlasPath(bool isAtlasPath) { this->isAtlasPath = isAtlasPath; }
 	void SetAtlasPath(const std::wstring& str);
+	std::vector<sf::FloatRect> GetSelectedAreas() const { return selectedAreas; }
 
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
