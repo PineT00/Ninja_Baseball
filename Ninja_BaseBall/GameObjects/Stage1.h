@@ -12,6 +12,8 @@ public:
 	SpriteGo stagePlane;
 	SpriteGo stageBoss;
 
+	sf::RectangleShape groundBound;
+
 private:
 
 

@@ -14,6 +14,13 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
+{
+    sf::FloatRect rect = stage->groundBound.getGlobalBounds();
+
+    return Utils::MyMath::Clamp(point, rect);
+}
+
 void SceneDev1::Init()
 {
     worldView.setSize(windowSize);
@@ -26,7 +33,7 @@ void SceneDev1::Init()
     AddGameObject(stage);
 
     player = new Player();
-    player->SetPosition({ 0.f, 80.f });
+    player->SetPosition({ 0.f, 300.f });
 
     AddGameObject(player);
 
@@ -89,6 +96,8 @@ void SceneDev1::UpdateGame(float dt)
     sf::Vector2f worldViewCenter = worldView.getCenter();
 
     worldViewCenter.x = player->GetPosition().x;
+    worldViewCenter.y = player->GetPosition().y;
+
 
     worldView.setCenter(worldViewCenter);
 

@@ -27,6 +27,8 @@ public :
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 
+	sf::Vector2f ClampByTileMap(const sf::Vector2f point);
+
 	void Init() override;
 	void Release() override;
 	virtual void Reset();

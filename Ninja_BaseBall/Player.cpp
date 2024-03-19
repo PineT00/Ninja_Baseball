@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "SceneDev1.h"
 
 Player::Player(const std::string& name)
 {
@@ -23,7 +24,16 @@ void Player::Init()
 {
 	SpriteGo::Init();
 
+	//animator.AddClip(RES_MGR_ANI_CLIP.Get("Animations/idle.csv"));
+	//animator.AddClip(RES_MGR_ANI_CLIP.Get("Animations/Jump.csv"));
+	//animator.AddClip(RES_MGR_ANI_CLIP.Get("Animations/Run.csv"));
+
 	animator.SetTarget(&sprite);
+}
+
+void Player::Reset()
+{
+	animator.ClearEvent();
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("animations/Jump.csv", 5, funcInstance);
@@ -31,15 +41,12 @@ void Player::Init()
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("animations/Idle.csv", 5, funcStatic);
 
-}
-
-void Player::Reset()
-{
-	animator.ClearEvent();
-
-	SetOrigin(Origins::BC);
-	SetPosition({ 0.f, 300.f });
 	animator.Play("animations/Idle.csv");
+	SetOrigin(Origins::BC);
+	//SetPosition({ 0.f, 0.f });
+	SetScale({ 0.8f,0.8f });
+
+	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 }
 
 void Player::Update(float dt)
@@ -48,6 +55,7 @@ void Player::Update(float dt)
 	animator.Update(dt);
 
 	float h = InputManager::GetAxis(Axis::Horizontal);
+	float v = InputManager::GetAxis(Axis::Vertical);
 
 	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
 	{
@@ -56,16 +64,20 @@ void Player::Update(float dt)
 	}
 
 	velocity.x = h * speed;
+	velocity.y = v * speed;
 
 	position += velocity * dt;
 
-	if (position.y > 0.f)
+	if (sceneDev1 != nullptr)
 	{
-		isGrounded = true;
-		position.y = 0.f;
-		velocity.y = 0.f;
+		position = sceneDev1->ClampByTileMap(position);
 	}
 
+	//if (position.y > 0.f)
+	//{
+	//	isGrounded = true;
+	//	velocity.y = 0.f;
+	//}
 	SetPosition(position);
 
 	if (h != 0.f)
@@ -73,24 +85,23 @@ void Player::Update(float dt)
 		SetFlipX(h < 0);
 	}
 
-	if (animator.GetCurrentClipId() == "Animations/Idle.csv")
+	if (animator.GetCurrentClipId() == "animations/Idle.csv")
 	{
 		if (h != 0.f)
 		{
-			animator.Play("Animations/Run.csv");
+			animator.Play("animations/Run.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "Animations/Run.csv")
+	else if (animator.GetCurrentClipId() == "animations/Run.csv")
 	{
 		if (h == 0.f)
 		{
-			animator.Play("Animations/Idle.csv");
+			animator.Play("animations/Idle.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "Animations/Jump.csv" && isGrounded)
+	else if (animator.GetCurrentClipId() == "animations/Jump.csv" && isGrounded)
 	{
-		//animator.Play("Animations/Idle.csv");
+		animator.Play("animations/Idle.csv");
 	}
 
-	
 }

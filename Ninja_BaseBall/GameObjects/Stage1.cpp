@@ -32,8 +32,12 @@ void Stage1::Reset()
 	transition.SetOrigin(Origins::TL);
 	stagePlane.SetPosition({ 1120,-480 });
 	stagePlane.SetOrigin(Origins::TL);
-	stageBoss.SetPosition({ 1440,-480 });
+	stageBoss.SetPosition({ 1760,-480 });
 	stageBoss.SetOrigin(Origins::TL);
+
+	groundBound.setFillColor(sf::Color::Red);
+	groundBound.setSize({ 1120.f,104.f });
+	groundBound.setPosition({ 0.f, 136.f });
 }
 
 void Stage1::Update(float dt)
@@ -50,5 +54,7 @@ void Stage1::Draw(sf::RenderWindow& window)
 	transition.Draw(window);
 	stagePlane.Draw(window);
 	stageBoss.Draw(window);
+
+	window.draw(groundBound);
 
 }

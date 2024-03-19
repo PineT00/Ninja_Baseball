@@ -2,6 +2,8 @@
 #include "SpriteGo.h"
 #include "Animator.h"
 
+class SceneDev1;
+
 class Player :
     public SpriteGo
 {
@@ -15,6 +17,7 @@ protected:
 
 	bool isGrounded = true;
 
+	SceneDev1* sceneDev1 = nullptr;
 public:
 	Player(const std::string& name = "");
 	~Player();
