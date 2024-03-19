@@ -16,7 +16,7 @@ void SceneAnimationTool::Init()
     font = *FONT_MANAGER.GetResource("fonts/strikers1945.ttf");
 
     worldView.setSize(windowSize);
-    worldView.setCenter(0, 0);
+    worldView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
     worldView.setViewport(sf::FloatRect(0.2f, 0.2f, 0.6f, 0.6f));
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
@@ -107,6 +107,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
     switch (event.type)
     {
     case  sf::Event::MouseWheelScrolled:
+    {
         if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
         {
             float zoomAmount = 0.1f;
@@ -119,6 +120,55 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
                 worldView.zoom(1.f + zoomAmount);
             }
         }
+    }
+    break;
+    case sf::Event::MouseButtonPressed:
+    {
+        if (event.mouseButton.button == sf::Mouse::Left)
+        {
+            isLeftDragging = true;
+            leftDragStartPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+        }
+        else if (event.mouseButton.button == sf::Mouse::Right)
+        {
+            isRightDragging = true;
+            rightDragStartPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+            lastMousePos = rightDragStartPos;
+        }
+    }
+    break;
+    case sf::Event::MouseButtonReleased:
+    {
+        if (event.mouseButton.button == sf::Mouse::Left && isLeftDragging && isAtlasPath)
+        {
+            isLeftDragging = false;
+            sf::Vector2f endPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+            sf::FloatRect selectedArea(leftDragStartPos, endPos - leftDragStartPos);
+            selectedAreas.push_back(selectedArea);
+
+            std::cout <<  selectedArea.left + spriteSheet->GetTexture()->getSize().x * 0.5f
+                << " : " << selectedArea.top + spriteSheet->GetTexture()->getSize().y * 0.5f
+                << " : " << selectedArea.width 
+                << " : " << selectedArea.height << std::endl;
+
+        }
+        else if (event.mouseButton.button == sf::Mouse::Right)
+        {
+            isRightDragging = false;
+        }
+    }
+    break;
+    case sf::Event::MouseMoved:
+    {
+        if (isRightDragging)
+        {
+            sf::Vector2f currentMousePos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+            sf::Vector2f delta = lastMousePos - currentMousePos;
+            worldView.move(delta);
+            lastMousePos = currentMousePos;
+        }
+        break;
+    }
     }
 }
 
@@ -134,10 +184,15 @@ void SceneAnimationTool::UpdateGame(float dt)
         spriteSheet->SetTexture(Utils::MyString::WideStringToString(atlasPath));
         spriteSheet->SetPosition({ 0,0 });
         spriteSheet->SetOrigin(Origins::MC);
-        AddGameObject(spriteSheet);
+        worldView.zoom(1.f - zoom);
+        zoom = 0.f;
+
+        if (firstTextureLoad)
+        {
+            firstTextureLoad = false;
+			AddGameObject(spriteSheet);
+        }
     }
-
-
 }
 
 void SceneAnimationTool::UpdateGameover(float dt)
@@ -154,6 +209,7 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 {
     Scene::Draw(window);
 }
+
 
 void SceneAnimationTool::SetAtlasPath(const std::wstring& str)
 {
