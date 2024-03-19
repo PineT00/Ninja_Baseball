@@ -143,6 +143,8 @@
     <ClCompile Include="Framework\Framework.cpp" />
     <ClCompile Include="Framework\InputManager.cpp" />
     <ClCompile Include="Framework\SoundManager.cpp" />
+    <ClCompile Include="GameObjects\Enemy.cpp" />
+    <ClCompile Include="GameObjects\EnemySpawner.cpp" />
     <ClCompile Include="GameObjects\Spawner.cpp" />
     <ClCompile Include="GameObjects\Tilemap.cpp" />
     <ClCompile Include="GameObjects\UiHUD.cpp" />
@@ -176,6 +178,8 @@
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="Framework\InputManager.h" />
     <ClInclude Include="Framework\SoundManager.h" />
+    <ClInclude Include="GameObjects\Enemy.h" />
+    <ClInclude Include="GameObjects\EnemySpawner.h" />
     <ClInclude Include="GameObjects\Spawner.h" />
     <ClInclude Include="GameObjects\Tilemap.h" />
     <ClInclude Include="GameObjects\UiHUD.h" />
