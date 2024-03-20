@@ -66,6 +66,11 @@ void SceneManager::ChangeScene(SceneIDs id)
 
 bool SceneManager::Update(float dt)
 {
+	if (InputManager::GetKeyDown(sf::Keyboard::P))
+	{
+		isDeveloperMode = !isDeveloperMode;
+	}
+
 	scenes[(int)currentScene]->Update(dt);
 
 	if (nextScene != SceneIDs::None)
