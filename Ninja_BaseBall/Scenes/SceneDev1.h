@@ -8,6 +8,7 @@ class TextGo;
 class InputField;
 class Stage1;
 class Player;
+class YellowBaseBall;
 
 class SceneDev1 : public Scene
 {
@@ -26,6 +27,8 @@ protected :
 	UiHUD* hud = nullptr;
 
 	sf::Vector2f windowSize;
+	
+	YellowBaseBall* monster = nullptr;
 
 public :
 	SceneDev1(SceneIDs id);

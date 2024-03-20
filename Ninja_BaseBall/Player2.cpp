@@ -1,27 +1,27 @@
 #include "pch.h"
-#include "Player.h"
+#include "Player2.h"
 #include "SceneDev1.h"
 
-Player::Player(const std::string& name)
+Player2::Player2(const std::string& name)
 	:SpriteGo(name)
 {
 }
 
-Player::~Player()
+Player2::~Player2()
 {
 }
 
-void Player::TestInstance()
+void Player2::TestInstance()
 {
 	std::cout << "TestInstance()" << std::endl;
 }
 
-void Player::TestStatic()
+void Player2::TestStatic()
 {
 	std::cout << "TestStatic()" << std::endl;
 }
 
-void Player::Init()
+void Player2::Init()
 {
 	SpriteGo::Init();
 
@@ -30,64 +30,67 @@ void Player::Init()
 	hasHitBox = true;
 }
 
-void Player::Reset()
+void Player2::Reset()
 {
 	animator.ClearEvent();
 
-	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
+	std::function<void()> funcInstance = std::bind(&Player2::TestInstance, this);
 	animator.AddEvent("Animations/Jump.csv", 5, funcInstance);
 
-	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
-	animator.AddEvent("Animations/player_Idle.csv", 5, funcStatic);
+	std::function<void()> funcStatic = std::bind(&Player2::TestStatic);
+	animator.AddEvent("Animations/Idle.csv", 5, funcStatic);
 	SetPosition({ 0.f, 0.f });
-	animator.Play("Animations/player_Idle.csv");
+	animator.Play("Animations/Idle.csv");
 	SetOrigin(Origins::BC);
 
-	//SetScale({ 0.75f, 0.75f });
+	SetScale({ 0.75f, 0.75f });
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 
 }
 
-void Player::Update(float dt)
+void Player2::Update(float dt)
 {
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 
 	float v = 0;
-	if (InputManager::GetKey(sf::Keyboard::Up))
+	if (InputManager::GetKey(sf::Keyboard::I))
 	{
 		v = -1;
 	}
-	else if (InputManager::GetKey(sf::Keyboard::Down))
+	else if (InputManager::GetKey(sf::Keyboard::K))
 	{
 		v = 1;
 	}
 
+
+
 	float h = 0;
 
-	if (InputManager::GetKeyDown(sf::Keyboard::Right))
+	if (InputManager::GetKeyDown(sf::Keyboard::L))
 	{
 		rightDashReady = true;
 	}
-	if (InputManager::GetKeyDown(sf::Keyboard::Left))
+	if (InputManager::GetKeyDown(sf::Keyboard::J))
 	{
 		leftDashReady = true;
 	}
 
-	if (InputManager::GetKey(sf::Keyboard::Left))
+	if (InputManager::GetKey(sf::Keyboard::J))
 	{
 		h = -1;
 	}
-	else if (InputManager::GetKey(sf::Keyboard::Right))
+	else if (InputManager::GetKey(sf::Keyboard::L))
 	{
 		h = 1;
 	}
 
+
 	//왼쪽 대시 모음
 	if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
 	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Right))
+		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
 			isLeftDashing = true; // 대쉬 상태 활성화
 		}
@@ -101,7 +104,7 @@ void Player::Update(float dt)
 	{
 		leftDashTime += dt;
 	}
-	if (InputManager::GetKeyUp(sf::Keyboard::Left))
+	if (InputManager::GetKeyUp(sf::Keyboard::J))
 	{
 		isLeftDashing = false;
 	}
@@ -110,10 +113,9 @@ void Player::Update(float dt)
 
 	if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
 	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Right))
+		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
 			isRightDashing = true; // 대쉬 상태 활성화
-			animator.Play("Animations/player_Dash.csv");
 		}
 	}
 	if (rightDashTime > dashTimer)
@@ -125,7 +127,7 @@ void Player::Update(float dt)
 	{
 		rightDashTime += dt;
 	}
-	if (InputManager::GetKeyUp(sf::Keyboard::Right))
+	if (InputManager::GetKeyUp(sf::Keyboard::L))
 	{
 		isRightDashing = false;
 	}
@@ -161,28 +163,25 @@ void Player::Update(float dt)
 		SetFlipX(h < 0);
 	}
 
-	if (animator.GetCurrentClipId() == "Animations/player_Idle.csv")
+	if (animator.GetCurrentClipId() == "Animations/Idle.csv")
 	{
 		if (h != 0.f)
 		{
-			animator.Play("Animations/player_Run.csv");
+			animator.Play("Animations/Run.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "Animations/player_Run.csv")
+	else if (animator.GetCurrentClipId() == "Animations/Run.csv")
 	{
 		if (h == 0.f)
 		{
-			animator.Play("Animations/player_Idle.csv");
+			animator.Play("Animations/Idle.csv");
 		}
 	}
 	else if (animator.GetCurrentClipId() == "Animations/Jump.csv" && isGrounded)
 	{
-		animator.Play("Animations/player_Idle.csv");
+		animator.Play("Animations/Idle.csv");
 	}
-	else if (animator.GetCurrentClipId() == "Animations/player_Dash.csv" && !isLeftDashing && !isRightDashing)
-	{
-		animator.Play("Animations/player_Idle.csv");
-	}
+
 }
 
 

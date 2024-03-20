@@ -4,8 +4,8 @@
 
 class SceneDev1;
 
-class Player :
-    public SpriteGo
+class Player2 :
+	public SpriteGo
 {
 protected:
 	Animator animator;
@@ -31,8 +31,8 @@ protected:
 
 
 public:
-	Player(const std::string& name = "");
-	~Player();
+	Player2(const std::string& name = "");
+	~Player2();
 
 	void TestInstance();
 	static void TestStatic();

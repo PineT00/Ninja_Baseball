@@ -7,6 +7,7 @@
 #include "InputField.h"
 #include "Stage1.h"
 #include "Player.h"
+#include "Player2.h"
 #include "YellowBaseBall.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
@@ -41,10 +42,14 @@ void SceneDev1::Init()
     player->SetPosition({ 100.f, 250.f });
     AddGameObject(player);
 
+    //Player2* player2 = new Player2("Player2");
+    //player->SetPosition({ 200.f, 250.f });
+    //AddGameObject(player2);
+
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
-    //YellowBaseBall* monster = new YellowBaseBall("Monster");
+    //monster = new YellowBaseBall("Monster");
     //AddGameObject(monster);
 
     Scene::Init();
@@ -117,18 +122,22 @@ void SceneDev1::UpdateGame(float dt)
     if (!(stage->clearStage1_1) && xMax >= camCenter1)
     {
         xMax = camCenter1;
+        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
         xMax = camCenter2;
+        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
     }
     if (!(stage->clearStage1_3) && xMax >= camCenter3)
     {
         xMax = camCenter3;
+        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
     }
     if (!(stage->clearStage1_4) && xMax >= camCenter4)
     {
         xMax = camCenter4;
+        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
     }
 
     sf::Vector2f worldViewCenter = worldView.getCenter();

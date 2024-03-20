@@ -150,6 +150,7 @@
     <ClCompile Include="GameObjects\UiHUD.cpp" />
     <ClCompile Include="GameObjects\InputField.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player2.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\Stage1.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="GameObjects\InputField.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="GameObjects\YellowBaseBall.h" />
+    <ClInclude Include="Player2.h" />
     <ClInclude Include="rapidcsv.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />
     <ClInclude Include="Scenes\SceneTitle.h" />
