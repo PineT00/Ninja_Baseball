@@ -12,6 +12,10 @@ public :
     float initialMoveDistance = 10.f;
     float followDistance = 30.f;
     float attackDistance = 10.f;
+    float attackDelay = 1.f;
+    float attackTimer = 0.f;
+    float attackCooldown = 1.f;
+    float retreatDistance = 10.f;
 protected:
     enum class YellowBaseBallState
     {
@@ -38,5 +42,9 @@ public:
     void Draw(sf::RenderWindow& window) override;
     void Update(float dt) override;
     void OnDamage(int damage) override;
-    
+    void DashTowards(const sf::Vector2f& target,float dt);
+    void Attack();
+    void RetreatAfterAction(float dt);
+    void MoveTowards(const sf::Vector2f& target, float speed, float dt);
+    sf::Vector2f Normalize(const sf::Vector2f& source);
 };
