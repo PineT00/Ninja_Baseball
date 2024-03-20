@@ -6,6 +6,8 @@ class UiHUD;
 class SpriteGo;
 class TextGo;
 class InputField;
+class Stage1;
+class Player;
 
 class SceneDev1 : public Scene
 {
@@ -15,11 +17,21 @@ protected :
 	SceneDev1& operator=(const SceneDev1&)	= delete;
 	SceneDev1& operator=(SceneDev1&&)		= delete;	
 	
+	sf::RectangleShape cameraRect;
+
+	float xMax = 0.f;
+
+	Stage1* stage = nullptr;
+	Player* player = nullptr;
+	UiHUD* hud = nullptr;
+
 	sf::Vector2f windowSize;
 
 public :
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
+
+	sf::Vector2f ClampByTileMap(const sf::Vector2f point);
 
 	void Init() override;
 	void Release() override;

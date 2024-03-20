@@ -10,6 +10,7 @@ enum class SceneIDs
 	SceneGame,
 	SceneAnimationTool,
 	SceneDev1,
+	TestScene,
 	COUNT,
 };
 

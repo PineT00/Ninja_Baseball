@@ -16,7 +16,8 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
-
+#include <algorithm>
+#include <memory>
 // SFML
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
