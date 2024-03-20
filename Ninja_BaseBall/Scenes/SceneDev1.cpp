@@ -23,8 +23,13 @@ sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
 
 void SceneDev1::Init()
 {
+    cameraRect.setSize({ 320.f, 240 });
+    cameraRect.setOutlineColor(sf::Color::Cyan);
+    cameraRect.setOutlineThickness(2);
+    cameraRect.setFillColor(sf::Color::Transparent);
+
     worldView.setSize(windowSize);
-    worldView.setCenter(0, 0);
+    worldView.setCenter(0, 120);
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
@@ -32,7 +37,7 @@ void SceneDev1::Init()
     AddGameObject(stage);
 
     player = new Player();
-   // player->SetPosition({ 0.f, 300.f });
+    player->SetPosition({ 100.f, 250.f });
     AddGameObject(player);
 
     hud = new UiHUD();
@@ -97,13 +102,12 @@ void SceneDev1::UpdateGame(float dt)
     sf::Vector2f worldViewCenter = worldView.getCenter();
 
     worldViewCenter.x = player->GetPosition().x;
-    //worldViewCenter.y = player->GetPosition().y;
-
 
     worldView.setCenter(worldViewCenter);
 
-    //backGround->SetPosition(worldViewCenter);
+    stage->stageBack1.SetPosition({ worldViewCenter.x, 0.f });
 
+    cameraRect.setPosition(worldViewCenter);
 }
 
 void SceneDev1::UpdateGameover(float dt)
@@ -119,6 +123,7 @@ void SceneDev1::UpdatePause(float dt)
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+    window.draw(cameraRect);
 }
 
 void SceneDev1::SetStatus(GameStatus newStatus)

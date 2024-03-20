@@ -17,6 +17,8 @@ protected :
 	SceneDev1& operator=(const SceneDev1&)	= delete;
 	SceneDev1& operator=(SceneDev1&&)		= delete;	
 	
+	sf::RectangleShape cameraRect;
+
 	Stage1* stage = nullptr;
 	Player* player = nullptr;
 	UiHUD* hud = nullptr;

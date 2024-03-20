@@ -16,6 +16,11 @@ void Stage1::Init()
 	transition.SetTexture("graphics/stage_transition.png");
 	stagePlane.SetTexture("graphics/stage_airplain.png");
 	stageBoss.SetTexture("graphics/stage_airplain.png");
+
+	stageBack1.SetTexture("graphics/background1-1.png");
+	stageBack2.SetTexture("graphics/background1-2.png");
+	stageBack3.SetTexture("graphics/background1-3.png");
+
 }
 
 void Stage1::Reset()
@@ -47,10 +52,26 @@ void Stage1::Reset()
 
 	stageBound1_2.setFillColor(sf::Color::Red);
 	stageBound1_2.setSize({ 320.f,240.f });
-	stageBound1_2.setPosition({ 460.f, 0.f });
+	stageBound1_2.setPosition({ 140.f, 0.f });
 	stageBound1_2.setOutlineColor(sf::Color::Red);
-	stageBound1_2.setOutlineThickness(1.f);
+	stageBound1_2.setOutlineThickness(3.f);
 	stageBound1_2.setFillColor(sf::Color::Transparent);
+
+	stageBound1_3.setFillColor(sf::Color::Red);
+	stageBound1_3.setSize({ 320.f,240.f });
+	stageBound1_3.setPosition({ 460.f, 0.f });
+	stageBound1_3.setOutlineColor(sf::Color::Red);
+	stageBound1_3.setOutlineThickness(1.f);
+	stageBound1_3.setFillColor(sf::Color::Transparent);
+
+	stageBound1_4.setFillColor(sf::Color::Red);
+	stageBound1_4.setSize({ 320.f,240.f });
+	stageBound1_4.setPosition({ 780.f, 0.f });
+	stageBound1_4.setOutlineColor(sf::Color::Red);
+	stageBound1_4.setOutlineThickness(1.f);
+	stageBound1_4.setFillColor(sf::Color::Transparent);
+
+	stageBack1.SetPosition({0.f, 0.f});
 
 
 
@@ -63,6 +84,8 @@ void Stage1::Update(float dt)
 
 void Stage1::Draw(sf::RenderWindow& window)
 {
+	stageBack1.Draw(window);
+
 	SpriteGo::Draw(window);
 	stageNormal.Draw(window);
 	stageNormal2.Draw(window);
@@ -72,11 +95,14 @@ void Stage1::Draw(sf::RenderWindow& window)
 	stageBoss.Draw(window);
 
 
+
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
 		window.draw(groundBound);
 		window.draw(stageBound1_1);
 		window.draw(stageBound1_2);
+		window.draw(stageBound1_3);
+		window.draw(stageBound1_4);
 	}
 
 }

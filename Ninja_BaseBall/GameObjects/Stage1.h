@@ -12,6 +12,11 @@ public:
 	SpriteGo stagePlane;
 	SpriteGo stageBoss;
 
+	SpriteGo stageBack1;
+	SpriteGo stageBack2;
+	SpriteGo stageBack3;
+
+
 	sf::RectangleShape groundBound;
 	sf::RectangleShape stageBound1_1;
 	sf::RectangleShape stageBound1_2;

@@ -42,6 +42,8 @@ void Player::Reset()
 	animator.Play("Animations/Idle.csv");
 	SetOrigin(Origins::BC);
 
+	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+
 }
 
 void Player::Update(float dt)
@@ -50,25 +52,25 @@ void Player::Update(float dt)
 	animator.Update(dt);
 
 	float h = InputManager::GetAxis(Axis::Horizontal);
+	float v = InputManager::GetAxis(Axis::Vertical);
 
 	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
 	{
 		isGrounded = false;
 		animator.Play("Animations/Jump.csv");
-		velocity.y = -500.f;
 	}
 
 	velocity.x = h * speed;
-	velocity.y += gravity * dt;
+	velocity.y = v * speed;
 
 	position += velocity * dt;
 
-	if (position.y > 0.f)
+
+	if (sceneDev1 != nullptr)
 	{
-		isGrounded = true;
-		position.y = 0.f;
-		velocity.y = 0.f;
+		position = sceneDev1->ClampByTileMap(position);
 	}
+
 	SetPosition(position);
 
 	if (h != 0.f)
@@ -100,10 +102,7 @@ void Player::Update(float dt)
 
 
 
-	//if (sceneDev1 != nullptr)
-	//{
-	//	//position = sceneDev1->ClampByTileMap(position);
-	//}
+
 
 
 

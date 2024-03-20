@@ -10,10 +10,8 @@ class Player :
 protected:
 	Animator animator;
 
-	//float gravity = 500.f;
-
 	float speed = 300.f;
-	float gravity = 300.f;
+
 	sf::Vector2f velocity;
 
 	bool isGrounded = true;
