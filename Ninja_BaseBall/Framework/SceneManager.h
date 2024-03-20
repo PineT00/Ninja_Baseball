@@ -26,7 +26,7 @@ protected:
 
 	std::vector<Scene*> scenes; 
 	SceneIDs startScene = SceneIDs::SceneAnimationTool;
-
+	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 
 	std::vector<std::string> TextureResourceNames = { };
