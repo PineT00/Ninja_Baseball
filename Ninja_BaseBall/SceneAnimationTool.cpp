@@ -221,10 +221,14 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 
 	case sf::Event::MouseMoved:
 	{
+		if (isLeftDragging)
+		{
+			currentMousePos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+		}
 		if (isRightDragging)
 		{
 			// TODO : 마우스 위치를 sf::Vector2f로 유지하는 방법
-			sf::Vector2f currentMousePos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+			currentMousePos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
 			sf::Vector2f delta = lastMousePos - currentMousePos;
 			worldView.move(delta);
 			lastMousePos = currentMousePos;
@@ -284,6 +288,19 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 	window.setView(worldView);
 	window.draw(textureBorder);
 	window.setView(saveView);
+
+	if (isLeftDragging)
+	{
+		sf::RectangleShape dragRect;
+		dragRect.setPosition(leftDragStartPos);
+		sf::Vector2f size = currentMousePos - leftDragStartPos;
+		dragRect.setSize(size);
+		dragRect.setFillColor(sf::Color::Transparent);
+		dragRect.setOutlineColor(sf::Color::Green);
+		dragRect.setOutlineThickness(1.0f);
+		window.setView(worldView);
+		window.draw(dragRect);
+	}
 
 	for (const auto& area : selectedAreas)
 	{

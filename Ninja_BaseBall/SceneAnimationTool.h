@@ -44,6 +44,7 @@ protected:
 	sf::Vector2f rightDragStartPos;
 	sf::Vector2f preloadBoardPos = { windowSize.x * 0.05f, windowSize.y * 0.7f };
 	sf::Vector2f lastMousePos;
+	sf::Vector2f currentMousePos;
 
 	bool isAtlasPath = false;
 	bool firstTextureLoad = true;
