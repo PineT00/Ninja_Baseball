@@ -112,7 +112,7 @@ void SceneDev1::UpdateGame(float dt)
     float camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
     float camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);
     float camCenter3 = stage->stageBound1_3.getGlobalBounds().left + (stage->stageBound1_3.getGlobalBounds().width / 2);
-    float camCenter4 = stage->stageBound1_3.getGlobalBounds().left + (stage->stageBound1_3.getGlobalBounds().width / 2);
+    float camCenter4 = stage->stageBound1_4.getGlobalBounds().left + (stage->stageBound1_4.getGlobalBounds().width / 2);
 
     if (!(stage->clearStage1_1) && xMax >= camCenter1)
     {
@@ -138,6 +138,7 @@ void SceneDev1::UpdateGame(float dt)
     worldView.setCenter(worldViewCenter);
 
     stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
+    stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 500.f, 0.f });
 
 
     if (InputManager::GetKeyDown(sf::Keyboard::Num1))

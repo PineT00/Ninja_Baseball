@@ -10,13 +10,24 @@ class Player :
 protected:
 	Animator animator;
 
-	float speed = 100.f;
+	float speed = 50.f;
+	float dashSpeed = 300.f;
 
 	sf::Vector2f velocity;
 
 	bool isGrounded = true;
 
 	SceneDev1* sceneDev1 = nullptr;
+
+	float leftDashTime = 0.f;
+	float dashTimer = 1.5f;
+	bool dashReady = false;
+	bool isDashing = false;
+
+	float RightDashTime = 0.f;
+	bool dashReady = false;
+	bool isDashing = false;
+
 
 public:
 	Player(const std::string& name = "");

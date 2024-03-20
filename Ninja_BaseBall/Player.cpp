@@ -3,6 +3,7 @@
 #include "SceneDev1.h"
 
 Player::Player(const std::string& name)
+	:SpriteGo(name)
 {
 }
 
@@ -53,20 +54,72 @@ void Player::Update(float dt)
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 
-	float h = InputManager::GetAxis(Axis::Horizontal);
+	float h = 0;
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Right))
+	{
+		dashReady = true;
+	}
+	else if (InputManager::GetKeyDown(sf::Keyboard::Left))
+	{
+		dashReady = true;
+	}
+
+	if (InputManager::GetKey(sf::Keyboard::Left))
+	{
+		h = -1;
+	}
+	else if (InputManager::GetKey(sf::Keyboard::Right))
+	{
+		h = 1;
+	}
 	float v = InputManager::GetAxis(Axis::Vertical);
+
+
+
+	if (dashReady && dashTime > 0.f && dashTime < dashTimer)
+	{
+		if (InputManager::GetKeyDown(sf::Keyboard::Right))
+		{
+			isDashing = true; // 대쉬 상태 활성화
+		}
+	}
+	if (dashReady)
+	{
+		dashTime += dt;
+	}
+
+	if (dashTime > dashTimer)
+	{
+		dashTime = 0.f;
+		dashReady = false;
+	}
+
+	if (InputManager::GetKeyUp(sf::Keyboard::Right))
+	{
+		isDashing = false;
+	}
+
 
 	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
 	{
 		isGrounded = false;
 		animator.Play("Animations/Jump.csv");
+		//isDashing = true;
 	}
 
-	velocity.x = h * speed;
+	if (isDashing)
+	{
+		velocity.x = h * dashSpeed;
+	}
+	else
+	{
+		velocity.x = h * speed;
+	}
+
 	velocity.y = v * speed;
 
 	position += velocity * dt;
-
 
 	if (sceneDev1 != nullptr)
 	{
@@ -74,7 +127,6 @@ void Player::Update(float dt)
 	}
 
 	SetPosition(position);
-	std::cout << position.x << std::endl;
 
 	if (h != 0.f)
 	{

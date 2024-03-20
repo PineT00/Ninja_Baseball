@@ -77,7 +77,8 @@ void Stage1::Reset()
 		stageBound1_4.setFillColor(sf::Color::Transparent);
 	}
 
-	stageBack1.SetPosition({0.f, 0.f});
+	stageBack1.SetPosition({ 0.f, 0.f });
+	stageBack2.SetPosition({ 566.f, 0.f });
 
 
 
@@ -91,6 +92,7 @@ void Stage1::Update(float dt)
 void Stage1::Draw(sf::RenderWindow& window)
 {
 	stageBack1.Draw(window);
+	stageBack2.Draw(window);
 
 	SpriteGo::Draw(window);
 	stageNormal.Draw(window);
@@ -105,11 +107,11 @@ void Stage1::Draw(sf::RenderWindow& window)
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
 		window.draw(groundBound);
-
+		window.draw(stageBound1_1);
 		window.draw(stageBound1_2);
 		window.draw(stageBound1_3);
 		window.draw(stageBound1_4);
 	}
-	window.draw(stageBound1_1);
+
 
 }
