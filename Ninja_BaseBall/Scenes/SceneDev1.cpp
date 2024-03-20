@@ -112,10 +112,11 @@ void SceneDev1::UpdateGame(float dt)
         xMax = camCenter;
     }
 
-    //if (!(stage->clearStage1_2) && xMax >= stage->stageBound1_2.getGlobalBounds().width)
-    //{
-    //    xMax = stage->stageBound1_2.getGlobalBounds().width;
-    //}
+    if (!(stage->clearStage1_2) && xMax >= stage->stageBound1_2.getGlobalBounds().width)
+    {
+        xMax = stage->stageBound1_2.getGlobalBounds().width;
+    }
+
     //if (!(stage->clearStage1_3) && xMax >= stage->stageBound1_3.getGlobalBounds().width)
     //{
     //    xMax = stage->stageBound1_3.getGlobalBounds().width;
