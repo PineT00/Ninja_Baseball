@@ -36,8 +36,23 @@ void Stage1::Reset()
 	stageBoss.SetOrigin(Origins::TL);
 
 	groundBound.setFillColor(sf::Color::Green);
-	groundBound.setSize({ 1120.f,104.f });
+	groundBound.setSize({ 1440.f,104.f });
 	groundBound.setPosition({ 0.f, 136.f });
+
+	stageBound1_1.setSize({ 320.f,240.f });
+	stageBound1_1.setPosition({ 100.f, 0.f });
+	stageBound1_1.setOutlineColor(sf::Color::Red);
+	stageBound1_1.setOutlineThickness(1.f);
+	stageBound1_1.setFillColor(sf::Color::Transparent);
+
+	stageBound1_2.setFillColor(sf::Color::Red);
+	stageBound1_2.setSize({ 320.f,240.f });
+	stageBound1_2.setPosition({ 460.f, 0.f });
+	stageBound1_2.setOutlineColor(sf::Color::Red);
+	stageBound1_2.setOutlineThickness(1.f);
+	stageBound1_2.setFillColor(sf::Color::Transparent);
+
+
 
 }
 
@@ -56,6 +71,12 @@ void Stage1::Draw(sf::RenderWindow& window)
 	stagePlane.Draw(window);
 	stageBoss.Draw(window);
 
-	window.draw(groundBound);
+
+	if (SCENE_MANAGER.GetDeveloperMode())
+	{
+		window.draw(groundBound);
+		window.draw(stageBound1_1);
+		window.draw(stageBound1_2);
+	}
 
 }

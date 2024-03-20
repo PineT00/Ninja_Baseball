@@ -28,12 +28,11 @@ void SceneDev1::Init()
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
-
     stage = new Stage1();
     AddGameObject(stage);
 
     player = new Player();
-    player->SetPosition({ 0.f, 300.f });
+   // player->SetPosition({ 0.f, 300.f });
     AddGameObject(player);
 
     hud = new UiHUD();
@@ -98,7 +97,7 @@ void SceneDev1::UpdateGame(float dt)
     sf::Vector2f worldViewCenter = worldView.getCenter();
 
     worldViewCenter.x = player->GetPosition().x;
-    worldViewCenter.y = player->GetPosition().y;
+    //worldViewCenter.y = player->GetPosition().y;
 
 
     worldView.setCenter(worldViewCenter);

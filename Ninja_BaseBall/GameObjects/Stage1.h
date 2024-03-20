@@ -13,6 +13,10 @@ public:
 	SpriteGo stageBoss;
 
 	sf::RectangleShape groundBound;
+	sf::RectangleShape stageBound1_1;
+	sf::RectangleShape stageBound1_2;
+	sf::RectangleShape stageBound1_3;
+	sf::RectangleShape stageBound1_4;
 
 private:
 
