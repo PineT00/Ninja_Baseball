@@ -5,6 +5,8 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 #include "InputField.h"
+#include "Stage1.h"
+#include "Player.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
     : Scene(id)
@@ -12,13 +14,34 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
+{
+    sf::FloatRect rect = stage->groundBound.getGlobalBounds();
+
+    return Utils::MyMath::Clamp(point, rect);
+}
+
 void SceneDev1::Init()
 {
+    //cameraRect.setSize({ 320.f, 240 });
+    //cameraRect.setOutlineColor(sf::Color::Cyan);
+    //cameraRect.setOutlineThickness(2);
+    //cameraRect.setFillColor(sf::Color::Transparent);
 
     worldView.setSize(windowSize);
-    worldView.setCenter(0, 0);
+    worldView.setCenter(0, 120);
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
+
+    stage = new Stage1();
+    AddGameObject(stage);
+
+    player = new Player();
+    player->SetPosition({ 100.f, 250.f });
+    AddGameObject(player);
+
+    hud = new UiHUD();
+    AddGameObject(hud, Ui);
 
     Scene::Init();
 }
@@ -77,6 +100,58 @@ void SceneDev1::UpdateAwake(float dt)
 void SceneDev1::UpdateGame(float dt)
 {
 
+    if (player->GetPosition().x > xMax)
+    {
+        xMax = player->GetPosition().x;
+
+    }
+    float camCenter = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
+
+    if (!(stage->clearStage1_1) && xMax >= camCenter)
+    {
+        xMax = camCenter;
+    }
+
+    if (!(stage->clearStage1_2) && xMax >= stage->stageBound1_2.getGlobalBounds().width)
+    {
+        xMax = stage->stageBound1_2.getGlobalBounds().width;
+    }
+
+    //if (!(stage->clearStage1_3) && xMax >= stage->stageBound1_3.getGlobalBounds().width)
+    //{
+    //    xMax = stage->stageBound1_3.getGlobalBounds().width;
+    //}
+    //if (!(stage->clearStage1_4) && xMax >= stage->stageBound1_4.getGlobalBounds().width)
+    //{
+    //    xMax = stage->stageBound1_4.getGlobalBounds().width;
+    //}
+
+
+    sf::Vector2f worldViewCenter = worldView.getCenter();
+
+    worldViewCenter.x = xMax;
+
+    worldView.setCenter(worldViewCenter);
+
+    stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
+
+
+    if (InputManager::GetKeyDown(sf::Keyboard::Num1))
+    {
+        stage->clearStage1_1 = true;
+    }
+    else if (InputManager::GetKeyDown(sf::Keyboard::Num2))
+    {
+        stage->clearStage1_2 = true;
+    }
+    else if (InputManager::GetKeyDown(sf::Keyboard::Num3))
+    {
+        stage->clearStage1_3 = true;
+    }
+    else if (InputManager::GetKeyDown(sf::Keyboard::Num4))
+    {
+        stage->clearStage1_4 = true;
+    }
 }
 
 void SceneDev1::UpdateGameover(float dt)
@@ -92,6 +167,7 @@ void SceneDev1::UpdatePause(float dt)
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+    window.draw(cameraRect);
 }
 
 void SceneDev1::SetStatus(GameStatus newStatus)
