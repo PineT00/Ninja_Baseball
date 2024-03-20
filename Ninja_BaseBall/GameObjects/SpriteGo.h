@@ -13,6 +13,7 @@ protected:
 	SpriteGo& operator=(const SpriteGo&) = delete;
 	SpriteGo& operator=(SpriteGo&&) = delete;
 
+	bool hasHitBox = false;
 public:
 	sf::Shader* shader;
 
@@ -35,7 +36,7 @@ public:
 
 	void Init() override;
 	void Reset() override;
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window) override;
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

@@ -31,6 +31,8 @@ protected:
 	std::vector<std::string> FontResourceNames = {};
 	std::vector<std::string> SoundResourceNames = {};
 
+	bool isDeveloperMode = false; //개발자 모드용 변수
+
 public:
 
 	SceneManager() = default;
@@ -42,6 +44,8 @@ public:
 	Scene* GetCurrentScene() { return scenes[(int)currentScene]; }
 	Scene* GetScene(SceneIDs id) { return scenes[(int)id]; }
 	
+	bool GetDeveloperMode() { return isDeveloperMode; } //개발자 모드용 메소드
+
 	void LoadAllResources();
 	void ChangeScene(SceneIDs id);
 	bool Update(float dt);

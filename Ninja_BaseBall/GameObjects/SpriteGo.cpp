@@ -106,6 +106,20 @@ void SpriteGo::Reset()
 void SpriteGo::Draw(sf::RenderWindow& window)
 {
 	window.draw(sprite, shader);
+
+	if (hasHitBox && SCENE_MANAGER.GetDeveloperMode())
+	{
+		sf::RectangleShape globalHitBox;
+		sf::FloatRect globalBound = sprite.getGlobalBounds();
+
+		globalHitBox.setPosition(globalBound.left, globalBound.top);
+		globalHitBox.setSize({ globalBound.width, globalBound.height });
+		globalHitBox.setOutlineColor(sf::Color::Red);
+		globalHitBox.setOutlineThickness(1.f);
+		globalHitBox.setFillColor(sf::Color::Transparent);
+
+		window.draw(globalHitBox);
+	}
 }
 
 
