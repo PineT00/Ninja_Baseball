@@ -19,11 +19,16 @@ protected:
 	sf::Vector2f resolution = referenceResolution;
 	sf::Vector2i windowSize;
 
+	std::string formatFps = "FPS: ";
+	TextGo textFps;
+
 	SceneGame* sceneGame = nullptr;
 
 public:
 	UiHUD(const std::string& name = "hud");
 	~UiHUD() override = default;
+
+	void SetFps(int fps);
 
 	void Init() override;
 	void Reset() override;
