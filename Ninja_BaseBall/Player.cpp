@@ -87,9 +87,10 @@ void Player::Update(float dt)
 	//왼쪽 대시 모음
 	if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
 	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Right))
+		if (InputManager::GetKeyDown(sf::Keyboard::Left))
 		{
 			isLeftDashing = true; // 대쉬 상태 활성화
+			animator.Play("Animations/player_Dash.csv");
 		}
 	}
 	if (leftDashTime > dashTimer)
@@ -130,11 +131,7 @@ void Player::Update(float dt)
 		isRightDashing = false;
 	}
 
-	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
-	{
-		isGrounded = false;
-		animator.Play("Animations/Jump.csv");
-	}
+
 
 	if (isRightDashing || isLeftDashing)
 	{
@@ -145,11 +142,37 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
-	velocity.y = v * speed;
+
+
+	if (isGrounded == false)
+	{
+		velocity.y += gravity * dt;
+	}
+	else
+	{
+		velocity.y = v * speed;
+	}
+
+	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
+	{
+		isGrounded = false;
+		jumpY = GetPosition().y;
+		animator.Play("Animations/player_Jump.csv");
+		velocity.y = -300.f;
+	}
 
 	position += velocity * dt;
 
-	if (sceneDev1 != nullptr)
+	if (!isGrounded)
+	{
+		if (position.y >= jumpY)
+		{
+			isGrounded = true;
+			SetPosition({ position.x, jumpY });
+		}
+	}
+
+	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
 	}
@@ -163,19 +186,20 @@ void Player::Update(float dt)
 
 	if (animator.GetCurrentClipId() == "Animations/player_Idle.csv")
 	{
-		if (h != 0.f)
+		if (h != 0.f || v != 0.f)
 		{
-			animator.Play("Animations/player_Run.csv");
+			animator.Play("Animations/player_Walk.csv");
 		}
+		
 	}
-	else if (animator.GetCurrentClipId() == "Animations/player_Run.csv")
+	else if (animator.GetCurrentClipId() == "Animations/player_Walk.csv")
 	{
-		if (h == 0.f)
+		if (h == 0.f && v == 0.f)
 		{
 			animator.Play("Animations/player_Idle.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "Animations/Jump.csv" && isGrounded)
+	else if (animator.GetCurrentClipId() == "Animations/player_Jump.csv" && isGrounded)
 	{
 		animator.Play("Animations/player_Idle.csv");
 	}

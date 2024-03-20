@@ -13,6 +13,9 @@ protected:
 	float speed = 100.f;
 	float dashSpeed = 200.f;
 
+	float gravity = 600.f;
+	float jumpY = 0.f;
+
 	sf::Vector2f velocity;
 
 	bool isGrounded = true;
@@ -28,6 +31,7 @@ protected:
 	float rightDashTime = 0.f;
 	bool rightDashReady = false;
 	bool isRightDashing = false;
+
 
 
 public:
