@@ -1,82 +1,16 @@
 ﻿#include "pch.h"
 #include "Enemy.h"
+#include "TestScene.h"
+#include "TestPlayer.h"
 
-Enemy* Enemy::Create(EnemyType enemyType)
-{
-    Enemy* enemy = new Enemy("Enemy");
-    enemy->type = enemyType;
-    switch (enemyType)
-    {
-    case EnemyType::BASEBALL_YELLOW:
-        enemy->monsterMaxHp = 100;
-        enemy->monsterHp = enemy->monsterMaxHp;
-        enemy->monsterSpeed = 100;
-        enemy->monsterDamage = 10;
-        enemy->monsterAttackRange = 50;
-        enemy->monsterAttackSpeed = 1.f;
-        enemy->animator.Play("animations/BaseballYellow_Idle.csv");
-        enemy->attackType = EnemyAttackType::SINGLE;
-        break;
-    case EnemyType::BASEBALL_GREEN:
-        // enemy->monsterMaxHp = 150;
-        // enemy->monsterHp = enemy->monsterMaxHp;
-        // enemy->monsterSpeed = 150;
-        // enemy->monsterDamage = 20;
-        // enemy->monsterAttackRange = 50;
-        // enemy->monsterAttackSpeed = 1.f;
-        // enemy->animator.Play("BaseballGreen_Idle");
-        // enemy->attackType = EnemyAttackType::SINGLE;
-        break;
-    case EnemyType::BASEBALL_BLUE:
-        // enemy->monsterMaxHp = 100;
-        // enemy->monsterHp = enemy->monsterMaxHp;
-        // enemy->monsterSpeed = 100;
-        // enemy->monsterDamage = 10;
-        // enemy->monsterAttackRange = 50;
-        // enemy->monsterAttackSpeed = 1.f;
-        // enemy->animator.Play("BaseballBlue_Idle");
-        // enemy->attackType = EnemyAttackType::COMBO;
-        break;
-    case EnemyType::BASEBALL_WHITE:
-        // enemy->monsterMaxHp = 100;
-        // enemy->monsterHp = enemy->monsterMaxHp;
-        // enemy->monsterSpeed = 100;
-        // enemy->monsterDamage = 10;
-        // enemy->monsterAttackRange = 50;
-        // enemy->monsterAttackSpeed = 1.f;
-        // enemy->animator.Play("BaseballWhite_Idle");
-        // enemy->attackType = EnemyAttackType::BACKJUMP;
-        break;
-    case EnemyType::ELITE:
-        
-        break;
-    case EnemyType::BOSS:
-        
-        break;
-    default:
-        break;
-    }
-    return enemy;
-}
-
-Enemy::Enemy(const std::string& name): SpriteGo(name), state(EnemyState::IDLE), attackCoolTime(0), monsterHp(0), monsterMaxHp(0),
-                monsterSpeed(0),
-                monsterDamage(0),
-                monsterAttackRange(0),
-                monsterAttackSpeed(0)
+Enemy::Enemy(const std::string& name):SpriteGo(name)
 {
 }
-
-Enemy::~Enemy()
-= default;
 
 void Enemy::Init()
 {
     SpriteGo::Init();
-    animator.SetTarget(&sprite);
-    SetOrigin(Origins::MC);
-    //SetPosition(sf::Vector2f(100, 100));
-    //SetScale(sf::Vector2f(1, 1));
+    enemyAnimator.SetTarget(&sprite);
     
 }
 
@@ -87,17 +21,21 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
-    SpriteGo::Reset();
-    monsterHp = monsterMaxHp;
-    
+    //SpriteGo::Reset();
+    testScene = dynamic_cast<TestScene*>(SCENE_MANAGER.GetCurrentScene());
+    testPlayer = dynamic_cast<TestPlayer*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("TestPlayer"));
+    health = maxHealth;
+    isDead = false;
+    isAttacking = false;
+    textureId = "Monster";
+    enemyAnimator.ClearEvent();
 }
 
 void Enemy::Update(float dt)
 {
     SpriteGo::Update(dt);
-    EnemyMovement(dt);
-    EnemyPattern(dt);
-    
+    enemyAnimator.Update(dt);
+   
 }
 
 void Enemy::LateUpdate(float dt)
@@ -113,39 +51,14 @@ void Enemy::FixedUpdate(float dt)
 void Enemy::Draw(sf::RenderWindow& window)
 {
     SpriteGo::Draw(window);
+    window.draw(sprite);
 }
 
-void Enemy::EnemyMovement(float dt)
+void Enemy::OnDamage(int damage)
 {
-    switch (state)
+    health -= damage;
+    if(health <= 0)
     {
-        case EnemyState::IDLE:
-            
-            break;
-        case EnemyState::MOVE:
-            
-            break;
-        case EnemyState::ATTACK:
-            
-            break;
-        case EnemyState::DEAD:
-            
-            break;
-    }
-}
-
-void Enemy::EnemyPattern(float dt)
-{
-    switch (attackType)
-    {
-        case EnemyAttackType::SINGLE:
-            
-            break;
-        case EnemyAttackType::COMBO:
-            
-            break;
-        case EnemyAttackType::BACKJUMP:
-            
-            break;
+        isDead = true;
     }
 }

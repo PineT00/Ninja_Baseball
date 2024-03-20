@@ -103,7 +103,7 @@ void Animator::Stop()
 
 void Animator::SetFrame(const AnimationFrame& frame)
 {
-	Utils::Origin::SetOrigin(*target, frame.pivot);
+	//Utils::Origin::SetOrigin(*target, frame.pivot);
 	target->setTexture(frame.GetTexture());
 	target->setTextureRect(frame.textureCoord);
 }

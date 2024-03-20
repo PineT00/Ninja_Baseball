@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "Scene.h"
 
-class EnemySpawner;
+
 class UiHUD;
 class SpriteGo;
 class TextGo;
 class InputField;
-class Enemy;
+class TestPlayer;
+class YellowBaseBall;
+
 
 class TestScene:public Scene
 {
@@ -17,13 +19,15 @@ protected:
     TestScene& operator=(TestScene&&) = delete;
 
     sf::Vector2f windowSize;
-    EnemySpawner* enemySpawner;
-    Enemy* enemy;
+    
+    YellowBaseBall* yellowEnemy;
 public:
+    TestPlayer* testPlayer;
     TestScene(SceneIDs id);
-    ~TestScene() override = default;
+    ~TestScene() override;
 
     void Init() override;
+    
     void Release() override;
     virtual void Reset();
     void Enter() override;

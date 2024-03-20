@@ -1,12 +1,17 @@
 ﻿#include "pch.h"
 #include "TestScene.h"
+#include "TestPlayer.h"
+#include "YellowBaseBall.h"
 
-#include "EnemySpawner.h"
+
 
 TestScene::TestScene(SceneIDs id):Scene(id)
 {
-    windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
+    windowSize = static_cast<sf::Vector2f>(FRAMEWORK.GetWindowSize());
 }
+
+TestScene::~TestScene()
+= default;
 
 void TestScene::Init()
 {
@@ -15,8 +20,14 @@ void TestScene::Init()
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
-    EnemySpawner* enemySpawner = new EnemySpawner();
-    enemySpawner->SpawnEnemy(Enemy::EnemyType::BASEBALL_YELLOW,sf::Vector2f(0,0));
+    testPlayer=new TestPlayer("TestPlayer");
+    testPlayer->SetPosition({0.f,0.f});
+    AddGameObject(testPlayer,World);
+
+    yellowEnemy=new YellowBaseBall("YellowEnemy");
+    yellowEnemy->SetPosition({100.f,100.f});
+    AddGameObject(yellowEnemy, World);
+
     Scene::Init();
 }
 
@@ -27,6 +38,7 @@ void TestScene::Release()
 
 void TestScene::Reset()
 {
+    
 }
 
 void TestScene::Enter()
@@ -73,7 +85,7 @@ void TestScene::UpdateAwake(float dt)
 
 void TestScene::UpdateGame(float dt)
 {
-    enemySpawner->Update(dt);
+    
     
 }
 
@@ -88,7 +100,7 @@ void TestScene::UpdatePause(float dt)
 void TestScene::Draw(sf::RenderWindow& window)
 {
     Scene::Draw(window);
-    enemySpawner->Draw(window);
+    
 }
 
 void TestScene::SetStatus(GameStatus newStatus)
