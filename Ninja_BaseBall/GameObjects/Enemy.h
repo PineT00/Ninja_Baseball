@@ -2,14 +2,14 @@
 #include "Animator.h"
 #include "SpriteGo.h"
 
-class TestScene;
-class TestPlayer;
+class SceneDev1;
+class Player;
 
 class Enemy:public SpriteGo
 {
 protected:
-    TestScene* testScene = nullptr;
-    TestPlayer* testPlayer = nullptr;
+    SceneDev1* Scene = nullptr;
+    Player* player = nullptr;
     Animator enemyAnimator;
 
     float speed = 100.f;

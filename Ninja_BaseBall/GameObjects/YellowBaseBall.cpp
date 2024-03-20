@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "YellowBaseBall.h"
+#include "SceneDev1.h"
+#include "Player.h"
 
 YellowBaseBall::YellowBaseBall(const std::string& name):Enemy(name)
 {
@@ -18,11 +20,8 @@ void YellowBaseBall::Init()
         break;
     case YellowBaseBallState::MOVE:
         enemyAnimator.Play("animations/BaseballYellow_Idle.csv");
-        // if(enemyAnimator.GetCurrentClipId() != "animations/BaseballYellow_Move.csv")
-            // {
-                //     enemyAnimator.Play("animations/BaseballYellow_Move.csv");
-                    // }
-                        break;
+       
+        break;
     case YellowBaseBallState::ATTACK:
             
         break;
@@ -43,7 +42,8 @@ void YellowBaseBall::Release()
 void YellowBaseBall::Reset()
 {
     Enemy::Reset();
-    testPlayer = dynamic_cast<TestPlayer*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("TestPlayer"));
+    sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+    player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     health = maxHealth;
     isDead = false;
     isAttacking = false;
@@ -72,35 +72,52 @@ void YellowBaseBall::Update(float dt)
 {
     //처음에 Idle 상태로 좌측으로 10정도 이동
     //이후에 Move 상태로 돌입하고 플레이어를 찾음
-    if(testPlayer!=nullptr)
-    {
-        sf::Vector2f playerPos = testPlayer->GetPosition();
-        sf::Vector2f direction=position - playerPos;
-        float distance=std::hypot(direction.x,direction.y);
-        float desiredDistance=30.f;
+    //플레이어를 찾으면 플레이어를 향해 이동
+    sf::Vector2f playerPosition = player->GetPosition();
+    sf::Vector2f playerDirection=player->GetBackPosition();
+    sf::Vector2f toPlayer=playerPosition-position;
+    float distanceToPlayer = std::hypot(toPlayer.x, toPlayer.y);
 
-        if(distance > desiredDistance)
+    if(player)
+    {
+
+        bool isWatchPlayer = (playerDirection.x * toPlayer.x + playerDirection.y * toPlayer.y) < 0;
+       
+        if(currentState ==YellowBaseBallState::MOVE)
         {
-            direction = direction / distance;
-            position.x -= direction.x * speed * dt;
-            position.y -= direction.y * speed * dt;
-        }else if(distance < desiredDistance)
-        {
-            float angle =std::atan2(direction.y,direction.x)+(speed*dt /desiredDistance);
-            position.x=playerPos.x+std::cos(angle)*desiredDistance;
-            position.y=playerPos.y+std::sin(angle)*desiredDistance;
-            
+            if(distanceToPlayer > followDistance)
+            {
+                sf::Vector2f direction=toPlayer / distanceToPlayer;
+                position += direction * speed * dt;
+            }
+            else if(isWatchPlayer)
+            {
+                if(distanceToPlayer <= attackDistance)
+                {
+                    currentState = YellowBaseBallState::ATTACK;
+                }
+                else
+                {
+                    currentState = YellowBaseBallState::DASH;
+                }
+            }
         }
     }
+
     
+    if(sceneDev1 !=nullptr)
+    {
+        position=sceneDev1->ClampByTileMap(position);
+    }
     if(currentState == YellowBaseBallState::IDLE)
     {
        enemyAnimator.Play("animations/BaseballYellow_Idle.csv");
        if(!hasMovedInitial)
        {
            position.x -= initialMoveDistance*dt;
+           
        }
-        if(position.x <= -10.f)
+        if(position.x <= -100.f)
         {
             hasMovedInitial = true;
             currentState = YellowBaseBallState::MOVE;
@@ -109,6 +126,11 @@ void YellowBaseBall::Update(float dt)
     else if(currentState == YellowBaseBallState::MOVE)
     {
         //enemyAnimator.Play("animations/BaseballYellow_Move.csv");
+       
+       
+    }
+    else if(currentState == YellowBaseBallState::DASH)
+    {
         
     }
     else if(currentState == YellowBaseBallState::ATTACK)
@@ -123,7 +145,6 @@ void YellowBaseBall::Update(float dt)
     {
         
     }
-    
     Enemy::Update(dt);
     sprite.setPosition(position);
 }

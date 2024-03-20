@@ -1,14 +1,23 @@
 ﻿#pragma once
 #include "Enemy.h"
-#include "TestPlayer.h"
+
+class SceneDev1;
+class Player;
 
 class YellowBaseBall:public Enemy
 {
+public :
+    bool isCatch = false;
+    bool hasMovedInitial = false;
+    float initialMoveDistance = 10.f;
+    float followDistance = 30.f;
+    float attackDistance = 10.f;
 protected:
     enum class YellowBaseBallState
     {
         IDLE,
         MOVE,
+        DASH,
         ATTACK,
         HURT,
         DEAD
@@ -16,11 +25,10 @@ protected:
     YellowBaseBallState currentState = YellowBaseBallState::IDLE;
     
     Animator yellowBaseBallAnimator;
+    SceneDev1* sceneDev1 = nullptr;
     
-    bool hasMovedInitial = false;
-    float initialMoveDistance = 100.f;
 public:
-    TestPlayer* testPlayer;
+    Player* player;
     YellowBaseBall(const std::string& name);
     void Init() override;
     void Release() override;

@@ -5,6 +5,7 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 #include "InputField.h"
+#include "YellowBaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
 
@@ -36,9 +37,13 @@ void SceneDev1::Init()
     stage = new Stage1();
     AddGameObject(stage);
 
-    player = new Player();
+    player = new Player("Player");
     player->SetPosition({ 100.f, 250.f });
-    AddGameObject(player);
+    AddGameObject(player,World);
+
+    yellowEnemy = new YellowBaseBall("YellowEnemy");
+    yellowEnemy->SetPosition({ 370.f, 25.f });
+    AddGameObject(yellowEnemy, World);
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
