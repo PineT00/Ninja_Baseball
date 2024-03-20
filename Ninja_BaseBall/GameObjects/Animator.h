@@ -1,4 +1,5 @@
 #pragma once
+#include "InputField.h"
 
 enum class AnimationLoopType
 {
@@ -13,11 +14,11 @@ struct AnimationFrame
 	sf::IntRect textureCoord;
 	Origins pivot = Origins::CUSTOM;
 
-
-	AnimationFrame(const std::string& id, const sf::IntRect& coord)//, Origins origin)
-		: textureId(id), textureCoord(coord) //pivot(origin)
+	AnimationFrame(const std::string& id, const sf::IntRect& coord, Origins origin)
+		: textureId(id), textureCoord(coord), pivot(origin)
 	{
 	}
+
 
 	const sf::Texture& GetTexture() const
 	{
@@ -57,7 +58,7 @@ private:
 	Animator& operator=(Animator&&) = delete;
 
 protected:
-	AnimationClip* currentClip = nullptr;
+	AnimationClip* currentClip = new AnimationClip();
 
 	std::queue<std::string> queue;
 	std::list<AnimationEvent> eventList;
@@ -80,6 +81,8 @@ public:
 
 	void Update(float dt);
 	void Play(const std::string& clipId, bool clearQueue = true);
+	void Play(std::vector<sf::FloatRect>& selectedAreas, std::vector<Origins>& selectedAreasPivot, 
+		InputField* inputfieldFPS, AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue = true);
 	void PlayQueue(const std::string& clipId);
 	void Stop();
 

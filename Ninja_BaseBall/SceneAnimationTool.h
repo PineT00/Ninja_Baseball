@@ -6,6 +6,7 @@ class Button;
 class SpriteGo;
 class TextGo;
 class InputField;
+class PreviewCharacter;
 
 class SceneAnimationTool : public Scene
 {
@@ -26,20 +27,22 @@ protected:
 	std::vector<Button*> loopButtons;
 	std::vector<std::string> originButtonsText = {"TL", "TC", "TR", "ML", "MC", "MR","BL", "BC", "BR"};
 	std::vector<std::string> loopButtonsText = {"Single", "Loop", "Ping Pong"};
+	std::wstring atlasPath;
 
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
-	AnimationLoopType selectedAreaLoopType;
+	PreviewCharacter* previewCharacter = nullptr;
+	AnimationLoopType selectedLoopType;
 
-	std::wstring atlasPath;
-	
 	sf::Font font;
 	sf::RectangleShape editorBorder;
+	sf::RectangleShape preloadBorder;
 	sf::RectangleShape textureBorder;
 	sf::Vector2f windowSize;
 	sf::Vector2f leftDragStartPos;
 	sf::Vector2f rightDragStartPos;
+	sf::Vector2f preloadBoardPos = { windowSize.x * 0.05f, windowSize.y * 0.7f };
 	sf::Vector2f lastMousePos;
 
 	bool isAtlasPath = false;
@@ -69,13 +72,15 @@ public:
 	std::wstring GetAtlasPath() const { return atlasPath; }
 	void SetAtlasPath(const std::wstring& str);
 
+	sf::Vector2f GetPreloadBoardPos() const { return preloadBoardPos; }
+
 	std::vector<sf::FloatRect>& GetSelectedAreas() { return selectedAreas; }
 	std::vector<Origins>& GetSelectedAreasPivot() { return selectedAreasPivot; }
-	AnimationLoopType& GetSelectedAreaLoopType() { return selectedAreaLoopType; }
+	AnimationLoopType& GetSelectedLoopType() { return selectedLoopType; }
 
 	InputField* GetFPS() const { return inputfieldFPS; }
-	
 	GameStatus GetStatus() const { return this->status; }
+
 	void SetStatus(GameStatus newStatus);
 	bool IsWithinWorldView(const sf::Vector2f& point);
 };

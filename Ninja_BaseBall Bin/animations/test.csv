@@ -1,5 +1,10 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
-,30,0
-
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),
+,5,1,,,
+,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN
-graphics/hud.png,81.6667,131.667,99.9999,101.667,0
+graphics/monster-Ball.png,0,0,99.8943,64.285,7
+graphics/monster-Ball.png,100.184,0,101.054,65.0089,7
+graphics/monster-Ball.png,201.382,0,53.5671,64.5746,7
+graphics/monster-Ball.png,255.094,0,49.5134,65.5881,7
+graphics/monster-Ball.png,304.607,0,94.394,64.8642,7
+graphics/monster-Ball.png,399.361,0,92.4963,63.7122,7

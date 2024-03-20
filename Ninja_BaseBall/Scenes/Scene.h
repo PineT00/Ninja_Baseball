@@ -50,6 +50,8 @@ public:
 	virtual void RemoveGameObject(std::string name);
 	virtual void ResortGameObject(GameObject* obj);
 
+	sf::View& GetUiView() { return uiView; }
+	sf::View& GetWorldView() { return worldView; }
 
 	sf::Vector2f ScreenToWorld(sf::Vector2i screenPosition);
 	sf::Vector2i WorldToScreen(sf::Vector2f worldPosition);

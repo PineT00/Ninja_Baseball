@@ -1,8 +1,10 @@
 #pragma once
 #include "SpriteGo.h"
+#include "Animator.h"
 
 class TextGo;
 class SceneAnimationTool;
+class PreviewCharacter;
 
 class Button : public SpriteGo
 {
@@ -14,7 +16,8 @@ public :
 		stop,
 		save,
 		loop,
-		pivot
+		pivot,
+		preload,
 	};
 
 protected:
@@ -25,6 +28,7 @@ protected:
 
 	SceneAnimationTool* sceneAnimationTool = nullptr;
 	ButtonIdentifier buttonIdentifier;
+	PreviewCharacter* obj = nullptr;
 
 	std::wstring stringValue;
 
@@ -68,6 +72,7 @@ public:
 	void SaveSelectedAreasWithDialog();
 	void SetFramePivot();
 	void SetLoopType();
+	void PlayPreView(PreviewCharacter* obj);
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

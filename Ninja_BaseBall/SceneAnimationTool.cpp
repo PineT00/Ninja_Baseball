@@ -4,6 +4,7 @@
 #include "SpriteGo.h"
 #include "InputField.h"
 #include "TextGo.h"
+#include "PreviewCharacter.h"
 
 SceneAnimationTool::SceneAnimationTool(SceneIDs id)
 	: Scene(id)
@@ -21,6 +22,16 @@ void SceneAnimationTool::Init()
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
+	// Test PreloadView
+	// preloadView.setSize(windowSize * 0.12f);
+	// preloadView.setCenter({ windowSize.x * 0.05f + windowSize.x * 0.06f, windowSize.y * 0.7f + windowSize.y * 0.06f });
+
+	// UI View 그리듯 변경 
+	//preloadView.setSize(windowSize);
+	//preloadView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
+	AddGameObject(new PreviewCharacter(), Layers::Ui);
+
+	//
 	buttonLoadAtlas = new Button(Button::ButtonIdentifier::loadAtlas);
 	buttonLoadAtlas->SetStringValue(atlasPath);
 	buttonLoadAtlas->SetButton({ 60.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.2f }, sf::Color::White, Origins::MC);
@@ -61,6 +72,12 @@ void SceneAnimationTool::Init()
 	editorBorder.setOutlineThickness(2.f);
 	editorBorder.setPosition(windowSize.x * 0.2f, windowSize.y * 0.2f);
 	editorBorder.setSize({ windowSize.x * 0.6f, windowSize.y * 0.6f });
+
+	preloadBorder.setOutlineColor(sf::Color::White);
+	preloadBorder.setFillColor(sf::Color::Transparent);
+	preloadBorder.setOutlineThickness(1.f);
+	preloadBorder.setPosition(windowSize.x * 0.05f, windowSize.y * 0.7f);
+	preloadBorder.setSize({ windowSize * 0.12f});
 
 	textureBorder.setOutlineColor(sf::Color::Cyan);
 	textureBorder.setFillColor(sf::Color::Transparent);
@@ -229,7 +246,11 @@ void SceneAnimationTool::UpdateGame(float dt)
 		spriteSheet->SetTexture(Utils::MyString::WideStringToString(atlasPath));
 		spriteSheet->SetPosition({ 0,0 });
 		spriteSheet->SetOrigin(Origins::TL);
+
+		// 텍스쳐가 바뀌었을 떄 초기화 적용
 		selectedAreas.clear();
+		selectedAreasPivot.clear();
+		selectedLoopType = AnimationLoopType::Single; // 기본 값
 
 		textureBorder.setPosition(0, 0);
 		textureBorder.setSize((sf::Vector2f)spriteSheet->GetTexture()->getSize());
@@ -255,10 +276,11 @@ void SceneAnimationTool::UpdatePause(float dt)
 void SceneAnimationTool::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
-
+	//TEST
 	const sf::View& saveView = window.getView();
 	window.setView(uiView);
 	window.draw(editorBorder);
+	window.draw(preloadBorder);
 	window.setView(worldView);
 	window.draw(textureBorder);
 	window.setView(saveView);
@@ -270,7 +292,7 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 		rectangle.setSize(sf::Vector2f(area.width, area.height));
 		rectangle.setFillColor(sf::Color::Transparent);
 		rectangle.setOutlineColor(sf::Color::Green);
-		rectangle.setOutlineThickness(2.0f);
+		rectangle.setOutlineThickness(1.0f);
 
 		window.setView(worldView);
 		window.draw(rectangle);

@@ -3,6 +3,7 @@
 #include "TextGo.h"
 #include "SceneAnimationTool.h"
 #include "InputField.h"
+#include "PreviewCharacter.h"
 
 Button::Button(ButtonIdentifier identifier, const std::string& name)
 	: SpriteGo(name), buttonIdentifier(identifier)
@@ -17,6 +18,7 @@ void Button::Init()
 void Button::Reset()
 {
 	sceneAnimationTool = dynamic_cast<SceneAnimationTool*>(SCENE_MANAGER.GetScene(SceneIDs::SceneAnimationTool));
+	obj = dynamic_cast<PreviewCharacter*>(sceneAnimationTool->FindGameObject("previewcharacter"));
 }
 
 void Button::Update(float dt)
@@ -73,6 +75,8 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::loop :
 		SetLoopType();
 		break;
+	case ButtonIdentifier::play :
+		PlayPreView(obj);
 	}
 }
 
@@ -212,7 +216,7 @@ void Button::SaveSelectedAreasWithDialog()
 		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
 		std::vector<Origins> pivotList = sceneAnimationTool->GetSelectedAreasPivot();
 		std::vector<sf::FloatRect> area = sceneAnimationTool->GetSelectedAreas();
-		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedAreaLoopType();
+		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
 
 		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
 		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "," << (int)loopType <<"\n\n";
@@ -242,8 +246,20 @@ void Button::SetFramePivot()
 
 void Button::SetLoopType()
 {
-	AnimationLoopType& loopType = sceneAnimationTool->GetSelectedAreaLoopType();
+	AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
 	loopType = (AnimationLoopType)(std::stoi(name.substr(name.size() - 1)));
+}
+
+void Button::PlayPreView(PreviewCharacter* obj)
+{
+	this->obj = obj;
+
+	obj->GetAnimator().Play(
+		sceneAnimationTool->GetSelectedAreas(), 
+		sceneAnimationTool->GetSelectedAreasPivot(), 
+		sceneAnimationTool->GetFPS(), 
+		sceneAnimationTool->GetSelectedLoopType(), 
+		sceneAnimationTool->GetAtlasPath(), false);
 }
 
 sf::FloatRect Button::GetLocalBounds()
