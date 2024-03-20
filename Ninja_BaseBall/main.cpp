@@ -2,7 +2,7 @@
 
 int main()
 {
-    FRAMEWORK.Init(320, 240, "Ninja Baseball");
+    FRAMEWORK.Init(640 * 2, 480 * 2, "Ninja Baseball");
     FRAMEWORK.Do();
     FRAMEWORK.Release();
 

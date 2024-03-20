@@ -93,6 +93,10 @@
     <ClCompile Include="Scenes\SceneDev1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="SceneAnimationTool.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\MyString.cpp">
     <ClCompile Include="GameObjects\Stage1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -200,6 +204,10 @@
     <ClInclude Include="Scenes\SceneDev1.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SceneAnimationTool.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\MyString.h">
     <ClInclude Include="Player.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
