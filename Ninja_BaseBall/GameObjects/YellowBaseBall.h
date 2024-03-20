@@ -7,22 +7,30 @@ class Player;
 class YellowBaseBall:public Enemy
 {
 public :
+    //잡힘 여부 판단 
     bool isCatch = false;
+    //이동 여부 판단
     bool hasMovedInitial = false;
-    float initialMoveDistance = 10.f;
-    float followDistance = 30.f;
+    //공격 관련
     float attackDistance = 10.f;
     float attackDelay = 1.f;
     float attackTimer = 0.f;
-    float attackCooldown = 1.f;
+    float attackCooldown = 2.f;
+    float prepareAttackDistance = 30.f;
+    float minDistance = 10.f;
     float retreatDistance = 10.f;
+    float dashSpeed = 10.f;
+    
+    float acceptableYDistance = 15.f;
 protected:
     enum class YellowBaseBallState
     {
         IDLE,
         MOVE,
         DASH,
+        PREPARE_ATTACK,
         ATTACK,
+        RETREAT,
         HURT,
         DEAD
     };
@@ -44,7 +52,7 @@ public:
     void OnDamage(int damage) override;
     void DashTowards(const sf::Vector2f& target,float dt);
     void Attack();
-    void RetreatAfterAction(float dt);
+    void RetreatAfterAction();
     void MoveTowards(const sf::Vector2f& target, float speed, float dt);
     sf::Vector2f Normalize(const sf::Vector2f& source);
 };

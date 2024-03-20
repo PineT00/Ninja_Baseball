@@ -20,7 +20,6 @@ void YellowBaseBall::Init()
         break;
     case YellowBaseBallState::MOVE:
         enemyAnimator.Play("animations/BaseballYellow_Move.csv");
-       
         break;
     case YellowBaseBallState::ATTACK:
             
@@ -49,6 +48,9 @@ void YellowBaseBall::Reset()
     isAttacking = false;
     currentState = YellowBaseBallState::IDLE;
 
+    std::function<void()> backPosition= [this] { RetreatAfterAction(); };
+    yellowBaseBallAnimator.AddEvent("animations/BaseballYellow_Attack.csv", 3, backPosition);
+
     yellowBaseBallAnimator.ClearEvent();
 }
 
@@ -73,43 +75,51 @@ void YellowBaseBall::Update(float dt)
     //처음에 Idle 상태로 좌측으로 10정도 이동
     //이후에 Move 상태로 돌입하고 플레이어를 찾음
     //플레이어를 찾으면 플레이어를 향해 이동
-    if (sceneDev1 != nullptr)
-    {
+    // 공격 쿨다운 감소
+    if (attackTimer > 0) {
+        attackTimer -= dt;
+    }
+
+    if (sceneDev1 != nullptr) {
         position = sceneDev1->ClampByTileMap(position);
     }
 
     sf::Vector2f playerPosition = player->GetPosition();
-    float xDistance = std::abs(playerPosition.x - position.x); // X축 거리
-    float yDistance = std::abs(playerPosition.y - position.y); // Y축 거리
+    float xDistance = std::abs(playerPosition.x - position.x);
+    float yDistance = std::abs(playerPosition.y - position.y);
 
-    // 플레이어와 Y축 위치가 충분히 가까운 경우에만 행동 결정
-    if (yDistance <= 2.0f) // 예를 들어, Y축 위치 차이가 10 이내일 때
-    {
-        if (xDistance <= attackDistance)
-        {
-            // 공격 거리 안에 있으면 공격
+    if (currentState != YellowBaseBallState::ATTACK && currentState != YellowBaseBallState::RETREAT) {
+        // 목표 위치 결정 로직 개선
+        sf::Vector2f targetPosition;
+        // 플레이어가 몬스터보다 앞에 있는 경우
+        if (playerPosition.x > position.x) {
+            targetPosition = playerPosition - sf::Vector2f(prepareAttackDistance, 0);
+            if (xDistance > prepareAttackDistance + minDistance || (attackTimer <= 0 && xDistance > attackDistance)) {
+                MoveTowards(targetPosition, speed, dt);
+            }
+        }
+        // 플레이어가 몬스터보다 뒤에 있는 경우
+        else {
+            targetPosition = playerPosition + sf::Vector2f(prepareAttackDistance, 0);
+            if (xDistance > prepareAttackDistance + minDistance || (attackTimer <= 0 && xDistance > attackDistance)) {
+                MoveTowards(targetPosition, speed, dt);
+            }
+        }
+
+        if (attackTimer <= 0 && xDistance <= attackDistance && yDistance <= acceptableYDistance) {
             Attack();
         }
-        else if (xDistance > attackDistance && xDistance <= followDistance)
-        {
-            // 대쉬 거리 안에 있으면 X축 방향으로 대쉬
-            DashTowards(playerPosition, dt);
+        else {
+            enemyAnimator.Play("animations/BaseballYellow_Move.csv");
         }
     }
-    else
-    {
-        // Y축 위치 차이가 큰 경우, 플레이어의 Y축 방향으로 접근
-        MoveTowards(sf::Vector2f(position.x, playerPosition.y), speed, dt);
+
+    if (currentState == YellowBaseBallState::RETREAT) {
+        RetreatAfterAction();
     }
 
-    // 공격 또는 대쉬 후에는 잠시 후퇴
-    RetreatAfterAction(dt);
-
-    Enemy::Update(dt);
     sprite.setPosition(position);
-
     Enemy::Update(dt);
-    sprite.setPosition(position);
 }
 
 void YellowBaseBall::OnDamage(int damage)
@@ -135,44 +145,49 @@ void YellowBaseBall::DashTowards(const sf::Vector2f& target, float dt)
 
 void YellowBaseBall::Attack()
 {
-    currentState = YellowBaseBallState::ATTACK;
+    enemyAnimator.Play("animations/BaseballYellow_Attack.csv");
+    attackTimer = attackCooldown;
+    
+    //currentState = YellowBaseBallState::RETREAT;
+    
+    
 }
 
-void YellowBaseBall::RetreatAfterAction(float dt)
+void YellowBaseBall::RetreatAfterAction()
 {
-    if(currentState == YellowBaseBallState::ATTACK || currentState == YellowBaseBallState::DASH)
+    if (currentState == YellowBaseBallState::RETREAT)
     {
-        sf::Vector2f toPlayer = player->GetPosition() - position;
-        float currentDistance=std::hypot(toPlayer.x,toPlayer.y);
+        sf::Vector2f toPlayer = position - player->GetPosition();
+        float distanceToPlayer = Utils::MyMath::Magnitude(toPlayer);
 
-        float targetRetreatDistance = 15.f;
-        if(currentDistance<targetRetreatDistance)
+        if (distanceToPlayer < retreatDistance)
         {
-            sf::Vector2f retreatDirection = Normalize(position - player->GetPosition());
-
-            float retreatSpeed = speed * 1.5f;
-            position += retreatDirection * retreatSpeed * dt;
+            sf::Vector2f retreatDirection = Normalize(toPlayer);
+            position += retreatDirection * speed;
             sprite.setPosition(position);
-
+        }
+        else
+        {
+            // 후퇴가 충분히 이루어졌다면 다시 MOVE 상태로 전환
             currentState = YellowBaseBallState::MOVE;
+            attackTimer = attackCooldown; // 공격 쿨다운 재설정
         }
     }
 }
 
 void YellowBaseBall::MoveTowards(const sf::Vector2f& target, float speed, float dt)
 {
-    sf::Vector2f direction = Normalize(target - position);
-    float distance= Utils::MyMath::Magnitude(target - position);
+    float minDistance = 30.0f; // 몬스터와 플레이어 사이의 최소 유지 거리
+    sf::Vector2f toTarget = target - position;
+    float distanceToTarget = Utils::MyMath::Magnitude(toTarget);
 
-    if(distance>0)
+    if (distanceToTarget > minDistance)
     {
+        sf::Vector2f direction = Normalize(toTarget);
         float moveDistance = speed * dt;
-
-        sf::Vector2f moveStep=direction * std::min(moveDistance,distance);
-
+        // 실제 이동 거리는 목표까지의 거리와 이동 가능 거리 중 작은 값을 선택
+        sf::Vector2f moveStep = direction * std::min(moveDistance, distanceToTarget - minDistance);
         position += moveStep;
-
-        currentState = YellowBaseBallState::MOVE;
     }
 }
 
