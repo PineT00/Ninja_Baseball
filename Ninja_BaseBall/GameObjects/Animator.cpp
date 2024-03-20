@@ -91,6 +91,46 @@ void Animator::Play(const std::string& clipId, bool clearQueue)
 	SetFrame(currentClip->frames[currentFrame]);
 }
 
+// TODO : 미리보기 작업중
+void Animator::Play(std::vector<sf::FloatRect>& selectedAreas, 
+	std::vector<Origins>& selectedAreasPivot, InputField* inputfieldFPS, 
+	AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue)
+{
+	if (clearQueue)
+	{
+		while (!queue.empty())
+		{
+			queue.pop();
+		}
+	}
+
+	addFrame = 1;
+	isPlaying = true;
+	accumTime = 0.f;
+	currentClip->fps = std::stoi(inputfieldFPS->GetText());
+
+	for (int i = 0; i < selectedAreas.size(); ++i)
+	{
+		currentClip->frames.push_back(
+			{
+			Utils::MyString::WideStringToString(atlasPath),
+			{
+				(int)selectedAreas[i].left,
+				(int)selectedAreas[i].top,
+				(int)selectedAreas[i].width,
+				(int)selectedAreas[i].height,
+			},
+			selectedAreasPivot[i]
+			});
+	}
+	currentClip->id;
+	currentClip->loopType;
+	currentFrame = 0;
+	totalFrame = selectedAreas.size();
+	clipDuration = 1.f / currentClip->fps;
+	SetFrame(currentClip->frames[currentFrame]);
+}
+
 void Animator::PlayQueue(const std::string& clipId)
 {
 	queue.push(clipId);
@@ -103,7 +143,7 @@ void Animator::Stop()
 
 void Animator::SetFrame(const AnimationFrame& frame)
 {
-	//Utils::Origin::SetOrigin(*target, frame.pivot);
+	Utils::Origin::SetOrigin(*target, frame.pivot);
 	target->setTexture(frame.GetTexture());
 	target->setTextureRect(frame.textureCoord);
 }
@@ -135,7 +175,8 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 				std::stoi(row[2]),
 				std::stoi(row[3]),
 				std::stoi(row[4]),
-			}
+			},
+			((Origins)std::stoi(row[5]))
 			});
 	}
 

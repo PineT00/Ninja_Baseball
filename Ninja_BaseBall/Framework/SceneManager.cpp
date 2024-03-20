@@ -3,6 +3,7 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
 #include "SceneDev1.h"
+#include "SceneAnimationTool.h"
 #include "TestScene.h"
 
 SceneManager::~SceneManager()
@@ -18,6 +19,7 @@ void SceneManager::Init()
 
 	scenes.push_back(new SceneTitle(SceneIDs::SceneTitle));
 	scenes.push_back(new SceneGame(SceneIDs::SceneGame));
+	scenes.push_back(new SceneAnimationTool(SceneIDs::SceneAnimationTool));
 	scenes.push_back(new SceneDev1(SceneIDs::SceneDev1));
 	scenes.push_back(new TestScene(SceneIDs::TestScene));
 
