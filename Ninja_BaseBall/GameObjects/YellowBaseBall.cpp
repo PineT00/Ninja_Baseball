@@ -19,7 +19,7 @@ void YellowBaseBall::Init()
         enemyAnimator.Play("animations/BaseballYellow_Idle.csv");
         break;
     case YellowBaseBallState::MOVE:
-        enemyAnimator.Play("animations/BaseballYellow_Idle.csv");
+        enemyAnimator.Play("animations/BaseballYellow_Move.csv");
        
         break;
     case YellowBaseBallState::ATTACK:
