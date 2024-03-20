@@ -19,11 +19,17 @@ protected:
 	Button* buttonStop = nullptr;
 	Button* buttonPlay = nullptr;
 
+	std::vector<Button*> originButtons;
+	std::vector<Button*> loopButtons;
+	std::vector<std::string> originButtonsText = {"TL", "TC", "TR", "ML", "MC", "MR","BL", "BC", "BR"};
+	std::vector<std::string> loopButtonsText = {"Single", "Loop", "Ping Pong"};
+
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
 
 	std::vector<sf::FloatRect> selectedAreas;
+	std::vector<Origins> selectedAreasPivot;
 	std::wstring atlasPath;
 	
 	sf::Font font;
@@ -58,9 +64,13 @@ public:
 
 	bool IsAtlasPath() const { return isAtlasPath; }
 	void SetIsAtlasPath(bool isAtlasPath) { this->isAtlasPath = isAtlasPath; }
+	std::wstring GetAtlasPath() const { return atlasPath; }
 	void SetAtlasPath(const std::wstring& str);
-	std::vector<sf::FloatRect> GetSelectedAreas() const { return selectedAreas; }
 
+	std::vector<sf::FloatRect>& GetSelectedAreas() { return selectedAreas; }
+	std::vector<Origins>& GetSelectedAreasPivot() { return selectedAreasPivot; }
+	InputField* GetFPS() const { return inputfieldFPS; }
+	
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 	bool IsWithinWorldView(const sf::Vector2f& point);

@@ -93,7 +93,16 @@ void Scene::UpdateEvent(const sf::Event& event)
 			{
 				if (event.text.unicode < 128)
 				{
-					dynamic_cast<InputField*>(obj)->AddText(static_cast<char>(event.text.unicode));
+					InputField* inputField = dynamic_cast<InputField*>(obj);
+
+					if (event.text.unicode == 8)
+					{
+						inputField->SetText(inputField->GetText().substr(0, inputField->GetText().size() - 1));
+					}
+					else
+					{
+						inputField->AddText(static_cast<char>(event.text.unicode));
+					}
 				}
 			}
 		}
@@ -104,7 +113,16 @@ void Scene::UpdateEvent(const sf::Event& event)
 			{
 				if (event.text.unicode < 128)
 				{
-					dynamic_cast<InputField*>(obj)->AddText(static_cast<char>(event.text.unicode));
+					InputField* inputField = dynamic_cast<InputField*>(obj);
+
+					if (event.text.unicode == 8)
+					{
+						inputField->SetText(inputField->GetText().substr(0, inputField->GetText().size() - 1));
+					}
+					else
+					{
+						inputField->AddText(static_cast<char>(event.text.unicode));
+					}
 				}
 			}
 		}

@@ -12,7 +12,9 @@ public :
 		loadAtlas,
 		play,
 		stop,
-		save
+		save,
+		loop,
+		pivot
 	};
 
 protected:
@@ -48,6 +50,8 @@ public:
 	void SetOrigin(Origins preset)			  override;
 	void SetOrigin(const sf::Vector2f& origin)override;
 
+	void SetText(const std::string& label);
+
 	void SetButton(sf::Vector2f size, sf::Vector2f position, sf::Color color, Origins origin);
 	void SetButtonText(const sf::Font& font, const std::string& label, size_t labelSize, sf::Color labelColor, sf::Vector2f position, Origins origin);
 
@@ -62,6 +66,8 @@ public:
 	void SetStringValue(std::wstring& wstr) { stringValue = wstr; }
 
 	void SaveSelectedAreasWithDialog();
+	void SetFramePivot();
+	void SetLoopType();
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

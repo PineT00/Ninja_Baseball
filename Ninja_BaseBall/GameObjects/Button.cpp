@@ -2,6 +2,7 @@
 #include "Button.h"
 #include "TextGo.h"
 #include "SceneAnimationTool.h"
+#include "InputField.h"
 
 Button::Button(ButtonIdentifier identifier, const std::string& name)
 	: SpriteGo(name), buttonIdentifier(identifier)
@@ -66,6 +67,9 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::save :
 		SaveSelectedAreasWithDialog();
 		break;
+	case ButtonIdentifier::pivot :
+		SetFramePivot();
+		break;
 	}
 }
 
@@ -92,6 +96,11 @@ void Button::SetOrigin(const sf::Vector2f& origin)
 	originPreset = Origins::CUSTOM;
 	this->origin = origin;
 	shape.setOrigin(this->origin);
+}
+
+void Button::SetText(const std::string& label)
+{
+	buttonText.setString(label);
 }
 
 void Button::SetButton(sf::Vector2f size, sf::Vector2f position, sf::Color color, Origins origin)
@@ -165,23 +174,21 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 
 void Button::SaveSelectedAreasWithDialog()
 {
-	OPENFILENAME ofn;       // 공통 대화 상자 구조체
-	wchar_t  szFileName[MAX_PATH] = L""; // 파일 이름을 저장할 배열
+	OPENFILENAME ofn;
+	wchar_t  szFileName[MAX_PATH] = L"";
 
-	// OPENFILENAME 구조체 초기화
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = NULL;  // 현재 창의 핸들, NULL이면 부모 창 없음
+	ofn.hwndOwner = NULL;
 	ofn.lpstrFilter = L"CSV Files (*.csv)\0*.csv\0All Files (*.*)\0*.*\0";
 	ofn.lpstrFile = szFileName;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
 	ofn.lpstrDefExt = L"csv";
 
-	// 파일 저장 대화 상자 표시
 	if (GetSaveFileName(&ofn))
 	{
-		std::ofstream outFile(szFileName); // 사용자가 선택한 이름으로 파일 열기
+		std::ofstream outFile(szFileName);
 
 		if (!outFile.is_open())
 		{
@@ -189,18 +196,49 @@ void Button::SaveSelectedAreasWithDialog()
 			return;
 		}
 
-		outFile << "Left,Top,Width,Height\n";
+		std::string sFp = Utils::MyString::WideStringToString(sceneAnimationTool->GetAtlasPath());
 
-		for (const auto& area : sceneAnimationTool->GetSelectedAreas())
+		for (int i = 0; i < sFp.size(); ++i)
 		{
-			outFile << area.left << ","
-				<< area.top << ","
-				<< area.width << ","
-				<< area.height << "\n";
+			if (sFp[i] == '\\')
+			{
+				sFp[i] = '\/';
+			}
+		}
+
+		std::cout << sFp << std::endl;
+		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
+
+		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
+		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "\n\n"; // 루프 타입도 추가 필요 (정수)
+		outFile << "TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN\n";
+
+		std::vector<Origins> pivotList = sceneAnimationTool->GetSelectedAreasPivot();
+		std::vector<sf::FloatRect> area = sceneAnimationTool->GetSelectedAreas();
+
+		for (int i = 0; i < sceneAnimationTool->GetSelectedAreas().size(); ++i)
+		{
+			outFile << fp << ","
+				<< area[i].left << ","
+				<< area[i].top << ","
+				<< area[i].width << ","
+				<< area[i].height << ","
+				<< (int)pivotList[i] << "\n";
 		}
 
 		outFile.close(); // 파일 닫기
 	}
+}
+
+void Button::SetFramePivot()
+{
+	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
+	Origins frameOrigin = (Origins)(std::stoi(name.substr(name.size() -1)));
+	pivotList.push_back(frameOrigin);
+}
+
+void Button::SetLoopType()
+{
 }
 
 sf::FloatRect Button::GetLocalBounds()

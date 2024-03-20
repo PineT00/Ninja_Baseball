@@ -15,6 +15,7 @@
 #include <functional>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 // SFML
 #include <SFML/Graphics.hpp>
