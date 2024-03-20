@@ -25,51 +25,57 @@ void Stage1::Init()
 
 void Stage1::Reset()
 {
-	SetPosition({ 0,0 });
-	SetOrigin(Origins::TL);
-	stageNormal.SetPosition({ 800,0 });
-	stageNormal.SetOrigin(Origins::TL);
-	stageNormal2.SetPosition({ 1120,0 });
-	stageNormal2.SetOrigin(Origins::TL);
-	stageBroken.SetPosition({ 1120,0 });
-	stageBroken.SetOrigin(Origins::TL);
-	transition.SetPosition({ 1120,-240 });
-	transition.SetOrigin(Origins::TL);
-	stagePlane.SetPosition({ 1120,-480 });
-	stagePlane.SetOrigin(Origins::TL);
-	stageBoss.SetPosition({ 1760,-480 });
-	stageBoss.SetOrigin(Origins::TL);
+	//스테이지 스프라이트
+	{
+		SetPosition({ 0,0 });
+		SetOrigin(Origins::TL);
+		stageNormal.SetPosition({ 800,0 });
+		stageNormal.SetOrigin(Origins::TL);
+		stageNormal2.SetPosition({ 1120,0 });
+		stageNormal2.SetOrigin(Origins::TL);
+		stageBroken.SetPosition({ 1120,0 });
+		stageBroken.SetOrigin(Origins::TL);
+		transition.SetPosition({ 1120,-240 });
+		transition.SetOrigin(Origins::TL);
+		stagePlane.SetPosition({ 1120,-480 });
+		stagePlane.SetOrigin(Origins::TL);
+		stageBoss.SetPosition({ 1760,-480 });
+		stageBoss.SetOrigin(Origins::TL);
+	}
 
-	groundBound.setFillColor(sf::Color::Green);
-	groundBound.setSize({ 1440.f,104.f });
-	groundBound.setPosition({ 0.f, 136.f });
+	//충돌영역
+	{
+		groundBound.setFillColor(sf::Color::Green);
+		groundBound.setSize({ 1440.f,100.f });
+		groundBound.setPosition({ 0.f, 138.f });
 
-	stageBound1_1.setSize({ 320.f,240.f });
-	stageBound1_1.setPosition({ 100.f, 0.f });
-	stageBound1_1.setOutlineColor(sf::Color::Red);
-	stageBound1_1.setOutlineThickness(1.f);
-	stageBound1_1.setFillColor(sf::Color::Transparent);
+		stageBound1_1.setSize({ 320.f,240.f });
+		stageBound1_1.setPosition({ 100.f, 0.f });
+		stageBound1_1.setOutlineColor(sf::Color::Blue);
+		stageBound1_1.setOutlineThickness(1.f);
+		stageBound1_1.setFillColor(sf::Color::Transparent);
 
-	stageBound1_2.setFillColor(sf::Color::Red);
-	stageBound1_2.setSize({ 320.f,240.f });
-	stageBound1_2.setPosition({ 140.f, 0.f });
-	stageBound1_2.setOutlineColor(sf::Color::Red);
-	stageBound1_2.setOutlineThickness(3.f);
-	stageBound1_2.setFillColor(sf::Color::Transparent);
+		stageBound1_2.setFillColor(sf::Color::Red);
+		stageBound1_2.setSize({ 320.f,240.f });
+		stageBound1_2.setPosition({ 140.f, 0.f });
+		stageBound1_2.setOutlineColor(sf::Color::Red);
+		stageBound1_2.setOutlineThickness(3.f);
+		stageBound1_2.setFillColor(sf::Color::Transparent);
 
-	stageBound1_3.setFillColor(sf::Color::Red);
-	stageBound1_3.setSize({ 320.f,240.f });
-	stageBound1_3.setPosition({ 460.f, 0.f });
-	stageBound1_3.setOutlineColor(sf::Color::Red);
-	stageBound1_3.setOutlineThickness(1.f);
-	stageBound1_3.setFillColor(sf::Color::Transparent);
+		stageBound1_3.setFillColor(sf::Color::Red);
+		stageBound1_3.setSize({ 320.f,240.f });
+		stageBound1_3.setPosition({ 460.f, 0.f });
+		stageBound1_3.setOutlineColor(sf::Color::Red);
+		stageBound1_3.setOutlineThickness(1.f);
+		stageBound1_3.setFillColor(sf::Color::Transparent);
 
-	stageBound1_4.setFillColor(sf::Color::Red);
-	stageBound1_4.setSize({ 320.f,240.f });
-	stageBound1_4.setPosition({ 780.f, 0.f });
-	stageBound1_4.setOutlineColor(sf::Color::Red);
-	stageBound1_4.setOutlineThickness(1.f);
-	stageBound1_4.setFillColor(sf::Color::Transparent);
+		stageBound1_4.setFillColor(sf::Color::Red);
+		stageBound1_4.setSize({ 320.f,240.f });
+		stageBound1_4.setPosition({ 780.f, 0.f });
+		stageBound1_4.setOutlineColor(sf::Color::Red);
+		stageBound1_4.setOutlineThickness(1.f);
+		stageBound1_4.setFillColor(sf::Color::Transparent);
+	}
 
 	stageBack1.SetPosition({0.f, 0.f});
 
@@ -99,10 +105,11 @@ void Stage1::Draw(sf::RenderWindow& window)
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
 		window.draw(groundBound);
-		window.draw(stageBound1_1);
+
 		window.draw(stageBound1_2);
 		window.draw(stageBound1_3);
 		window.draw(stageBound1_4);
 	}
+	window.draw(stageBound1_1);
 
 }

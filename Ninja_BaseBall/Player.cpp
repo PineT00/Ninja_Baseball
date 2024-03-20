@@ -42,6 +42,8 @@ void Player::Reset()
 	animator.Play("Animations/Idle.csv");
 	SetOrigin(Origins::BC);
 
+	SetScale({ 0.75f, 0.75f });
+
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 
 }
@@ -72,6 +74,7 @@ void Player::Update(float dt)
 	}
 
 	SetPosition(position);
+	std::cout << position.x << std::endl;
 
 	if (h != 0.f)
 	{

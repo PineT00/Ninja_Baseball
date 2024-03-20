@@ -10,7 +10,7 @@ class Player :
 protected:
 	Animator animator;
 
-	float speed = 300.f;
+	float speed = 100.f;
 
 	sf::Vector2f velocity;
 

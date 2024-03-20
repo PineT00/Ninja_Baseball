@@ -23,6 +23,12 @@ public:
 	sf::RectangleShape stageBound1_3;
 	sf::RectangleShape stageBound1_4;
 
+
+	bool clearStage1_1 = false;
+	bool clearStage1_2 = false;
+	bool clearStage1_3 = false;
+	bool clearStage1_4 = false;
+
 private:
 
 

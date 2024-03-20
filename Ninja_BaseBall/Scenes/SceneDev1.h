@@ -19,6 +19,8 @@ protected :
 	
 	sf::RectangleShape cameraRect;
 
+	float xMax = 0.f;
+
 	Stage1* stage = nullptr;
 	Player* player = nullptr;
 	UiHUD* hud = nullptr;

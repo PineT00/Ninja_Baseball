@@ -23,10 +23,10 @@ sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
 
 void SceneDev1::Init()
 {
-    cameraRect.setSize({ 320.f, 240 });
-    cameraRect.setOutlineColor(sf::Color::Cyan);
-    cameraRect.setOutlineThickness(2);
-    cameraRect.setFillColor(sf::Color::Transparent);
+    //cameraRect.setSize({ 320.f, 240 });
+    //cameraRect.setOutlineColor(sf::Color::Cyan);
+    //cameraRect.setOutlineThickness(2);
+    //cameraRect.setFillColor(sf::Color::Transparent);
 
     worldView.setSize(windowSize);
     worldView.setCenter(0, 120);
@@ -99,15 +99,58 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+
+    if (player->GetPosition().x > xMax)
+    {
+        xMax = player->GetPosition().x;
+
+    }
+    float camCenter = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
+
+    if (!(stage->clearStage1_1) && xMax >= camCenter)
+    {
+        xMax = camCenter;
+    }
+
+    //if (!(stage->clearStage1_2) && xMax >= stage->stageBound1_2.getGlobalBounds().width)
+    //{
+    //    xMax = stage->stageBound1_2.getGlobalBounds().width;
+    //}
+    //if (!(stage->clearStage1_3) && xMax >= stage->stageBound1_3.getGlobalBounds().width)
+    //{
+    //    xMax = stage->stageBound1_3.getGlobalBounds().width;
+    //}
+    //if (!(stage->clearStage1_4) && xMax >= stage->stageBound1_4.getGlobalBounds().width)
+    //{
+    //    xMax = stage->stageBound1_4.getGlobalBounds().width;
+    //}
+
+
     sf::Vector2f worldViewCenter = worldView.getCenter();
 
-    worldViewCenter.x = player->GetPosition().x;
+    worldViewCenter.x = xMax;
 
     worldView.setCenter(worldViewCenter);
 
-    stage->stageBack1.SetPosition({ worldViewCenter.x, 0.f });
+    stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
 
-    cameraRect.setPosition(worldViewCenter);
+
+    if (InputManager::GetKeyDown(sf::Keyboard::Num1))
+    {
+        stage->clearStage1_1 = true;
+    }
+    else if (InputManager::GetKeyDown(sf::Keyboard::Num2))
+    {
+        stage->clearStage1_2 = true;
+    }
+    else if (InputManager::GetKeyDown(sf::Keyboard::Num3))
+    {
+        stage->clearStage1_3 = true;
+    }
+    else if (InputManager::GetKeyDown(sf::Keyboard::Num4))
+    {
+        stage->clearStage1_4 = true;
+    }
 }
 
 void SceneDev1::UpdateGameover(float dt)
