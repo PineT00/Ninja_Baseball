@@ -8,9 +8,23 @@ UiHUD::UiHUD(const std::string& name)
 	windowSize = FRAMEWORK.GetWindowSize();
 }
 
+void UiHUD::SetFps(int fps)
+{
+	textFps.SetText(formatFps + std::to_string(fps));
+}
+
 void UiHUD::Init()
 {
 	GameObject::Init();
+	textFps.Init();
+
+	sf::Font& font = *FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf");
+	float textSize = 60.f;
+
+	textFps.Set(font, "", textSize, sf::Color::White);
+	textFps.SetActive(false);
+	textFps.SetPosition({ referenceResolution.x, 0.f });
+
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetScene(SceneIDs::SceneGame));
 }
@@ -39,4 +53,9 @@ void UiHUD::FixedUpdate(float dt)
 void UiHUD::Draw(sf::RenderWindow& window)
 {
 	GameObject::Draw(window);
+	if (SCENE_MANAGER.GetDeveloperMode())
+	{
+		SetFps(FRAMEWORK.GetFps());
+		textFps.Draw(window);
+	}
 }

@@ -31,6 +31,17 @@ void Framework::Do()
 
         fixedDeltaTime += deltaTime;
 
+
+        fpsTimer += realDeltaTime.asSeconds();
+        fpsCount++;
+        if (fpsTimer >= 1.f)
+        {
+            fpsTimer = 0.f;
+            fps = fpsCount;
+            fpsCount = 0;
+        }
+
+
         InputManager::Clear();
 
         sf::Event event;

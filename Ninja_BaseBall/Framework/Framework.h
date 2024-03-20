@@ -31,6 +31,10 @@ public:
 	float timeScale = 1.f;
 	float fixedUpdateTime = 1.f / 50.f;
 
+	float fpsTimer = 0.f;
+	int fpsCount = 0;
+	int fps = 0;
+
 public:
 	sf::RenderWindow& GetWindow() { return window; }
 	const sf::Vector2i& GetWindowSize() const { return windowSize; }
@@ -41,6 +45,8 @@ public:
 	float GetDeltaTime()		const { return deltaTime.asSeconds(); }
 	float GetTimeScale()		const { return timeScale; }
 	void SetTimeScale(const float scale) { this->timeScale = scale; }
+
+	int GetFps() const { return fps; }
 
 	virtual void Init(int width, int height, const std::string& name = "Game");
 	virtual void Do();
