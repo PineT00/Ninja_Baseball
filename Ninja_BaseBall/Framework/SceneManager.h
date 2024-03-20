@@ -9,6 +9,7 @@ enum class SceneIDs
 	SceneTitle,
 	SceneGame,
 	SceneDev1,
+	TestScene,
 	COUNT,
 };
 
@@ -23,7 +24,7 @@ protected:
 	SceneManager& operator=(SceneManager&&)		 = delete;
 
 	std::vector<Scene*> scenes; 
-	SceneIDs startScene = SceneIDs::SceneDev1;
+	SceneIDs startScene = SceneIDs::TestScene;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 

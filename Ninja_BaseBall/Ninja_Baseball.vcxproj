@@ -143,14 +143,23 @@
     <ClCompile Include="Framework\Framework.cpp" />
     <ClCompile Include="Framework\InputManager.cpp" />
     <ClCompile Include="Framework\SoundManager.cpp" />
+    <ClCompile Include="GameObjects\Enemy.cpp" />
     <ClCompile Include="GameObjects\Spawner.cpp" />
+    <ClCompile Include="GameObjects\TestPlayer.cpp" />
     <ClCompile Include="GameObjects\Tilemap.cpp" />
     <ClCompile Include="GameObjects\UiHUD.cpp" />
     <ClCompile Include="GameObjects\InputField.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\Stage1.cpp" />
+=======
+    <ClCompile Include="GameObjects\YellowBaseBall.cpp" />
+    <ClCompile Include="Scenes\SceneDev1.cpp" />
+    <ClCompile Include="Scenes\SceneTitle.cpp" />
+    <ClCompile Include="Scenes\TestScene.cpp" />
+>>>>>>> feature/Enemy
     <ClCompile Include="Utils\MyMath.cpp" />
     <ClCompile Include="Utils\Origin.cpp" />
     <ClCompile Include="Framework\pch.cpp">
@@ -178,15 +187,18 @@
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="Framework\InputManager.h" />
     <ClInclude Include="Framework\SoundManager.h" />
+    <ClInclude Include="GameObjects\Enemy.h" />
     <ClInclude Include="GameObjects\Spawner.h" />
+    <ClInclude Include="GameObjects\TestPlayer.h" />
     <ClInclude Include="GameObjects\Tilemap.h" />
     <ClInclude Include="GameObjects\UiHUD.h" />
     <ClInclude Include="GameObjects\InputField.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="GameObjects\YellowBaseBall.h" />
     <ClInclude Include="rapidcsv.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />
     <ClInclude Include="Scenes\SceneTitle.h" />
-    <ClInclude Include="GameObjects\Stage1.h" />
+    <ClInclude Include="Scenes\TestScene.h" />
     <ClInclude Include="Utils\MyMath.h" />
     <ClInclude Include="Utils\Origin.h" />
     <ClInclude Include="Framework\pch.h" />
