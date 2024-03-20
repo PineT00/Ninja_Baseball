@@ -70,6 +70,9 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::pivot :
 		SetFramePivot();
 		break;
+	case ButtonIdentifier::loop :
+		SetLoopType();
+		break;
 	}
 }
 
@@ -206,15 +209,14 @@ void Button::SaveSelectedAreasWithDialog()
 			}
 		}
 
-		std::cout << sFp << std::endl;
 		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
-
-		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
-		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "\n\n"; // 루프 타입도 추가 필요 (정수)
-		outFile << "TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN\n";
-
 		std::vector<Origins> pivotList = sceneAnimationTool->GetSelectedAreasPivot();
 		std::vector<sf::FloatRect> area = sceneAnimationTool->GetSelectedAreas();
+		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedAreaLoopType();
+
+		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
+		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "," << (int)loopType <<"\n\n";
+		outFile << "TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN\n";
 
 		for (int i = 0; i < sceneAnimationTool->GetSelectedAreas().size(); ++i)
 		{
@@ -226,6 +228,7 @@ void Button::SaveSelectedAreasWithDialog()
 				<< (int)pivotList[i] << "\n";
 		}
 
+		std::cout << fp << ", 저장되었습니다." << std::endl;
 		outFile.close(); // 파일 닫기
 	}
 }
@@ -239,6 +242,8 @@ void Button::SetFramePivot()
 
 void Button::SetLoopType()
 {
+	AnimationLoopType& loopType = sceneAnimationTool->GetSelectedAreaLoopType();
+	loopType = (AnimationLoopType)(std::stoi(name.substr(name.size() - 1)));
 }
 
 sf::FloatRect Button::GetLocalBounds()

@@ -68,7 +68,7 @@ void SceneAnimationTool::Init()
 
 	for (int i = 0; i < loopButtonsText.size(); ++i)
 	{
-		loopButtons.push_back(new Button(Button::ButtonIdentifier::loop, "loopbutton"));
+		loopButtons.push_back(new Button(Button::ButtonIdentifier::loop, "loopbutton" + std::to_string(i)));
 
 		loopButtons[i]->SetButton({ 80.f,40.f }, { windowSize.x * (0.4f + 0.15f * i), windowSize.y * 0.15f }, sf::Color::White, Origins::MC);
 		loopButtons[i]->SetButtonText(font, loopButtonsText[i], 15.f, sf::Color::Black, { windowSize.x * (0.4f + 0.15f * i), windowSize.y * 0.15f }, Origins::MC);

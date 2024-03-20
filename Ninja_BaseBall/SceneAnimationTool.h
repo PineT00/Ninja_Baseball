@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Animator.h"
 
 class Button;
 class SpriteGo;
@@ -19,6 +20,8 @@ protected:
 	Button* buttonStop = nullptr;
 	Button* buttonPlay = nullptr;
 
+	std::vector<sf::FloatRect> selectedAreas;
+	std::vector<Origins> selectedAreasPivot;
 	std::vector<Button*> originButtons;
 	std::vector<Button*> loopButtons;
 	std::vector<std::string> originButtonsText = {"TL", "TC", "TR", "ML", "MC", "MR","BL", "BC", "BR"};
@@ -27,9 +30,8 @@ protected:
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
+	AnimationLoopType selectedAreaLoopType;
 
-	std::vector<sf::FloatRect> selectedAreas;
-	std::vector<Origins> selectedAreasPivot;
 	std::wstring atlasPath;
 	
 	sf::Font font;
@@ -69,6 +71,8 @@ public:
 
 	std::vector<sf::FloatRect>& GetSelectedAreas() { return selectedAreas; }
 	std::vector<Origins>& GetSelectedAreasPivot() { return selectedAreasPivot; }
+	AnimationLoopType& GetSelectedAreaLoopType() { return selectedAreaLoopType; }
+
 	InputField* GetFPS() const { return inputfieldFPS; }
 	
 	GameStatus GetStatus() const { return this->status; }
