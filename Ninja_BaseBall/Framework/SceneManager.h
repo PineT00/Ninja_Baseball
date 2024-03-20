@@ -24,7 +24,7 @@ protected:
 	SceneManager& operator=(SceneManager&&)		 = delete;
 
 	std::vector<Scene*> scenes; 
-	SceneIDs startScene = SceneIDs::TestScene;
+	SceneIDs startScene = SceneIDs::SceneDev1;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 

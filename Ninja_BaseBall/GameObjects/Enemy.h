@@ -8,8 +8,6 @@ class TestPlayer;
 class Enemy:public SpriteGo
 {
 protected:
-    TestScene* testScene = nullptr;
-    TestPlayer* testPlayer = nullptr;
     Animator enemyAnimator;
 
     float speed = 100.f;

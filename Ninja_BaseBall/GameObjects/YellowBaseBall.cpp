@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "YellowBaseBall.h"
+#include "Player.h"
 
 YellowBaseBall::YellowBaseBall(const std::string& name):Enemy(name)
 {
@@ -43,7 +44,7 @@ void YellowBaseBall::Release()
 void YellowBaseBall::Reset()
 {
     Enemy::Reset();
-    testPlayer = dynamic_cast<TestPlayer*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("TestPlayer"));
+    player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     health = maxHealth;
     isDead = false;
     isAttacking = false;
@@ -72,10 +73,10 @@ void YellowBaseBall::Update(float dt)
 {
     //처음에 Idle 상태로 좌측으로 10정도 이동
     //이후에 Move 상태로 돌입하고 플레이어를 찾음
-    if(testPlayer!=nullptr)
+    if(player != nullptr)
     {
-        sf::Vector2f playerPos = testPlayer->GetPosition();
-        sf::Vector2f direction=position - playerPos;
+        sf::Vector2f playerPos = player->GetPosition();
+        sf::Vector2f direction = position - playerPos;
         float distance=std::hypot(direction.x,direction.y);
         float desiredDistance=30.f;
 
@@ -84,7 +85,8 @@ void YellowBaseBall::Update(float dt)
             direction = direction / distance;
             position.x -= direction.x * speed * dt;
             position.y -= direction.y * speed * dt;
-        }else if(distance < desiredDistance)
+        }
+        else if(distance < desiredDistance)
         {
             float angle =std::atan2(direction.y,direction.x)+(speed*dt /desiredDistance);
             position.x=playerPos.x+std::cos(angle)*desiredDistance;

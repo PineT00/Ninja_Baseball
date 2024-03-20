@@ -1,9 +1,13 @@
 ﻿#pragma once
 #include "Enemy.h"
-#include "TestPlayer.h"
+
+class Player;
 
 class YellowBaseBall:public Enemy
 {
+public:
+    Player* player = nullptr;
+
 protected:
     enum class YellowBaseBallState
     {
@@ -20,7 +24,6 @@ protected:
     bool hasMovedInitial = false;
     float initialMoveDistance = 100.f;
 public:
-    TestPlayer* testPlayer;
     YellowBaseBall(const std::string& name);
     void Init() override;
     void Release() override;

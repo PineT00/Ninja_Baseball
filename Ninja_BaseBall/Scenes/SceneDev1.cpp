@@ -7,6 +7,7 @@
 #include "InputField.h"
 #include "Stage1.h"
 #include "Player.h"
+#include "YellowBaseBall.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
     : Scene(id)
@@ -36,12 +37,15 @@ void SceneDev1::Init()
     stage = new Stage1();
     AddGameObject(stage);
 
-    player = new Player();
+    player = new Player("Player");
     player->SetPosition({ 100.f, 250.f });
     AddGameObject(player);
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
+
+    //YellowBaseBall* monster = new YellowBaseBall("Monster");
+    //AddGameObject(monster);
 
     Scene::Init();
 }
@@ -105,27 +109,27 @@ void SceneDev1::UpdateGame(float dt)
         xMax = player->GetPosition().x;
 
     }
-    float camCenter = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
+    float camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
+    float camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);
+    float camCenter3 = stage->stageBound1_3.getGlobalBounds().left + (stage->stageBound1_3.getGlobalBounds().width / 2);
+    float camCenter4 = stage->stageBound1_3.getGlobalBounds().left + (stage->stageBound1_3.getGlobalBounds().width / 2);
 
-    if (!(stage->clearStage1_1) && xMax >= camCenter)
+    if (!(stage->clearStage1_1) && xMax >= camCenter1)
     {
-        xMax = camCenter;
+        xMax = camCenter1;
     }
-
-    if (!(stage->clearStage1_2) && xMax >= stage->stageBound1_2.getGlobalBounds().width)
+    if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
-        xMax = stage->stageBound1_2.getGlobalBounds().width;
+        xMax = camCenter2;
     }
-
-    //if (!(stage->clearStage1_3) && xMax >= stage->stageBound1_3.getGlobalBounds().width)
-    //{
-    //    xMax = stage->stageBound1_3.getGlobalBounds().width;
-    //}
-    //if (!(stage->clearStage1_4) && xMax >= stage->stageBound1_4.getGlobalBounds().width)
-    //{
-    //    xMax = stage->stageBound1_4.getGlobalBounds().width;
-    //}
-
+    if (!(stage->clearStage1_3) && xMax >= camCenter3)
+    {
+        xMax = camCenter3;
+    }
+    if (!(stage->clearStage1_4) && xMax >= camCenter4)
+    {
+        xMax = camCenter4;
+    }
 
     sf::Vector2f worldViewCenter = worldView.getCenter();
 

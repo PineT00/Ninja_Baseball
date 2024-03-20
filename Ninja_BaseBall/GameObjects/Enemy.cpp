@@ -21,9 +21,6 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
-    //SpriteGo::Reset();
-    testScene = dynamic_cast<TestScene*>(SCENE_MANAGER.GetCurrentScene());
-    testPlayer = dynamic_cast<TestPlayer*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("TestPlayer"));
     health = maxHealth;
     isDead = false;
     isAttacking = false;
