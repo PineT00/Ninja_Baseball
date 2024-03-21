@@ -81,6 +81,9 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::stop :
 		StopPreView(obj);
 		break;
+	case ButtonIdentifier::autoslice :
+		AutoSlice(intValues);
+		break;
 	}
 }
 
@@ -218,13 +221,14 @@ void Button::SaveSelectedAreasWithDialog()
 		}
 
 		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
-		std::vector<Origins> pivotList = sceneAnimationTool->GetSelectedAreasPivot();
-		std::vector<sf::FloatRect> area = sceneAnimationTool->GetSelectedAreas();
+		std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
+		std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
+		std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
 		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
 
 		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
 		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "," << (int)loopType <<"\n\n";
-		outFile << "TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN\n";
+		outFile << "TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY\n";
 
 		for (int i = 0; i < sceneAnimationTool->GetSelectedAreas().size(); ++i)
 		{
@@ -233,7 +237,9 @@ void Button::SaveSelectedAreasWithDialog()
 				<< area[i].top << ","
 				<< area[i].width << ","
 				<< area[i].height << ","
-				<< (int)pivotList[i] << "\n";
+				<< (int)pivotList[i] << ","
+				<< customPivots[i].x << ","
+				<< customPivots[i].y << "\n";
 		}
 
 		std::cout << fp << ", 저장되었습니다." << std::endl;
@@ -244,8 +250,23 @@ void Button::SaveSelectedAreasWithDialog()
 void Button::SetFramePivot()
 {
 	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
+	std::vector<sf::Vector2f>& customPivotList = sceneAnimationTool->GetCustomPivot();
 	Origins frameOrigin = (Origins)(std::stoi(name.substr(name.size() -1)));
+	// Custom 피봇이 선택 되면 피봇을 선택할 수 있게 해야 함.
+	
+	if (frameOrigin == Origins::CUSTOM)
+	{
+		sceneAnimationTool->SetIsCutomPivot(true);
+	}
+	else
+	{
+		customPivotList.push_back({ 0,0 });
+	}
+	// 가장 마지막 SelectedArea의 위치를 받아 상대적인 좌표를 구해야 함
+	//sf::Vector2f frameCustomOrigin = customPivotList[customPivotList.size() - 1]; // 에러 주의
+
 	pivotList.push_back(frameOrigin);
+	//customPivotList.push_back(frameCustomOrigin);
 }
 
 void Button::SetLoopType()
@@ -263,7 +284,8 @@ void Button::PlayPreView(PreviewCharacter* obj)
 
 	obj->GetAnimator().Play(
 		sceneAnimationTool->GetSelectedAreas(), 
-		sceneAnimationTool->GetSelectedAreasPivot(), 
+		sceneAnimationTool->GetSelectedAreasPivot(),
+		sceneAnimationTool->GetCustomPivot(),
 		sceneAnimationTool->GetFPS(), 
 		sceneAnimationTool->GetSelectedLoopType(), 
 		sceneAnimationTool->GetAtlasPath(), false);
@@ -272,6 +294,12 @@ void Button::PlayPreView(PreviewCharacter* obj)
 void Button::StopPreView(PreviewCharacter* obj)
 {
 	obj->GetAnimator().Stop();
+}
+
+void Button::AutoSlice(const std::vector<int> intValues)
+{
+	// 슬라이스 후 저장 준비
+	
 }
 
 sf::FloatRect Button::GetLocalBounds()
