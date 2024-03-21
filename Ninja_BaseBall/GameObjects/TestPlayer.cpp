@@ -11,8 +11,8 @@ TestPlayer::TestPlayer(const std::string& name): SpriteGo(name), testScene(nullp
 void TestPlayer::Init()
 {
     SpriteGo::Init();
-    playerAnimator.SetTarget(&sprite);
     //textureId = "Player";
+    playerAnimator.SetTarget(&sprite);
 }
 
 void TestPlayer::Reset()
@@ -20,7 +20,7 @@ void TestPlayer::Reset()
     //SpriteGo::Reset();
     testScene = dynamic_cast<TestScene*>(SCENE_MANAGER.GetCurrentScene());
     //enemy = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
-    playerAnimator.Play("animations/Player_Idle.csv",false);
+    playerAnimator.Play("animations/testP.csv",false);
     SetPosition({0.f,0.f});
     //SetOrigin(Origins::BC);
 }
@@ -71,8 +71,8 @@ void TestPlayer::Attack()
 
 void TestPlayer::Draw(sf::RenderWindow& window)
 {
-    //SpriteGo::Draw(window);
-    window.draw(sprite);
+    SpriteGo::Draw(window);
+    //window.draw(sprite);
 }
 
 

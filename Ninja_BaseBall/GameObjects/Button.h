@@ -18,6 +18,7 @@ public :
 		loop,
 		pivot,
 		preload,
+		autoslice,
 	};
 
 protected:
@@ -30,6 +31,7 @@ protected:
 	ButtonIdentifier buttonIdentifier;
 	PreviewCharacter* obj = nullptr;
 
+	std::vector<int> intValues;
 	std::wstring stringValue;
 
 	sf::Text buttonText;
@@ -68,11 +70,14 @@ public:
 
 	std::wstring OpenFileDialog(std::wstring& filePath);
 	void SetStringValue(std::wstring& wstr) { stringValue = wstr; }
+	void SetIntValues(const std::vector<int>& intValues) { this->intValues = intValues; }
 
 	void SaveSelectedAreasWithDialog();
 	void SetFramePivot();
 	void SetLoopType();
 	void PlayPreView(PreviewCharacter* obj);
+	void StopPreView(PreviewCharacter* obj);
+	void AutoSlice(const std::vector<int> intValues);
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

@@ -157,7 +157,7 @@ void YellowBaseBall::Attack()
 {
     enemyAnimator.Play("animations/BaseballYellow_Attack.csv");
     attackTimer = attackCooldown;
-    std::cout<<" player Attack"<<std::endl;
+    //std::cout<<" player Attack"<<std::endl;
     
     //player->OnDamage(damage)
     
@@ -212,7 +212,7 @@ sf::Vector2f YellowBaseBall::Normalize(const sf::Vector2f& source)
 void YellowBaseBall::GetCurrentAnimationName()
 {
     std::string currentAnimationName = yellowBaseBallAnimator.GetCurrentClipId();
-    std::cout << currentAnimationName << std::endl;
+    //std::cout << currentAnimationName << std::endl;
 }
 
 void YellowBaseBall::SetPosition(const sf::Vector2f& pos)
@@ -223,7 +223,7 @@ void YellowBaseBall::SetPosition(const sf::Vector2f& pos)
 
 void YellowBaseBall::Intro()
 {
-    std::cout<<"Intro"<<std::endl;
+    //std::cout<<"Intro"<<std::endl;
 }
 
 void YellowBaseBall::DrawBox()

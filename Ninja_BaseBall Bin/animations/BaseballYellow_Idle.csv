@@ -1,6 +1,6 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),
-Idle,15,1,,,
-TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN
-graphics/monster-Ball.png,98.0583,0.361046,-97.7116,62.5894,4
-graphics/monster-Ball.png,252.281,0,-47.7301,63.4008,4
-graphics/monster-Ball.png,397.272,0,-94.3344,61.3745,4
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+Idle,15,1,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/monster-Ball.png,98.0583,0.361046,-97.7116,62.5894,4,0,0
+graphics/monster-Ball.png,252.281,0,-47.7301,63.4008,4,0,0
+graphics/monster-Ball.png,397.272,0,-94.3344,61.3745,4,0,0

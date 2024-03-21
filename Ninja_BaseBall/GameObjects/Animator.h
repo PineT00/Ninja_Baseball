@@ -12,11 +12,16 @@ struct AnimationFrame
 {
 	std::string textureId;
 	sf::IntRect textureCoord;
+	sf::Vector2f customPivot;
 	Origins pivot = Origins::CUSTOM;
 
-	AnimationFrame(const std::string& id, const sf::IntRect& coord, Origins origin)
+	AnimationFrame(const std::string& id, const sf::IntRect& coord, Origins origin, const sf::Vector2f& customPivot = {0.f, 0.f})
 		: textureId(id), textureCoord(coord), pivot(origin)
 	{
+		if (pivot == Origins::CUSTOM)
+		{
+			this->customPivot = customPivot;
+		}
 	}
 
 
@@ -82,7 +87,7 @@ public:
 	void Update(float dt);
 	void Play(const std::string& clipId, bool clearQueue = true);
 	void Play(std::vector<sf::FloatRect>& selectedAreas, std::vector<Origins>& selectedAreasPivot, 
-		InputField* inputfieldFPS, AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue = true);
+		std::vector<sf::Vector2f>& customPivot, InputField* inputfieldFPS, AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue = true);
 	void PlayQueue(const std::string& clipId);
 	void Stop();
 
