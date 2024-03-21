@@ -137,6 +137,26 @@ void Animator::PlayQueue(const std::string& clipId)
 	queue.push(clipId);
 }
 
+void Animator::Play(const std::string& clipId, int startFrame, bool clearQueue)
+{
+	if (clearQueue)
+	{
+		while (!queue.empty())
+		{
+			queue.pop();
+		}
+	}
+
+	addFrame = 1;
+	isPlaying = true;
+	accumTime = 0.f;
+	currentClip = ANIMATION_CLIP_MANAGER.GetResource(clipId);
+	currentFrame = startFrame;
+	totalFrame = currentClip->GetTotalFrame();
+	clipDuration = 1.f / currentClip->fps;
+	SetFrame(currentClip->frames[currentFrame]);
+}
+
 void Animator::Stop()
 {
 	isPlaying = false;

@@ -384,11 +384,11 @@ void Player::Update(float dt)
 			Animator trailAnimator;
 
 			trailAnimator.SetTarget(&trail);
-			trailAnimator.Play(animator.GetCurrentClipId());
-			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 240.f);
+			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 220.f);
 			trail.setColor(sf::Color(0, 0, 0, 100));
 			trail.setPosition(GetPosition());
-			if (h < 0.f)
+			if (h < 0.f || jumpDirection < 0.f)
 			{
 				trail.setScale(-1, 1);
 			}
