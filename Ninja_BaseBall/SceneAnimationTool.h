@@ -23,6 +23,7 @@ protected:
 	
 	// TODO : Auto Slice ±â´É
 	Button* buttonAutoSlice = nullptr;
+	Button* buttonLoadCsv = nullptr;
 
 	std::vector<sf::FloatRect> selectedAreas;
 	std::vector<Origins> selectedAreasPivot;
@@ -58,6 +59,7 @@ protected:
 	bool isLeftDragging = false;
 	bool isRightDragging = false;
 	bool isCustomPivot = false;
+	bool isLoadedFromCsv = false;
 
 public:
 	SceneAnimationTool(SceneIDs id);
@@ -79,7 +81,7 @@ public:
 	bool IsAtlasPath() const { return isAtlasPath; }
 	void SetIsAtlasPath(bool isAtlasPath) { this->isAtlasPath = isAtlasPath; }
 	std::wstring GetAtlasPath() const { return atlasPath; }
-	void SetAtlasPath(const std::wstring& str);
+	void SetAtlasPath(std::wstring& str);
 
 	sf::Vector2f GetPreloadBoardPos() const { return preloadBoardPos; }
 	std::vector<sf::FloatRect>& GetSelectedAreas() { return selectedAreas; }
@@ -89,6 +91,11 @@ public:
 
 	bool IsCustomPivot() const { return isCustomPivot; }
 	void SetIsCutomPivot(bool isCustom) { isCustomPivot = isCustom; }
+
+	bool IsLoadedFromCsv() const { return isLoadedFromCsv; }
+	void SetLoadedFromCsv(bool isLoadedFromCsv) { this->isLoadedFromCsv = isLoadedFromCsv; }
+	void SetFPS(const std::wstring& fps);
+	void SetLoopType(const AnimationLoopType looptype);
 
 	InputField* GetFPS() const { return inputfieldFPS; }
 	GameStatus GetStatus() const { return this->status; }
