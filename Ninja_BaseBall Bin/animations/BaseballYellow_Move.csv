@@ -1,7 +1,7 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
-,3,1
-
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,3,1,,,,,
+,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/3_Enemy/baseball/yBaseball_idle.bmp,250.257,119.783,-227.35,177.156,7,0,0
-graphics/3_Enemy/baseball/yBaseball_idle.bmp,616.379,119.783,-233.256,174.203,7,0,0
-graphics/3_Enemy/baseball/yBaseball_idle.bmp,976.597,122.735,-233.255,171.251,7,0,0
+graphics/3_Enemy/baseball/yBaseball_idle.bmp,250.257,119.783,-227.35,177.156,4,0,0
+graphics/3_Enemy/baseball/yBaseball_idle.bmp,616.379,119.783,-233.256,174.203,4,0,0
+graphics/3_Enemy/baseball/yBaseball_idle.bmp,976.597,122.735,-233.255,171.251,4,0,0

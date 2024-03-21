@@ -44,7 +44,7 @@ void SceneDev1::Init()
     AddGameObject(player,World);
 
     yellowEnemy = new YellowBaseBall("YellowEnemy");
-    yellowEnemy->SetPosition({ 370.f, 25.f });
+    yellowEnemy->SetPosition({ 300.f, 250.f });
     AddGameObject(yellowEnemy, World);
 
     //Player2* player2 = new Player2("Player2");

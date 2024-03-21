@@ -33,11 +33,6 @@ void YellowBaseBall::Reset()
     
     damageBounds = sprite.getGlobalBounds();
     attackBounds = sprite.getGlobalBounds();
-
-
-
-    std::function<void()> IntroAnimation=std::bind(&YellowBaseBall::Intro, this);
-    yellowBaseBallAnimator.AddEvent("animations/BaseballYellow_Idle.csv", 3, IntroAnimation);
     std::function<void()> backPosition= std::bind(&YellowBaseBall::RetreatAfterAction, this);
     yellowBaseBallAnimator.AddEvent("animations/BaseballYellow_Attack.csv", 3, backPosition);
 }
@@ -55,7 +50,6 @@ void YellowBaseBall::LateUpdate(float dt)
 void YellowBaseBall::Draw(sf::RenderWindow& window)
 {
     Enemy::Draw(window);
-    //window.draw(sprite);
     window.draw(damageBox);
     window.draw(attackBox);
 }
@@ -66,6 +60,7 @@ void YellowBaseBall::Update(float dt)
     //이후에 Move 상태로 돌입하고 플레이어를 찾음
     //플레이어를 찾으면 플레이어를 향해 이동
     DrawBox();
+   
     if(currentState!=YellowBaseBallState::ATTACK)
     {
         SetFlipX(position.x > player->GetPosition().x);
@@ -75,8 +70,7 @@ void YellowBaseBall::Update(float dt)
     if (attackTimer > 0) {
         attackTimer -= dt;
     }
-   
-
+    
     if (sceneDev1 != nullptr) {
         position = sceneDev1->ClampByTileMap(position);
     }else
@@ -85,6 +79,7 @@ void YellowBaseBall::Update(float dt)
     }
     
     sf::Vector2f playerPosition = player->GetPosition();
+    Direction(playerPosition);
     float distanceX = playerPosition.x - position.x;
     float distanceY = playerPosition.y - position.y;
     if(std::abs(distanceY)>acceptableYDistance)
@@ -221,11 +216,6 @@ void YellowBaseBall::SetPosition(const sf::Vector2f& pos)
     sprite.setPosition(pos);
 }
 
-void YellowBaseBall::Intro()
-{
-    
-}
-
 void YellowBaseBall::DrawBox()
 {
     // damageBox 설정
@@ -252,4 +242,13 @@ void YellowBaseBall::DrawBox()
     attackBox.setOutlineColor(sf::Color::Red); // 디버깅 목적
     attackBox.setOutlineThickness(1.f);
     
+}
+
+void YellowBaseBall::Direction(const sf::Vector2f& playerPosition)
+{
+    if (playerPosition.x < position.x) {
+        sprite.setScale(1.0f, 1.0f); // 플레이어가 왼쪽에 있음
+    } else {
+        sprite.setScale(-1.0f, 1.0f); // 플레이어가 오른쪽에 있음
+    }
 }

@@ -68,6 +68,6 @@ public:
     static sf::Vector2f Normalize(const sf::Vector2f& source);
     void GetCurrentAnimationName();
     void SetPosition(const sf::Vector2f& pos) override;
-    void Intro();
     void DrawBox();
+    void Direction(const sf::Vector2f& playerPosition);
 };
