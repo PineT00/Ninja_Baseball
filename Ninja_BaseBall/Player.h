@@ -3,12 +3,17 @@
 #include "Animator.h"
 
 class SceneDev1;
+class Player2;
 
 class Player :
     public SpriteGo
 {
 protected:
+	SceneDev1* sceneDev1 = nullptr;
+	Player2* player2 = nullptr;
+
 	Animator animator;
+
 
 	float speed = 150.f;
 	float dashSpeed = 400.f;
@@ -20,7 +25,8 @@ protected:
 
 	bool isGrounded = true;
 
-	SceneDev1* sceneDev1 = nullptr;
+
+
 
 	float dashTimer = 0.5f;
 

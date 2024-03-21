@@ -24,10 +24,15 @@ void Player2::TestStatic()
 void Player2::Init()
 {
 	SpriteGo::Init();
+	hasHitBox = true;
 
 	animator.SetTarget(&sprite);
 
-	hasHitBox = true;
+	hitBox.setFillColor(sf::Color::Yellow);
+	hitBox.setSize({ 50,50 });
+	hitBox.setOrigin({ 20.f, 150.f });
+
+
 }
 
 void Player2::Reset()
@@ -43,7 +48,7 @@ void Player2::Reset()
 	animator.Play("Animations/Idle.csv");
 	SetOrigin(Origins::BC);
 
-	SetScale({ 0.75f, 0.75f });
+	SetScale({ 2.2f, 2.2f });
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 
@@ -182,6 +187,18 @@ void Player2::Update(float dt)
 		animator.Play("Animations/Idle.csv");
 	}
 
+	hitBox.setPosition(GetPosition());
+}
+
+void Player2::Draw(sf::RenderWindow& window)
+{
+	SpriteGo::Draw(window);
+
+
+	if (SCENE_MANAGER.GetDeveloperMode())
+	{
+		window.draw(hitBox);
+	}
 }
 
 

@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,12,1,,,,,
+,8,1,,,,,
 ,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
 graphics/2_Player/red/red_walk2.bmp,2.80234,0,242.603,261.755,9,122.763,256.884
