@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Enemy.h"
-#include "TestScene.h"
-#include "TestPlayer.h"
+#include "Player.h"
+#include "SceneDev1.h"
 
 Enemy::Enemy(const std::string& name):SpriteGo(name)
 {
@@ -22,15 +22,12 @@ void Enemy::Release()
 void Enemy::Reset()
 {
     //SpriteGo::Reset();
-    testScene = dynamic_cast<TestScene*>(SCENE_MANAGER.GetCurrentScene());
-    testPlayer = dynamic_cast<TestPlayer*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("TestPlayer"));
     health = maxHealth;
     isDead = false;
     isAttacking = false;
-    textureId = "Monster";
+    //textureId = "Monster";
     enemyAnimator.ClearEvent();
 }
-
 void Enemy::Update(float dt)
 {
     SpriteGo::Update(dt);

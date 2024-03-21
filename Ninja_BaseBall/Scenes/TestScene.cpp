@@ -2,6 +2,7 @@
 #include "TestScene.h"
 #include "TestPlayer.h"
 #include "YellowBaseBall.h"
+#include "Stage1.h"
 
 
 
@@ -124,5 +125,11 @@ void TestScene::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(0.f);
         break;
     }
+}
+
+sf::Vector2f TestScene::ClampByTileMap(const sf::Vector2f point)
+{
+    sf::FloatRect rect = stage->groundBound.getGlobalBounds();
+    return Utils::MyMath::Clamp(point,rect);
 }
 

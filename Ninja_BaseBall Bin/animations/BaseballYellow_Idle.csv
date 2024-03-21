@@ -1,10 +1,6 @@
-ID,FPS,"LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)",,,
-Idle,3,1,,,
-,,,,,
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),
+Idle,15,1,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN
-graphics/YellowIdle.png,0,0,30,15.5,7
-graphics/YellowIdle.png,30,0,30,15.5,7
-graphics/YellowIdle.png,60,0,30,15.5,7
-graphics/YellowIdle.png,90,0,30,15.5,7
-graphics/YellowIdle.png,120,0,30,15.5,7
-graphics/YellowIdle.png,150,0,30,15.5,7
+graphics/monster-Ball.png,98.0583,0.361046,-97.7116,62.5894,4
+graphics/monster-Ball.png,252.281,0,-47.7301,63.4008,4
+graphics/monster-Ball.png,397.272,0,-94.3344,61.3745,4

@@ -8,7 +8,7 @@ class TextGo;
 class InputField;
 class TestPlayer;
 class YellowBaseBall;
-
+class Stage1;
 
 class TestScene:public Scene
 {
@@ -19,7 +19,7 @@ protected:
     TestScene& operator=(TestScene&&) = delete;
 
     sf::Vector2f windowSize;
-    
+    Stage1* stage;
     YellowBaseBall* yellowEnemy;
 public:
     TestPlayer* testPlayer;
@@ -41,4 +41,5 @@ public:
 
     GameStatus GetStatus() const { return this->status; }
     void SetStatus(GameStatus newStatus);
+    sf::Vector2f ClampByTileMap(const sf::Vector2f point);
 };

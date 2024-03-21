@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "SceneDev1.h"
 
-Player::Player(const std::string& name)
+Player::Player(const std::string& name):SpriteGo(name)
 {
 }
 
@@ -72,9 +72,12 @@ void Player::Update(float dt)
 	{
 		position = sceneDev1->ClampByTileMap(position);
 	}
-
+	if(velocity != sf::Vector2f(0,0))
+	{
+		facingDirection=velocity/std::sqrt(velocity.x*velocity.x+velocity.y*velocity.y);
+	}
 	SetPosition(position);
-	std::cout << position.x << std::endl;
+	//std::cout << position.x << std::endl;
 
 	if (h != 0.f)
 	{
@@ -101,6 +104,15 @@ void Player::Update(float dt)
 	}
 
 }
+
+sf::Vector2f Player::GetBackPosition() const
+{
+	return facingDirection;
+}
+
+
+
+
 
 
 
