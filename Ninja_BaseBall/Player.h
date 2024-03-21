@@ -22,7 +22,7 @@ protected:
 
 	SceneDev1* sceneDev1 = nullptr;
 
-	float dashTimer = 1.5f;
+	float dashTimer = 0.5f;
 
 	float leftDashTime = 0.f;
 	bool leftDashReady = false;
@@ -32,7 +32,13 @@ protected:
 	bool rightDashReady = false;
 	bool isRightDashing = false;
 
+	int jumpDirection = 0;
 
+	int normalAttack = 0;
+
+	sf::RectangleShape attackBox;
+	sf::RectangleShape grapBox;
+	sf::RectangleShape hitBox;
 
 public:
 	Player(const std::string& name = "");
@@ -44,5 +50,7 @@ public:
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;
+
+	void draw(sf::RenderWindow& window);
 };
 
