@@ -17,9 +17,11 @@ protected:
 	bool isGrounded = true;
 
 	SceneDev1* sceneDev1 = nullptr;
-
+	sf::Vector2f backDirection;
+	sf::Vector2f position;
+	sf::Vector2f facingDirection;
 public:
-	Player(const std::string& name = "");
+	Player(const std::string& name);
 	~Player();
 
 	void TestInstance();
@@ -28,5 +30,7 @@ public:
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;
+
+	sf::Vector2f GetBackPosition() const;
 };
 

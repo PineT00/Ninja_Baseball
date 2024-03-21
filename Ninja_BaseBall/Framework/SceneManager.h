@@ -25,7 +25,8 @@ protected:
 	SceneManager& operator=(SceneManager&&)		 = delete;
 
 	std::vector<Scene*> scenes; 
-	SceneIDs startScene = SceneIDs::SceneAnimationTool;
+	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
+	SceneIDs startScene = SceneIDs::SceneDev1;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 
@@ -33,7 +34,7 @@ protected:
 	std::vector<std::string> FontResourceNames = {};
 	std::vector<std::string> SoundResourceNames = {};
 
-	bool isDeveloperMode = false; //°³¹ßÀÚ ¸ğµå¿ë º¯¼ö
+	bool isDeveloperMode = false; //ê°œë°œì ëª¨ë“œìš© ë³€ìˆ˜
 
 public:
 
@@ -46,7 +47,7 @@ public:
 	Scene* GetCurrentScene() { return scenes[(int)currentScene]; }
 	Scene* GetScene(SceneIDs id) { return scenes[(int)id]; }
 	
-	bool GetDeveloperMode() { return isDeveloperMode; } //°³¹ßÀÚ ¸ğµå¿ë ¸Ş¼Òµå
+	bool GetDeveloperMode() { return isDeveloperMode; } //ê°œë°œì ëª¨ë“œìš© ë©”ì†Œë“œ
 
 	void LoadAllResources();
 	void ChangeScene(SceneIDs id);

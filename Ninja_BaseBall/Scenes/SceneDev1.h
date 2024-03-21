@@ -6,6 +6,7 @@ class UiHUD;
 class SpriteGo;
 class TextGo;
 class InputField;
+class YellowBaseBall;
 class Stage1;
 class Player;
 
@@ -22,12 +23,14 @@ protected :
 	float xMax = 0.f;
 
 	Stage1* stage = nullptr;
-	Player* player = nullptr;
+	
 	UiHUD* hud = nullptr;
+	YellowBaseBall* yellowEnemy = nullptr;
 
 	sf::Vector2f windowSize;
 
-public :
+public:
+	Player* player;
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 

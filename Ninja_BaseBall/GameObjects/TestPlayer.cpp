@@ -41,6 +41,11 @@ void TestPlayer::Update(float dt)
     {
         position.y+=InputManager::GetAxisRaw(Axis::Vertical) * speed * dt;
     }
+    if(testScene != nullptr)
+    {
+        position = testScene->ClampByTileMap(position);
+    }
+    
     sprite.setPosition(position);
 }
 
