@@ -35,6 +35,7 @@ protected:
 	int jumpDirection = 0;
 
 	int normalAttack = 0;
+	bool isAttack = false;
 
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
@@ -47,10 +48,14 @@ public:
 	void TestInstance();
 	static void TestStatic();
 
+	void SetAttackOn();
+	void SetAttackOff();
+	void SetBox(bool flip);
+
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;
 
-	void draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window) override;
 };
 

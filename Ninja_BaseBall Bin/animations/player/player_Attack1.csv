@@ -1,10 +1,8 @@
 ID,FPS,"LOOPTYPE (0:Single , 1:Loop , 2:PingPong)",,
-Idle,6,1,,
+Idle,16,0,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
-graphics/temperPlayer.png,0,0,77,100
-graphics/temperPlayer.png,77,0,77,100
-graphics/temperPlayer.png,144,0,77,100
-graphics/temperPlayer.png,221,0,77,100
-graphics/temperPlayer.png,298,0,77,100
-graphics/temperPlayer.png,375,0,77,100
+graphics/player_Red.png,0,312,93,88
+graphics/player_Red.png,93,312,93,88
+graphics/player_Red.png,196,312,93,88
+graphics/player_Red.png,289,312,93,88

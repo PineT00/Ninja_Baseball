@@ -66,7 +66,7 @@ void YellowBaseBall::LateUpdate(float dt)
 void YellowBaseBall::Draw(sf::RenderWindow& window)
 {
     Enemy::Draw(window);
-    window.draw(sprite);
+    //window.draw(sprite);
 }
 
 void YellowBaseBall::Update(float dt)

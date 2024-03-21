@@ -21,6 +21,32 @@ void Player::TestStatic()
 	std::cout << "TestStatic()" << std::endl;
 }
 
+void Player::SetAttackOn()
+{
+	isAttack = true;
+}
+
+void Player::SetAttackOff()
+{
+	isAttack = false;
+}
+
+void Player::SetBox(bool flip)
+{
+	if (flip)
+	{
+		attackBox.setOrigin({ 40.f, 40.f });
+		grapBox.setOrigin({ 20.f, 40.f });
+		hitBox.setOrigin({ 0.f, 50.f });
+	}
+	else
+	{
+		attackBox.setOrigin({ -40.f, 40.f });
+		grapBox.setOrigin({ -20.f, 40.f });
+		hitBox.setOrigin({ 0.f, 50.f });
+	}
+}
+
 void Player::Init()
 {
 	SpriteGo::Init();
@@ -33,9 +59,14 @@ void Player::Init()
 	grapBox.setFillColor(sf::Color::Red);
 	hitBox.setFillColor(sf::Color::Yellow);
 	
-	attackBox.setSize({ 20,20 });
-	grapBox.setSize({ 20,20 });
+	attackBox.setSize({ 5,5 });
+	grapBox.setSize({ 5,5 });
 	hitBox.setSize({ 20,20 });
+
+
+	attackBox.setOrigin({ -40.f, 40.f });
+	grapBox.setOrigin({ -20.f, 40.f });
+	hitBox.setOrigin({ 0.f, 50.f });
 
 
 }
@@ -43,6 +74,10 @@ void Player::Init()
 void Player::Reset()
 {
 	animator.ClearEvent();
+	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
+	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
+	animator.AddEvent("Animations/player/player_Attack1.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_Attack1.csv", 3, AttackOff);
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
@@ -57,9 +92,10 @@ void Player::Reset()
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 
-	attackBox.setOrigin({30.f, 0.f});
-	grapBox.setOrigin({ 10.f, 0.f });
-	hitBox.setOrigin({ 0.f, 0.f });
+
+	attackBox.setPosition({ GetPosition() });
+	grapBox.setPosition({ GetPosition() });
+	hitBox.setPosition({ GetPosition() });
 
 }
 
@@ -75,7 +111,6 @@ void Player::Update(float dt)
 	}
 	else
 	{
-
 		if (InputManager::GetKey(sf::Keyboard::Up))
 		{
 			v = -1;
@@ -89,11 +124,11 @@ void Player::Update(float dt)
 
 	float h = 0;
 
-	if (InputManager::GetKeyDown(sf::Keyboard::Right))
+	if (InputManager::GetKeyDown(sf::Keyboard::Right) && isGrounded)
 	{
 		rightDashReady = true;
 	}
-	if (InputManager::GetKeyDown(sf::Keyboard::Left))
+	if (InputManager::GetKeyDown(sf::Keyboard::Left) && isGrounded)
 	{
 		leftDashReady = true;
 	}
@@ -155,7 +190,7 @@ void Player::Update(float dt)
 	}
 
 
-
+	//대쉬 스피드
 	if (isRightDashing || isLeftDashing)
 	{
 		velocity.x = h * dashSpeed;
@@ -165,11 +200,30 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
+	//점프
 
+	if (!isGrounded)
+	{
+		if (position.y >= jumpY)
+		{
+			isGrounded = true;
+			SetPosition({ position.x, jumpY });
+		}
+	}
 
-	if (isGrounded == false)
+	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
+	{
+		isGrounded = false;
+		jumpY = GetPosition().y;
+		animator.Play("Animations/player/player_Jump.csv");
+		velocity.y = -300.f;
+		jumpDirection = h;
+	}
+
+	if (!isGrounded)
 	{
 		velocity.y += gravity * dt;
+
 		if (jumpDirection != 0.f)
 		{
 			velocity.x = jumpDirection * speed;
@@ -184,59 +238,54 @@ void Player::Update(float dt)
 		velocity.y = v * speed;
 	}
 
-	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
-	{
-		isGrounded = false;
-		jumpY = GetPosition().y;
-		animator.Play("Animations/player/player_Jump.csv");
-		velocity.y = -300.f;
-		jumpDirection = h;
-
-	}
-
-
 	position += velocity * dt;
+	SetPosition(position);
 
-	if (!isGrounded)
+	if (isAttack)
 	{
-
-
-		if (position.y >= jumpY)
-		{
-			isGrounded = true;
-			SetPosition({ position.x, jumpY });
-		}
+		velocity = { 0.f, 0.f };
+		std::cout << isAttack << std::endl;
 	}
 
+
+
+	//이동영역 제한
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
 	}
 
-	SetPosition(position);
 
 	if (h != 0.f)
 	{
 		SetFlipX(h < 0);
+		SetBox(h < 0);
 	}
 
 	//콤보용 기술 모음
 	{
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
-			animator.Play("Animations/player/player_Jump.csv");
+			animator.Play("Animations/player/player_Attack1.csv");
+			normalAttack = 1;
 		}
 		if (InputManager::GetKeyDown(sf::Keyboard::W))
 		{
-			animator.Play("Animations/player/player_Jump.csv");
+			animator.Play("Animations/player/player_Attack2.csv");
+			isAttack = true;
+			normalAttack = 2;
 		}
 		if (InputManager::GetKeyDown(sf::Keyboard::E))
 		{
-			animator.Play("Animations/player/player_Jump.csv");
+			animator.Play("Animations/player/player_Attack3.csv");
+			isAttack = true;
+			normalAttack = 3;
 		}
 		if (InputManager::GetKeyDown(sf::Keyboard::R))
 		{
-			animator.Play("Animations/player/player_Jump.csv");
+			animator.Play("Animations/player/player_Attck4.csv");
+			isAttack = true;
+			normalAttack = 4;
 		}
 		if (InputManager::GetKeyDown(sf::Keyboard::T))
 		{
@@ -275,18 +324,27 @@ void Player::Update(float dt)
 	{
 		animator.Play("Animations/player/player_Idle.csv");
 	}
+
+	if (!isAttack && animator.GetCurrentClipId() == "Animations/player/player_Attack1.csv")
+	{
+		animator.PlayQueue("Animations/player/player_Idle.csv");
+	}
+
+
+	attackBox.setPosition({ GetPosition() });
+	grapBox.setPosition({ GetPosition() });
+	hitBox.setPosition({ GetPosition() });
 }
 
-void Player::draw(sf::RenderWindow& window)
-{
+void Player::Draw(sf::RenderWindow& window)
+{	
 	SpriteGo::Draw(window);
 
 	window.draw(attackBox);
 	window.draw(grapBox);
 	window.draw(hitBox);
-
-
 }
+
 
 
 
