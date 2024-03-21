@@ -223,7 +223,7 @@ void YellowBaseBall::SetPosition(const sf::Vector2f& pos)
 
 void YellowBaseBall::Intro()
 {
-    //std::cout<<"Intro"<<std::endl;
+    
 }
 
 void YellowBaseBall::DrawBox()
