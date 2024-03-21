@@ -22,16 +22,8 @@ void SceneAnimationTool::Init()
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
-	// Test PreloadView
-	// preloadView.setSize(windowSize * 0.12f);
-	// preloadView.setCenter({ windowSize.x * 0.05f + windowSize.x * 0.06f, windowSize.y * 0.7f + windowSize.y * 0.06f });
-
-	// UI View 그리듯 변경 
-	//preloadView.setSize(windowSize);
-	//preloadView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 	AddGameObject(new PreviewCharacter(), Layers::Ui);
 
-	//
 	buttonLoadAtlas = new Button(Button::ButtonIdentifier::loadAtlas);
 	buttonLoadAtlas->SetStringValue(atlasPath);
 	buttonLoadAtlas->SetButton({ 60.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.2f }, sf::Color::White, Origins::MC);
@@ -52,6 +44,17 @@ void SceneAnimationTool::Init()
 	inputfieldFPS->SetOrigin(Origins::ML);
 	AddGameObject(inputfieldFPS, Layers::Ui);
 
+	// TODO : Auto Slice 기능
+	//inputfieldRow = new InputField("inputfieldfps");
+	//inputfieldRow->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
+	//inputfieldRow->SetOrigin(Origins::ML);
+	//AddGameObject(inputfieldRow, Layers::Ui);
+
+	//inputfieldCol = new InputField("inputfieldfps");
+	//inputfieldCol->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
+	//inputfieldCol->SetOrigin(Origins::ML);
+	//AddGameObject(inputfieldFPS, Layers::Ui);
+
 	buttonStop = new Button(Button::ButtonIdentifier::stop, "buttonstop");
 	buttonStop->SetButton({ 30.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.5f }, sf::Color::White, Origins::MC);
 	buttonStop->SetButtonText(font, "Stop", 12.f, sf::Color::Black, { windowSize.x * 0.1f, windowSize.y * 0.5f }, Origins::MC);
@@ -66,6 +69,11 @@ void SceneAnimationTool::Init()
 	buttonSaveAnimation->SetButton({ 80.f,40.f }, { windowSize.x * 0.75f, windowSize.y * 0.85f }, sf::Color::White, Origins::MC);
 	buttonSaveAnimation->SetButtonText(font, "Save\nAnimation", 15.f, sf::Color::Black, { windowSize.x * 0.75f, windowSize.y * 0.85f }, Origins::MC);
 	AddGameObject(buttonSaveAnimation, Layers::Ui);
+
+	//buttonAutoSlice = new Button(Button::ButtonIdentifier::autoslice, "buttonautoslice");
+	//buttonAutoSlice->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.35f }, sf::Color::White, Origins::MC);
+	//buttonAutoSlice->SetButtonText(font, "Auto Slice", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.35f }, Origins::MC);
+	//AddGameObject(buttonAutoSlice, Layers::Ui);
 
 	editorBorder.setOutlineColor(sf::Color::Red);
 	editorBorder.setFillColor(sf::Color::Transparent);
@@ -172,7 +180,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 	break;
 	case sf::Event::MouseButtonPressed:
 	{
-		if (event.mouseButton.button == sf::Mouse::Left)
+		if (event.mouseButton.button == sf::Mouse::Left && !isCustomPivot)
 		{
 			sf::Vector2f mouseWorldPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
 			if (IsWithinWorldView(mouseWorldPos))
@@ -191,27 +199,39 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 	break;
 	case sf::Event::MouseButtonReleased:
 	{
-		if (event.mouseButton.button == sf::Mouse::Left && isLeftDragging && isAtlasPath)
+		if (event.mouseButton.button == sf::Mouse::Left)
 		{
-			isLeftDragging = false;
-			sf::Vector2f endPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
-			if (IsWithinWorldView(endPos))
+			if (isLeftDragging && isAtlasPath && !isCustomPivot)
 			{
-				leftDragStartPos.x = std::max(0.f, leftDragStartPos.x);
-				leftDragStartPos.y = std::max(0.f, leftDragStartPos.y);
+				isLeftDragging = false;
+				sf::Vector2f endPos = ScreenToWorld((sf::Vector2i)InputManager::GetMousePos());
+				if (IsWithinWorldView(endPos))
+				{
+					leftDragStartPos.x = std::max(0.f, leftDragStartPos.x);
+					leftDragStartPos.y = std::max(0.f, leftDragStartPos.y);
 
-				sf::Vector2f RightBottomPos = endPos - leftDragStartPos;
+					sf::Vector2f RightBottomPos = endPos - leftDragStartPos;
 
-				sf::FloatRect selectedArea(leftDragStartPos, RightBottomPos);
+					sf::FloatRect selectedArea(leftDragStartPos, RightBottomPos);
 
-				selectedAreas.push_back(selectedArea);
+					selectedAreas.push_back(selectedArea);
 
-				std::cout << selectedArea.left
-					<< " : " << selectedArea.top
-					<< " : " << selectedArea.width
-					<< " : " << selectedArea.height << std::endl;
+					std::cout << selectedArea.left
+						<< " : " << selectedArea.top
+						<< " : " << selectedArea.width
+						<< " : " << selectedArea.height << std::endl;
+				}
+			}
+
+			if (isCustomPivot)
+			{
+				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top }; 
+				customPivots.push_back((ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect));
+				std::cout << (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect).x << " : " << (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect).y << std::endl;
+				isCustomPivot = false;
 			}
 		}
+			
 		else if (event.mouseButton.button == sf::Mouse::Right)
 		{
 			isRightDragging = false;
@@ -265,6 +285,7 @@ void SceneAnimationTool::UpdateGame(float dt)
 			AddGameObject(spriteSheet);
 		}
 	}
+
 }
 
 void SceneAnimationTool::UpdateGameover(float dt)

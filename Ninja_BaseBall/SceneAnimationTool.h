@@ -20,18 +20,25 @@ protected:
 	Button* buttonSaveAnimation = nullptr;
 	Button* buttonStop = nullptr;
 	Button* buttonPlay = nullptr;
+	
+	// TODO : Auto Slice 기능
+	//Button* buttonAutoSlice = nullptr;
 
 	std::vector<sf::FloatRect> selectedAreas;
 	std::vector<Origins> selectedAreasPivot;
 	std::vector<Button*> originButtons;
 	std::vector<Button*> loopButtons;
-	std::vector<std::string> originButtonsText = {"TL", "TC", "TR", "ML", "MC", "MR","BL", "BC", "BR"};
+	std::vector<std::string> originButtonsText = {"TL", "TC", "TR", "ML", "MC", "MR","BL", "BC", "BR", "CUSTOM"};
 	std::vector<std::string> loopButtonsText = {"Single", "Loop", "Ping Pong"};
+	std::vector<sf::Vector2f> customPivots;
 	std::wstring atlasPath;
 
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
+	// TODO : Auto Slice 기능
+	//InputField* inputfieldRow = nullptr;
+	//InputField* inputfieldCol = nullptr;
 	PreviewCharacter* previewCharacter = nullptr;
 	AnimationLoopType selectedLoopType = AnimationLoopType::Single;
 
@@ -50,6 +57,7 @@ protected:
 	bool firstTextureLoad = true;
 	bool isLeftDragging = false;
 	bool isRightDragging = false;
+	bool isCustomPivot = false;
 
 public:
 	SceneAnimationTool(SceneIDs id);
@@ -74,10 +82,13 @@ public:
 	void SetAtlasPath(const std::wstring& str);
 
 	sf::Vector2f GetPreloadBoardPos() const { return preloadBoardPos; }
-
 	std::vector<sf::FloatRect>& GetSelectedAreas() { return selectedAreas; }
 	std::vector<Origins>& GetSelectedAreasPivot() { return selectedAreasPivot; }
+	std::vector<sf::Vector2f>& GetCustomPivot() { return customPivots; }
 	AnimationLoopType& GetSelectedLoopType() { return selectedLoopType; }
+
+	bool IsCustomPivot() const { return isCustomPivot; }
+	void SetIsCutomPivot(bool isCustom) { isCustomPivot = isCustom; }
 
 	InputField* GetFPS() const { return inputfieldFPS; }
 	GameStatus GetStatus() const { return this->status; }

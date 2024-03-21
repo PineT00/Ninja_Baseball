@@ -4,6 +4,7 @@
 
 Animator::Animator()
 {
+	shader.loadFromFile("transparent.frag", sf::Shader::Fragment);
 }
 
 Animator::~Animator()
@@ -93,8 +94,8 @@ void Animator::Play(const std::string& clipId, bool clearQueue)
 
 // TODO : 미리보기 작업중
 void Animator::Play(std::vector<sf::FloatRect>& selectedAreas, 
-	std::vector<Origins>& selectedAreasPivot, InputField* inputfieldFPS, 
-	AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue)
+	std::vector<Origins>& selectedAreasPivot, std::vector<sf::Vector2f>& customPivot, InputField* inputfieldFPS,
+	 AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue)
 {
 	if (clearQueue)
 	{
@@ -120,7 +121,8 @@ void Animator::Play(std::vector<sf::FloatRect>& selectedAreas,
 				(int)selectedAreas[i].width,
 				(int)selectedAreas[i].height,
 			},
-			selectedAreasPivot[i]
+			selectedAreasPivot[i],
+			customPivot[i]
 			});
 	}
 	currentClip->id = Utils::MyString::WideStringToString(atlasPath);
@@ -147,8 +149,10 @@ void Animator::SetFrame(const AnimationFrame& frame)
 	{
 		target->setOrigin(frame.customPivot);
 	}
-
-	Utils::Origin::SetOrigin(*target, frame.pivot);
+	else
+	{
+		Utils::Origin::SetOrigin(*target, frame.pivot);
+	}
 	target->setTexture(frame.GetTexture());
 	target->setTextureRect(frame.textureCoord);
 }
@@ -181,7 +185,8 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 				std::stoi(row[3]),
 				std::stoi(row[4]),
 			},
-			((Origins)std::stoi(row[5]))
+			((Origins)std::stoi(row[5])),
+			{std::stof(row[6]), std::stof(row[7])}
 			});
 	}
 
