@@ -33,7 +33,7 @@ protected:
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
 	PreviewCharacter* previewCharacter = nullptr;
-	AnimationLoopType selectedLoopType;
+	AnimationLoopType selectedLoopType = AnimationLoopType::Single;
 
 	sf::Font font;
 	sf::RectangleShape editorBorder;

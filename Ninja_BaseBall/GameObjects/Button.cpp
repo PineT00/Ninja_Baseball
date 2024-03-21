@@ -254,6 +254,9 @@ void Button::PlayPreView(PreviewCharacter* obj)
 {
 	this->obj = obj;
 
+	if (sceneAnimationTool->GetSelectedAreas().empty() || sceneAnimationTool->GetSelectedAreasPivot().empty() ||
+		sceneAnimationTool->GetFPS() == nullptr) return;
+
 	obj->GetAnimator().Play(
 		sceneAnimationTool->GetSelectedAreas(), 
 		sceneAnimationTool->GetSelectedAreasPivot(), 
