@@ -22,7 +22,8 @@ void SceneAnimationTool::Init()
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
-	AddGameObject(new PreviewCharacter(), Layers::Ui);
+	previewCharacter = new PreviewCharacter();
+	AddGameObject(previewCharacter, Layers::Ui);
 
 	buttonLoadAtlas = new Button(Button::ButtonIdentifier::loadAtlas);
 	buttonLoadAtlas->SetStringValue(atlasPath);
@@ -229,23 +230,10 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top };
 				sf::Vector2f customPivot = (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect);
 
-				if (customPivot.x < selectedAreas[selectedAreas.size() - 1].left)
-				{
-					customPivot.x = selectedAreas[selectedAreas.size() - 1].left;
-				}
-				if (customPivot.y < selectedAreas[selectedAreas.size() - 1].top)
-				{
-					customPivot.y = selectedAreas[selectedAreas.size() - 1].top;
-				}
-				if (customPivot.x > selectedAreas[selectedAreas.size() - 1].left + selectedAreas[selectedAreas.size() - 1].width)
-				{
-					customPivot.x = selectedAreas[selectedAreas.size() - 1].left + selectedAreas[selectedAreas.size() - 1].width;
-				}
 				if (customPivot.y > selectedAreas[selectedAreas.size() - 1].top + selectedAreas[selectedAreas.size() - 1].height)
 				{
 					customPivot.y = selectedAreas[selectedAreas.size() - 1].top + selectedAreas[selectedAreas.size() - 1].height;
 				}
-
 
 				customPivots.push_back(customPivot);
 				std::cout << "Custom Pivot, Selected Pivot : " << customPivot.x << " : " << customPivot.y << std::endl;
@@ -297,6 +285,8 @@ void SceneAnimationTool::UpdateGame(float dt)
 		selectedLoopType = AnimationLoopType::Single; // 기본 값
 		customPivots.clear();
 
+		previewCharacter->GetAnimator().ClearFrames();
+
 		textureBorder.setPosition(0, 0);
 		textureBorder.setSize((sf::Vector2f)spriteSheet->GetTexture()->getSize());
 
@@ -307,6 +297,20 @@ void SceneAnimationTool::UpdateGame(float dt)
 		}
 	}
 
+	if (InputManager::GetKeyDown(sf::Keyboard::Delete))
+	{
+		if (selectedAreas.empty()) return;
+		// 마지막 선택된 영역 삭제
+		if (selectedAreas.size() > selectedAreasPivot.size())
+		{
+			selectedAreas.erase(selectedAreas.end() - 1);
+		}
+		else if (selectedAreas.size() == selectedAreasPivot.size())
+		{
+			selectedAreas.erase(selectedAreas.end() - 1);
+			selectedAreasPivot.erase(selectedAreasPivot.end() - 1);
+		}
+	}
 }
 
 void SceneAnimationTool::UpdateGameover(float dt)
