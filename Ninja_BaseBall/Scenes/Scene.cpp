@@ -101,6 +101,7 @@ void Scene::UpdateEvent(const sf::Event& event)
 					}
 					else if (event.text.unicode == 15)
 					{
+						inputField->SetFocused(false);
 						continue;
 					}
 					else
@@ -125,6 +126,7 @@ void Scene::UpdateEvent(const sf::Event& event)
 					}
 					else if (event.text.unicode == 13)
 					{
+						inputField->SetFocused(false);
 						continue;
 					}
 					else
