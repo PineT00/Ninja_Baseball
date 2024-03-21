@@ -264,41 +264,33 @@ void Player::Update(float dt)
 
 	//콤보용 기술 모음
 	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Q))
-		{
-			animator.Play("Animations/player/player_Attack1.csv");
-			normalAttack = 1;
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::W))
-		{
-			animator.Play("Animations/player/player_Attack2.csv");
-			isAttack = true;
-			normalAttack = 2;
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::E))
-		{
-			animator.Play("Animations/player/player_Attack3.csv");
-			isAttack = true;
-			normalAttack = 3;
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::R))
-		{
-			animator.Play("Animations/player/player_Attck4.csv");
-			isAttack = true;
-			normalAttack = 4;
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::T))
-		{
-			animator.Play("Animations/player/player_Jump.csv");
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::Y))
-		{
-			animator.Play("Animations/player/player_Jump.csv");
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::U))
-		{
-			animator.Play("Animations/player/player_Jump.csv");
-		}
+		//if (InputManager::GetKeyDown(sf::Keyboard::Q))
+		//{
+		//	animator.Play("Animations/player/player_Attack1.csv");
+		//	normalAttack = 1;
+		//}
+		//if (InputManager::GetKeyDown(sf::Keyboard::W))
+		//{
+		//	animator.Play("Animations/player/player_Attack2.csv");
+		//	isAttack = true;
+		//	normalAttack = 2;
+		//}
+		//if (InputManager::GetKeyDown(sf::Keyboard::E))
+		//{
+		//	animator.Play("Animations/player/player_Attack3.csv");
+		//	isAttack = true;
+		//	normalAttack = 3;
+		//}
+		//if (InputManager::GetKeyDown(sf::Keyboard::R))
+		//{
+		//	animator.Play("Animations/player/player_Attck4.csv");
+		//	isAttack = true;
+		//	normalAttack = 4;
+		//}
+		//if (InputManager::GetKeyDown(sf::Keyboard::T))
+		//{
+		//	animator.Play("Animations/player/player_DashAttack.csv");
+		//}
 	}
 
 
@@ -325,10 +317,10 @@ void Player::Update(float dt)
 		animator.Play("Animations/player/player_Idle.csv");
 	}
 
-	if (!isAttack && animator.GetCurrentClipId() == "Animations/player/player_Attack1.csv")
-	{
-		animator.PlayQueue("Animations/player/player_Idle.csv");
-	}
+	//if (!isAttack && animator.GetCurrentClipId() == "Animations/player/player_Attack1.csv")
+	//{
+	//	animator.PlayQueue("Animations/player/player_Idle.csv");
+	//}
 
 
 	attackBox.setPosition({ GetPosition() });
