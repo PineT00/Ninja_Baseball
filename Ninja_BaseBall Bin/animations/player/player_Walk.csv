@@ -1,10 +1,10 @@
-ID,FPS,"LOOPTYPE (0:Single , 1:Loop , 2:PingPong)",,,,,
-Idle,6,1,,,,,
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,12,1,,,,,
 ,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/temperPlayer.png,0,0,77,100,4,0,0
-graphics/temperPlayer.png,77,0,77,100,4,0,0
-graphics/temperPlayer.png,144,0,77,100,4,0,0
-graphics/temperPlayer.png,221,0,77,100,4,0,0
-graphics/temperPlayer.png,298,0,77,100,4,0,0
-graphics/temperPlayer.png,375,0,77,100,4,0,0
+graphics/2_Player/red/red_walk2.bmp,2.80234,0,242.603,261.755,9,122.763,256.884
+graphics/2_Player/red/red_walk2.bmp,248.328,0,237.731,260.14,9,120.814,253.32
+graphics/2_Player/red/red_walk2.bmp,488.982,0,236.757,259.166,9,118.866,255.269
+graphics/2_Player/red/red_walk2.bmp,727.688,0,231.885,261.115,9,118.866,255.269
+graphics/2_Player/red/red_walk2.bmp,961.522,0,237.731,260.781,9,117.891,256.243
+graphics/2_Player/red/red_walk2.bmp,1201.2,0,237.731,261.755,9,122.763,254.935

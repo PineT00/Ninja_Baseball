@@ -32,7 +32,7 @@ void SceneDev1::Init()
     //cameraRect.setFillColor(sf::Color::Transparent);
 
     worldView.setSize(windowSize);
-    worldView.setCenter(0, 120);
+    worldView.setCenter(0, 360);
     uiView.setSize(windowSize);
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
@@ -152,7 +152,7 @@ void SceneDev1::UpdateGame(float dt)
     worldView.setCenter(worldViewCenter);
 
     stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
-    stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 500.f, 0.f });
+    stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 1588.f, 0.f });
 
 
     if (InputManager::GetKeyDown(sf::Keyboard::Num1))
