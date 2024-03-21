@@ -153,6 +153,7 @@
     <ClCompile Include="Utils\MyString.cpp" />
     <ClCompile Include="SceneAnimationTool.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player2.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\Stage1.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Utils\MyString.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="GameObjects\YellowBaseBall.h" />
+    <ClInclude Include="Player2.h" />
     <ClInclude Include="rapidcsv.h" />
     <ClInclude Include="SceneAnimationTool.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />

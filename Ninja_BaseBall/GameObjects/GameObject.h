@@ -21,8 +21,8 @@ protected:
 	bool isFlipY = false;
 	bool isFocused = false;
 
-	int sortLayer = 0; // �ٸ� ���̾� �� ����
-	int sortOrder = 0; // ���� ���̾� �� ����
+	int sortLayer = 0;
+	int sortOrder = 0;
 
 public:
 	static bool CompareDrawOrder(const GameObject& lhs, const GameObject& rhs);

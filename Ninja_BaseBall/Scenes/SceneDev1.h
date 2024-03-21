@@ -9,6 +9,7 @@ class InputField;
 class YellowBaseBall;
 class Stage1;
 class Player;
+class YellowBaseBall;
 
 class SceneDev1 : public Scene
 {
@@ -28,6 +29,8 @@ protected :
 	YellowBaseBall* yellowEnemy = nullptr;
 
 	sf::Vector2f windowSize;
+	
+	YellowBaseBall* monster = nullptr;
 
 public:
 	Player* player;
