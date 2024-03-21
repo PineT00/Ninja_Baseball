@@ -252,7 +252,6 @@ void Button::SetFramePivot()
 	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
 	std::vector<sf::Vector2f>& customPivotList = sceneAnimationTool->GetCustomPivot();
 	Origins frameOrigin = (Origins)(std::stoi(name.substr(name.size() -1)));
-	// Custom 피봇이 선택 되면 피봇을 선택할 수 있게 해야 함.
 	
 	if (frameOrigin == Origins::CUSTOM)
 	{
@@ -261,12 +260,9 @@ void Button::SetFramePivot()
 	else
 	{
 		customPivotList.push_back({ 0,0 });
+		std::cout << "Selected Pivot : " << (int)frameOrigin << std::endl;
 	}
-	// 가장 마지막 SelectedArea의 위치를 받아 상대적인 좌표를 구해야 함
-	//sf::Vector2f frameCustomOrigin = customPivotList[customPivotList.size() - 1]; // 에러 주의
-
 	pivotList.push_back(frameOrigin);
-	//customPivotList.push_back(frameCustomOrigin);
 }
 
 void Button::SetLoopType()

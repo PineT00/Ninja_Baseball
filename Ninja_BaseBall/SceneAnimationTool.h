@@ -22,7 +22,7 @@ protected:
 	Button* buttonPlay = nullptr;
 	
 	// TODO : Auto Slice 기능
-	//Button* buttonAutoSlice = nullptr;
+	Button* buttonAutoSlice = nullptr;
 
 	std::vector<sf::FloatRect> selectedAreas;
 	std::vector<Origins> selectedAreasPivot;
@@ -37,8 +37,8 @@ protected:
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
 	// TODO : Auto Slice 기능
-	//InputField* inputfieldRow = nullptr;
-	//InputField* inputfieldCol = nullptr;
+	InputField* inputfieldRow = nullptr;
+	InputField* inputfieldCol = nullptr;
 	PreviewCharacter* previewCharacter = nullptr;
 	AnimationLoopType selectedLoopType = AnimationLoopType::Single;
 

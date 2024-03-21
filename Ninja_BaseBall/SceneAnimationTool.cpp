@@ -45,15 +45,15 @@ void SceneAnimationTool::Init()
 	AddGameObject(inputfieldFPS, Layers::Ui);
 
 	// TODO : Auto Slice 기능
-	//inputfieldRow = new InputField("inputfieldfps");
-	//inputfieldRow->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
-	//inputfieldRow->SetOrigin(Origins::ML);
-	//AddGameObject(inputfieldRow, Layers::Ui);
+	inputfieldRow = new InputField("inputfieldfps");
+	inputfieldRow->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
+	inputfieldRow->SetOrigin(Origins::ML);
+	AddGameObject(inputfieldRow, Layers::Ui);
 
-	//inputfieldCol = new InputField("inputfieldfps");
-	//inputfieldCol->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
-	//inputfieldCol->SetOrigin(Origins::ML);
-	//AddGameObject(inputfieldFPS, Layers::Ui);
+	inputfieldCol = new InputField("inputfieldfps");
+	inputfieldCol->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
+	inputfieldCol->SetOrigin(Origins::ML);
+	AddGameObject(inputfieldFPS, Layers::Ui);
 
 	buttonStop = new Button(Button::ButtonIdentifier::stop, "buttonstop");
 	buttonStop->SetButton({ 30.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.5f }, sf::Color::White, Origins::MC);
@@ -70,10 +70,10 @@ void SceneAnimationTool::Init()
 	buttonSaveAnimation->SetButtonText(font, "Save\nAnimation", 15.f, sf::Color::Black, { windowSize.x * 0.75f, windowSize.y * 0.85f }, Origins::MC);
 	AddGameObject(buttonSaveAnimation, Layers::Ui);
 
-	//buttonAutoSlice = new Button(Button::ButtonIdentifier::autoslice, "buttonautoslice");
-	//buttonAutoSlice->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.35f }, sf::Color::White, Origins::MC);
-	//buttonAutoSlice->SetButtonText(font, "Auto Slice", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.35f }, Origins::MC);
-	//AddGameObject(buttonAutoSlice, Layers::Ui);
+	buttonAutoSlice = new Button(Button::ButtonIdentifier::autoslice, "buttonautoslice");
+	buttonAutoSlice->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.35f }, sf::Color::White, Origins::MC);
+	buttonAutoSlice->SetButtonText(font, "Auto Slice", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.35f }, Origins::MC);
+	AddGameObject(buttonAutoSlice, Layers::Ui);
 
 	editorBorder.setOutlineColor(sf::Color::Red);
 	editorBorder.setFillColor(sf::Color::Transparent);
@@ -225,9 +225,30 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 
 			if (isCustomPivot)
 			{
-				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top }; 
-				customPivots.push_back((ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect));
-				std::cout << (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect).x << " : " << (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect).y << std::endl;
+
+				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top };
+				sf::Vector2f customPivot = (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect);
+
+				if (customPivot.x < selectedAreas[selectedAreas.size() - 1].left)
+				{
+					customPivot.x = selectedAreas[selectedAreas.size() - 1].left;
+				}
+				if (customPivot.y < selectedAreas[selectedAreas.size() - 1].top)
+				{
+					customPivot.y = selectedAreas[selectedAreas.size() - 1].top;
+				}
+				if (customPivot.x > selectedAreas[selectedAreas.size() - 1].left + selectedAreas[selectedAreas.size() - 1].width)
+				{
+					customPivot.x = selectedAreas[selectedAreas.size() - 1].left + selectedAreas[selectedAreas.size() - 1].width;
+				}
+				if (customPivot.y > selectedAreas[selectedAreas.size() - 1].top + selectedAreas[selectedAreas.size() - 1].height)
+				{
+					customPivot.y = selectedAreas[selectedAreas.size() - 1].top + selectedAreas[selectedAreas.size() - 1].height;
+				}
+
+
+				customPivots.push_back(customPivot);
+				std::cout << "Custom Pivot, Selected Pivot : " << customPivot.x << " : " << customPivot.y << std::endl;
 				isCustomPivot = false;
 			}
 		}
@@ -271,10 +292,10 @@ void SceneAnimationTool::UpdateGame(float dt)
 		spriteSheet->SetPosition({ 0,0 });
 		spriteSheet->SetOrigin(Origins::TL);
 
-		// 텍스쳐가 바뀌었을 떄 초기화 적용
 		selectedAreas.clear();
 		selectedAreasPivot.clear();
 		selectedLoopType = AnimationLoopType::Single; // 기본 값
+		customPivots.clear();
 
 		textureBorder.setPosition(0, 0);
 		textureBorder.setSize((sf::Vector2f)spriteSheet->GetTexture()->getSize());
