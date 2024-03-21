@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "ComboCommands.h"
 #include "SceneDev1.h"
 #include "Player2.h"
 
@@ -102,6 +103,10 @@ void Player::Reset()
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
+	combo = new ComboCommands();
+
+	combo->SetCombo();
+
 }
 
 void Player::Update(float dt)
@@ -138,11 +143,11 @@ void Player::Update(float dt)
 		leftDashReady = true;
 	}
 
-	if (InputManager::GetKey(sf::Keyboard::Left))
+	if (InputManager::GetKey(sf::Keyboard::Left) && isGrounded)
 	{
 		h = -1;
 	}
-	else if (InputManager::GetKey(sf::Keyboard::Right))
+	else if (InputManager::GetKey(sf::Keyboard::Right) && isGrounded)
 	{
 		h = 1;
 	}
@@ -221,7 +226,7 @@ void Player::Update(float dt)
 		isGrounded = false;
 		jumpY = GetPosition().y;
 		animator.Play("Animations/player/player_Jump.csv");
-		velocity.y = -300.f;
+		velocity.y = -800.f;
 		jumpDirection = h;
 	}
 
@@ -310,6 +315,23 @@ void Player::Update(float dt)
 			{
 				animator.Play("Animations/player/player_DashAttack.csv");
 			}
+		}
+		
+
+
+		if (InputManager::GetKeyDown(sf::Keyboard::L))
+		{
+			InputManager::StopComboRecord();
+			InputManager::ClearCombo();
+			InputManager::ComboRecord(10.f);
+		}
+
+		if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
+		{
+
+			animator.Play("Animations/player/player_DashAttack.csv");
+			InputManager::StopComboRecord();
+			
 		}
 	}
 
