@@ -16,7 +16,10 @@ protected:
 
 	Animator animator;
 
+	std::vector<sf::Sprite> trails;
+	sf::Texture texture;
 
+	float trailDuration = 0.1f;
 
 	float speed = 150.f;
 	float dashSpeed = 400.f;

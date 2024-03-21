@@ -70,7 +70,7 @@ void Player::Init()
 	grapBox.setOrigin({ -70.f, 150.f });
 	hitBox.setOrigin({ 20.f, 150.f });
 
-
+	
 }
 
 void Player::Reset()
@@ -372,11 +372,50 @@ void Player::Update(float dt)
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
+
+	trailDuration -= dt;
+
+	texture.loadFromFile("graphics/2_Player/red/red_sliding.bmp");
+	if (trailDuration <= 0)
+	{
+		if (trails.size() < 3)
+		{ // 잔상을 최대 3개까지 유지
+			sf::Sprite trail;
+			Animator trailAnimator;
+
+			trailAnimator.SetTarget(&trail);
+			trailAnimator.Play(animator.GetCurrentClipId());
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 240.f);
+			trail.setColor(sf::Color(0, 0, 0, 100));
+			trail.setPosition(GetPosition());
+			if (h < 0.f)
+			{
+				trail.setScale(-1, 1);
+			}
+			else
+			{
+				trail.setScale(1, 1);
+			}
+			//trail.setTexture(texture);
+			trails.push_back(trail);
+		}
+		else
+		{
+			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
+		}
+		trailDuration = 0.1f; // 잔상 유지 시간 초기화
+	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {	
+
 	SpriteGo::Draw(window);
+
+	for (const auto& trail : trails)
+	{
+		window.draw(trail, shader);
+	}
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
