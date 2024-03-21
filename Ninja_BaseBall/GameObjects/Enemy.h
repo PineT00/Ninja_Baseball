@@ -32,4 +32,5 @@ public:
     virtual void OnDamage(int damage);
     void SetSpeed(float newSpeed) { speed = newSpeed; }
     float GetHealth() const { return health; }
+    void SetPosition(const sf::Vector2f& position) override { sprite.setPosition(position); }
 };

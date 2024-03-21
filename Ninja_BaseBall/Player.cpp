@@ -77,7 +77,7 @@ void Player::Update(float dt)
 		facingDirection=velocity/std::sqrt(velocity.x*velocity.x+velocity.y*velocity.y);
 	}
 	SetPosition(position);
-	std::cout << position.x << std::endl;
+	//std::cout << position.x << std::endl;
 
 	if (h != 0.f)
 	{
