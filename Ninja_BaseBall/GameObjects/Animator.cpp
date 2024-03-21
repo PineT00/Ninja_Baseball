@@ -123,8 +123,8 @@ void Animator::Play(std::vector<sf::FloatRect>& selectedAreas,
 			selectedAreasPivot[i]
 			});
 	}
-	currentClip->id;
-	currentClip->loopType;
+	currentClip->id = Utils::MyString::WideStringToString(atlasPath);
+	currentClip->loopType = loopType;
 	currentFrame = 0;
 	totalFrame = selectedAreas.size();
 	clipDuration = 1.f / currentClip->fps;
