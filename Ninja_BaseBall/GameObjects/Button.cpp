@@ -77,6 +77,10 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 		break;
 	case ButtonIdentifier::play :
 		PlayPreView(obj);
+		break;
+	case ButtonIdentifier::stop :
+		StopPreView(obj);
+		break;
 	}
 }
 
@@ -263,6 +267,11 @@ void Button::PlayPreView(PreviewCharacter* obj)
 		sceneAnimationTool->GetFPS(), 
 		sceneAnimationTool->GetSelectedLoopType(), 
 		sceneAnimationTool->GetAtlasPath(), false);
+}
+
+void Button::StopPreView(PreviewCharacter* obj)
+{
+	obj->GetAnimator().Stop();
 }
 
 sf::FloatRect Button::GetLocalBounds()

@@ -73,6 +73,7 @@ public:
 	void SetFramePivot();
 	void SetLoopType();
 	void PlayPreView(PreviewCharacter* obj);
+	void StopPreView(PreviewCharacter* obj);
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;
