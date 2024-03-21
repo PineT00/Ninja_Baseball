@@ -10,8 +10,8 @@ class Player :
 protected:
 	Animator animator;
 
-	float speed = 100.f;
-	float dashSpeed = 200.f;
+	float speed = 150.f;
+	float dashSpeed = 400.f;
 
 	float gravity = 600.f;
 	float jumpY = 0.f;

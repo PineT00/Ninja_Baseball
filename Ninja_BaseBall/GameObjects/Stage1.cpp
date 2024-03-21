@@ -27,54 +27,54 @@ void Stage1::Reset()
 	{
 		SetPosition({ 0,0 });
 		SetOrigin(Origins::TL);
-		stageNormal.SetPosition({ 800,0 });
+		stageNormal.SetPosition({ 2400,0 });
 		stageNormal.SetOrigin(Origins::TL);
-		stageBroken1.SetPosition({ 800,0 });
+		stageBroken1.SetPosition({ 2400,0 });
 		stageBroken1.SetOrigin(Origins::TL);
-		stageBroken2.SetPosition({ 800,0 });
+		stageBroken2.SetPosition({ 2400,0 });
 		stageBroken2.SetOrigin(Origins::TL);
-		transition.SetPosition({ 800,-240 });
+		transition.SetPosition({ 2400,-760 });
 		transition.SetOrigin(Origins::TL);
-		stagePlane.SetPosition({ 800,-480 });
+		stagePlane.SetPosition({ 2400,-1520 });
 		stagePlane.SetOrigin(Origins::TL);
 	}
 
 	//충돌영역
 	{
 		groundBound.setFillColor(sf::Color::Green);
-		groundBound.setSize({ 1050.f,100.f });
-		groundBound.setPosition({ 0.f, 145.f });
+		groundBound.setSize({ 3300.f,300.f });
+		groundBound.setPosition({ 0.f, 400.f });
 
-		stageBound1_1.setSize({ 320.f,240.f });
-		stageBound1_1.setPosition({ 100.f, 0.f });
+		stageBound1_1.setSize({ 960.f,720.f });
+		stageBound1_1.setPosition({ 300.f, 0.f });
 		stageBound1_1.setOutlineColor(sf::Color::Blue);
 		stageBound1_1.setOutlineThickness(1.f);
 		stageBound1_1.setFillColor(sf::Color::Transparent);
 
 		stageBound1_2.setFillColor(sf::Color::Red);
-		stageBound1_2.setSize({ 320.f,240.f });
-		stageBound1_2.setPosition({ 140.f, 0.f });
+		stageBound1_2.setSize({ 960.f,720.f });
+		stageBound1_2.setPosition({ 420.f, 0.f });
 		stageBound1_2.setOutlineColor(sf::Color::Red);
 		stageBound1_2.setOutlineThickness(3.f);
 		stageBound1_2.setFillColor(sf::Color::Transparent);
 
 		stageBound1_3.setFillColor(sf::Color::Red);
-		stageBound1_3.setSize({ 320.f,240.f });
-		stageBound1_3.setPosition({ 460.f, 0.f });
+		stageBound1_3.setSize({ 960.f,720.f });
+		stageBound1_3.setPosition({ 1380.f, 0.f });
 		stageBound1_3.setOutlineColor(sf::Color::Red);
 		stageBound1_3.setOutlineThickness(1.f);
 		stageBound1_3.setFillColor(sf::Color::Transparent);
 
 		stageBound1_4.setFillColor(sf::Color::Red);
-		stageBound1_4.setSize({ 320.f,240.f });
-		stageBound1_4.setPosition({ 800.f, 0.f });
+		stageBound1_4.setSize({ 960.f,720.f });
+		stageBound1_4.setPosition({ 2400.f, 0.f });
 		stageBound1_4.setOutlineColor(sf::Color::Red);
 		stageBound1_4.setOutlineThickness(1.f);
 		stageBound1_4.setFillColor(sf::Color::Transparent);
 	}
 
 	stageBack1.SetPosition({ 0.f, 0.f });
-	stageBack2.SetPosition({ 566.f, 0.f });
+	stageBack2.SetPosition({ 1566.f, 0.f });
 
 
 

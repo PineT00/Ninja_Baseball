@@ -226,7 +226,7 @@ void Scene::Draw(sf::RenderWindow& window)
 
 	sf::Vector2u windowSize = window.getSize();
 	// 창의 비율을 유지하면서 크기를 조절
-	float aspectRatio = 640.f / 480.f; // 원하는 가로 세로 비율
+	float aspectRatio = 960.f / 720.f; // 원하는 가로 세로 비율
 	if (windowSize.x / static_cast<float>(windowSize.y) > aspectRatio)
 	{
 		window.setSize(sf::Vector2u(static_cast<unsigned int>(windowSize.y * aspectRatio), windowSize.y));
