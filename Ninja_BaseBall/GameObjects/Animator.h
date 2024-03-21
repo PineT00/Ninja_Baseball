@@ -92,6 +92,7 @@ public:
 	void Stop();
 
 	const std::string& GetCurrentClipId() { return this->currentClip->id; }
+	AnimationClip* GetCurrentClip() const { return currentClip; }
 
 	sf::Sprite* GetTarget() const { return this->target; }
 	void SetTarget(sf::Sprite* target) { this->target = target; }
@@ -105,4 +106,5 @@ public:
 
 	void AddEvent(const std::string& clipId, int frame, std::function<void()> action);
 	void ClearEvent();
+	void ClearFrames();
 };
