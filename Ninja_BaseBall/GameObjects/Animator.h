@@ -12,11 +12,16 @@ struct AnimationFrame
 {
 	std::string textureId;
 	sf::IntRect textureCoord;
+	sf::Vector2f customPivot;
 	Origins pivot = Origins::CUSTOM;
 
-	AnimationFrame(const std::string& id, const sf::IntRect& coord, Origins origin)
+	AnimationFrame(const std::string& id, const sf::IntRect& coord, Origins origin, const sf::Vector2f& customPivot = {0.f, 0.f})
 		: textureId(id), textureCoord(coord), pivot(origin)
 	{
+		if (pivot == Origins::CUSTOM)
+		{
+			this->customPivot = customPivot;
+		}
 	}
 
 

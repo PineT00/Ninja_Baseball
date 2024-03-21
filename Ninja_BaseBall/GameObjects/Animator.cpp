@@ -143,6 +143,11 @@ void Animator::Stop()
 
 void Animator::SetFrame(const AnimationFrame& frame)
 {
+	if (frame.pivot == Origins::CUSTOM)
+	{
+		target->setOrigin(frame.customPivot);
+	}
+
 	Utils::Origin::SetOrigin(*target, frame.pivot);
 	target->setTexture(frame.GetTexture());
 	target->setTextureRect(frame.textureCoord);
