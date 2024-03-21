@@ -21,8 +21,8 @@ protected:
 	Button* buttonStop = nullptr;
 	Button* buttonPlay = nullptr;
 	
-	// TODO : Auto Slice ±â´É
-	//Button* buttonAutoSlice = nullptr;
+	// TODO : Auto Slice ï¿½ï¿½ï¿½
+	Button* buttonAutoSlice = nullptr;
 
 	std::vector<sf::FloatRect> selectedAreas;
 	std::vector<Origins> selectedAreasPivot;
@@ -36,9 +36,9 @@ protected:
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
 	InputField* inputfieldFPS = nullptr;
-	// TODO : Auto Slice ±â´É
-	//InputField* inputfieldRow = nullptr;
-	//InputField* inputfieldCol = nullptr;
+	// TODO : Auto Slice ï¿½ï¿½ï¿½
+	InputField* inputfieldRow = nullptr;
+	InputField* inputfieldCol = nullptr;
 	PreviewCharacter* previewCharacter = nullptr;
 	AnimationLoopType selectedLoopType = AnimationLoopType::Single;
 

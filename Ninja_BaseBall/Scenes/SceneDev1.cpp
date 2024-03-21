@@ -40,11 +40,11 @@ void SceneDev1::Init()
     AddGameObject(stage);
 
     player = new Player("Player");
-    player->SetPosition({ 100.f, 250.f });
+    //player->SetPosition({ 2000.f, 2000.f });
     AddGameObject(player,World);
 
     yellowEnemy = new YellowBaseBall("YellowEnemy");
-    yellowEnemy->SetPosition({ 300.f, 250.f });
+    //yellowEnemy->SetPosition({ 200.f, 250.f });
     AddGameObject(yellowEnemy, World);
 
     //Player2* player2 = new Player2("Player2");
@@ -54,8 +54,8 @@ void SceneDev1::Init()
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
-    monster = new YellowBaseBall("Monster");
-    AddGameObject(monster);
+    //monster = new YellowBaseBall("Monster");
+    //AddGameObject(monster);
 
     Scene::Init();
 }

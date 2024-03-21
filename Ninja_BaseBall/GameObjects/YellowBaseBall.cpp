@@ -79,7 +79,7 @@ void YellowBaseBall::Update(float dt)
     }
     
     sf::Vector2f playerPosition = player->GetPosition();
-    Direction(playerPosition);
+    TargetDirection(playerPosition);
     float distanceX = playerPosition.x - position.x;
     float distanceY = playerPosition.y - position.y;
     if(std::abs(distanceY)>acceptableYDistance)
@@ -181,17 +181,36 @@ void YellowBaseBall::RetreatAfterAction()
 
 void YellowBaseBall::MoveTowards(const sf::Vector2f& target, float speed, float dt)
 {
-    float minDistance = 50.0f; // 몬스터와 플레이어 사이의 최소 유지 거리
+    float minDistance = 30.0f; // 몬스터와 플레이어 사이의 최소 유지 거리
     sf::Vector2f toTarget = target - position;
-    float distanceToTarget = Utils::MyMath::Magnitude(toTarget);
-    
-    if (distanceToTarget > minDistance)
+
+    if (position.y < target.y) // 플레이어보다 위에 있을 경우
     {
-        sf::Vector2f direction = Normalize(toTarget);
-        float moveDistance = speed * dt;
-        enemyAnimator.Play("animations/BaseballYellow_Move.csv");
-        sf::Vector2f moveStep = direction * std::min(moveDistance, distanceToTarget - minDistance);
-        position += moveStep;
+        // Y축 위치 고정
+        position.y = target.y;
+
+        // X축으로만 이동
+        float distanceToTargetX = std::abs(target.x - position.x);
+        if (distanceToTargetX > minDistance)
+        {
+            sf::Vector2f directionX = (target.x < position.x) ? sf::Vector2f(-1.0f, 0.0f) : sf::Vector2f(1.0f, 0.0f);
+            float moveDistance = speed * dt;
+            enemyAnimator.Play("animations/BaseballYellow_Move.csv");
+            sf::Vector2f moveStep = directionX * std::min(moveDistance, distanceToTargetX - minDistance);
+            position.x += moveStep.x;
+        }
+    }
+    else // 플레이어보다 아래에 있을 경우
+    {
+        float distanceToTarget = Utils::MyMath::Magnitude(toTarget);
+        if (distanceToTarget > minDistance)
+        {
+            sf::Vector2f direction = Normalize(toTarget);
+            float moveDistance = speed * dt;
+            enemyAnimator.Play("animations/BaseballYellow_Move.csv");
+            sf::Vector2f moveStep = direction * std::min(moveDistance, distanceToTarget - minDistance);
+            position += moveStep;
+        }
     }
 }
 
@@ -231,12 +250,7 @@ void YellowBaseBall::DrawBox()
     float attackBoxWidth = 20.f;
     float attackBoxHeight = 20.f;
     attackBox.setSize({attackBoxWidth, attackBoxHeight});
-    // 몬스터가 바라보는 방향에 따라 위치 조정
-    if (!sprite.getScale().x > 0) { 
-        attackBox.setPosition(globalBounds.left - attackBoxWidth / 2, sprite.getPosition().y);
-    } else { 
-        attackBox.setPosition(globalBounds.left + globalBounds.width + attackBoxWidth / 2, sprite.getPosition().y);
-    }
+    attackBox.setPosition(sprite.getPosition().x + globalBounds.width / 2 + attackBoxWidth, sprite.getPosition().y + globalBounds.height / 2);
     attackBox.setOrigin(attackBox.getSize().x, attackBox.getSize().y);
     attackBox.setFillColor(sf::Color::Transparent); // 실제 게임에서는 투명하게 설정
     attackBox.setOutlineColor(sf::Color::Red); // 디버깅 목적
@@ -244,7 +258,7 @@ void YellowBaseBall::DrawBox()
     
 }
 
-void YellowBaseBall::Direction(const sf::Vector2f& playerPosition)
+void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < position.x) {
         sprite.setScale(1.0f, 1.0f); // 플레이어가 왼쪽에 있음

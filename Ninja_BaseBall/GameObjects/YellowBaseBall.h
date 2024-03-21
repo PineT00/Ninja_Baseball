@@ -69,5 +69,5 @@ public:
     void GetCurrentAnimationName();
     void SetPosition(const sf::Vector2f& pos) override;
     void DrawBox();
-    void Direction(const sf::Vector2f& playerPosition);
+    void TargetDirection(const sf::Vector2f& playerPosition);
 };

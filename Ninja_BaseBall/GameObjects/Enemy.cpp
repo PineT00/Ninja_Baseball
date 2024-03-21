@@ -26,7 +26,7 @@ void Enemy::Reset()
     isDead = false;
     isAttacking = false;
     //textureId = "Monster";
-    enemyAnimator.ClearEvent();
+    
 }
 void Enemy::Update(float dt)
 {
