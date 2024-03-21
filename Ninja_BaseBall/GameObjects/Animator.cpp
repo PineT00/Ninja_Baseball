@@ -4,7 +4,6 @@
 
 Animator::Animator()
 {
-	shader.loadFromFile("transparent.frag", sf::Shader::Fragment);
 }
 
 Animator::~Animator()

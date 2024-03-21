@@ -51,7 +51,6 @@ void Enemy::FixedUpdate(float dt)
 void Enemy::Draw(sf::RenderWindow& window)
 {
     SpriteGo::Draw(window);
-    window.draw(sprite);
 }
 
 void Enemy::OnDamage(int damage)

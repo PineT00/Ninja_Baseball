@@ -84,8 +84,6 @@ public:
 	Animator();
 	virtual ~Animator();
 
-	sf::Shader shader;
-
 	void Update(float dt);
 	void Play(const std::string& clipId, bool clearQueue = true);
 	void Play(std::vector<sf::FloatRect>& selectedAreas, std::vector<Origins>& selectedAreasPivot, 
