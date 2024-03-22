@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComboCommands.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
     <ClCompile Include="GameObjects\Animator.cpp" />
     <ClCompile Include="DataTables\DataTable.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Utils\Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComboCommands.h" />
     <ClInclude Include="GameObjects\Button.h" />
     <ClInclude Include="GameObjects\Animator.h" />
     <ClInclude Include="DataTables\DataTable.h" />

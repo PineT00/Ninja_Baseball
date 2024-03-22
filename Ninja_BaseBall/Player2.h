@@ -29,6 +29,8 @@ protected:
 	bool rightDashReady = false;
 	bool isRightDashing = false;
 
+	sf::RectangleShape hitBox;
+
 
 public:
 	Player2(const std::string& name = "");
@@ -37,8 +39,12 @@ public:
 	void TestInstance();
 	static void TestStatic();
 
+	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
+
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;
+
+	void Draw(sf::RenderWindow& window) override;
 };
 

@@ -2,25 +2,37 @@
 #include "SpriteGo.h"
 #include "Animator.h"
 
+class ComboCommands;
 class SceneDev1;
+class Player2;
 
 class Player :
     public SpriteGo
 {
 protected:
+	ComboCommands* combo;
+	SceneDev1* sceneDev1 = nullptr;
+	Player2* player2 = nullptr;
+
 	Animator animator;
+
+	std::vector<sf::Sprite> trails;
+	sf::Texture texture;
+
+	float trailDuration = 0.1f;
 
 	float speed = 150.f;
 	float dashSpeed = 400.f;
 
-	float gravity = 600.f;
+	float gravity = 1300.f;
 	float jumpY = 0.f;
 
 	sf::Vector2f velocity;
 
 	bool isGrounded = true;
 
-	SceneDev1* sceneDev1 = nullptr;
+
+
 
 	float dashTimer = 0.5f;
 
