@@ -436,11 +436,6 @@ void Player::Update(float dt)
 	{
 		isGrip = true;
 		animator.Play("Animations/player/player_Grip.csv");
-
-	}
-	else
-	{
-
 	}
 
 
@@ -467,6 +462,10 @@ void Player::Update(float dt)
 		//잡기중일때 기술
 		if (isGrip)
 		{
+			if (InputManager::GetKeyDown(sf::Keyboard::Q))
+			{
+
+			}
 
 		}
 
