@@ -49,6 +49,14 @@ void Player::SetBox(bool flip)
 	}
 }
 
+void Player::Bitted()
+{
+	animator.Play("Animations/player/player_Damage1.csv");
+	animator.PlayQueue("Animations/player/player_Idle.csv");
+	getHit = false;
+
+}
+
 void Player::DashAttack()
 {
 	velocity.x + 800.f;
@@ -121,6 +129,11 @@ void Player::Update(float dt)
 {
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
+
+	if (getHit)
+	{
+		Bitted();
+	}
 
 	float v = 0;
 	if (isRightDashing || isLeftDashing)
@@ -342,7 +355,6 @@ void Player::Update(float dt)
 
 		}
 
-
 		//ÄÞº¸ ±â·Ï¿ë
 		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
@@ -356,7 +368,6 @@ void Player::Update(float dt)
 
 			animator.Play("Animations/player/player_DashAttack.csv");
 			InputManager::StopComboRecord();
-			
 		}
 	}
 

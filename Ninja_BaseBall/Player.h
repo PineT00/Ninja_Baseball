@@ -9,6 +9,11 @@ class Player2;
 class Player :
     public SpriteGo
 {
+public:
+	int normalAttack = 0;
+	bool isAttack = false;
+	bool getHit = false;
+
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
@@ -31,8 +36,6 @@ protected:
 	bool isGrounded = true;
 	bool isHolding = false;
 
-
-
 	float dashTimer = 0.5f;
 
 	float leftDashTime = 0.f;
@@ -44,10 +47,6 @@ protected:
 	bool isRightDashing = false;
 
 	int jumpDirection = 0;
-
-	int normalAttack = 0;
-	bool isAttack = false;
-
 
 	SpriteGo playerShadow;
 
@@ -66,6 +65,10 @@ public:
 	void SetAttackOn();
 	void SetAttackOff();
 	void SetBox(bool flip);
+
+	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
+
+	void Bitted();
 
 	//기술모음
 	void DashAttack();
