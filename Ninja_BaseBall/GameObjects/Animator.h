@@ -89,10 +89,13 @@ public:
 	void Play(std::vector<sf::FloatRect>& selectedAreas, std::vector<Origins>& selectedAreasPivot, 
 		std::vector<sf::Vector2f>& customPivot, InputField* inputfieldFPS, AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue = true);
 	void PlayQueue(const std::string& clipId);
+
+	void Play(const std::string& clipId, int startFrame, bool clearQueue = true); //잔상효과용. 지정프레임부터 시작
+
 	void Stop();
 
 	const std::string& GetCurrentClipId() { return this->currentClip->id; }
-	AnimationClip* GetCurrentClip() const { return currentClip; }
+	const int GetCurrentClipFrame() { return this->currentFrame; }
 
 	sf::Sprite* GetTarget() const { return this->target; }
 	void SetTarget(sf::Sprite* target) { this->target = target; }
@@ -106,5 +109,4 @@ public:
 
 	void AddEvent(const std::string& clipId, int frame, std::function<void()> action);
 	void ClearEvent();
-	void ClearFrames();
 };

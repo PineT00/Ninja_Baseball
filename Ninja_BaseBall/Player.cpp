@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Player.h"
+#include "ComboCommands.h"
 #include "SceneDev1.h"
+#include "Player2.h"
 
 Player::Player(const std::string& name)
 	:SpriteGo(name)
@@ -29,6 +31,8 @@ void Player::SetAttackOn()
 void Player::SetAttackOff()
 {
 	isAttack = false;
+	isLeftDashing = false;
+	isRightDashing = false;
 }
 
 void Player::SetBox(bool flip)
@@ -66,7 +70,7 @@ void Player::Init()
 	grapBox.setOrigin({ -70.f, 150.f });
 	hitBox.setOrigin({ 20.f, 150.f });
 
-
+	
 }
 
 void Player::Reset()
@@ -76,6 +80,10 @@ void Player::Reset()
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
 	animator.AddEvent("Animations/player/player_Attack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_Attack1.csv", 3, AttackOff);
+
+	animator.AddEvent("Animations/player/player_DashAttack.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_DashAttack.csv", 3, AttackOff);
+
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
@@ -88,11 +96,16 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
 
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
+
+	combo = new ComboCommands();
+
+	combo->SetCombo();
 
 }
 
@@ -130,11 +143,11 @@ void Player::Update(float dt)
 		leftDashReady = true;
 	}
 
-	if (InputManager::GetKey(sf::Keyboard::Left))
+	if (InputManager::GetKey(sf::Keyboard::Left) && isGrounded)
 	{
 		h = -1;
 	}
-	else if (InputManager::GetKey(sf::Keyboard::Right))
+	else if (InputManager::GetKey(sf::Keyboard::Right) && isGrounded)
 	{
 		h = 1;
 	}
@@ -213,7 +226,7 @@ void Player::Update(float dt)
 		isGrounded = false;
 		jumpY = GetPosition().y;
 		animator.Play("Animations/player/player_Jump.csv");
-		velocity.y = -300.f;
+		velocity.y = -800.f;
 		jumpDirection = h;
 	}
 
@@ -259,35 +272,67 @@ void Player::Update(float dt)
 		SetBox(h < 0);
 	}
 
-	//콤보용 기술 모음
+	if (attackBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	{
+
+		if (InputManager::GetKeyDown(sf::Keyboard::Q))
+		{
+			normalAttack += 1;
+			switch (normalAttack)
+			{
+				case 1:
+					animator.Play("Animations/player/player_Attack1.csv");
+					break;
+				case 2:
+					animator.Play("Animations/player/player_Attack2.csv");
+					break;
+				case 3:
+					animator.Play("Animations/player/player_Attack3.csv");
+					break;
+				case 4:
+					animator.Play("Animations/player/player_Attack4.csv");
+					normalAttack = 0;
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	else
 	{
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
 			animator.Play("Animations/player/player_Attack1.csv");
-			normalAttack = 1;
 		}
-		//if (InputManager::GetKeyDown(sf::Keyboard::W))
-		//{
-		//	animator.Play("Animations/player/player_Attack2.csv");
-		//	isAttack = true;
-		//	normalAttack = 2;
-		//}
-		//if (InputManager::GetKeyDown(sf::Keyboard::E))
-		//{
-		//	animator.Play("Animations/player/player_Attack3.csv");
-		//	isAttack = true;
-		//	normalAttack = 3;
-		//}
-		//if (InputManager::GetKeyDown(sf::Keyboard::R))
-		//{
-		//	animator.Play("Animations/player/player_Attck4.csv");
-		//	isAttack = true;
-		//	normalAttack = 4;
-		//}
-		//if (InputManager::GetKeyDown(sf::Keyboard::T))
-		//{
-		//	animator.Play("Animations/player/player_DashAttack.csv");
-		//}
+	}
+
+
+	//콤보용 기술 모음
+	{
+		if (isLeftDashing || isRightDashing)
+		{
+			if (InputManager::GetKeyDown(sf::Keyboard::W))
+			{
+				animator.Play("Animations/player/player_DashAttack.csv");
+			}
+		}
+		
+
+
+		if (InputManager::GetKeyDown(sf::Keyboard::L))
+		{
+			InputManager::StopComboRecord();
+			InputManager::ClearCombo();
+			InputManager::ComboRecord(10.f);
+		}
+
+		if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
+		{
+
+			animator.Play("Animations/player/player_DashAttack.csv");
+			InputManager::StopComboRecord();
+			
+		}
 	}
 
 
@@ -318,20 +363,67 @@ void Player::Update(float dt)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
 	}
+	if (!isAttack && animator.GetCurrentClipId() == "Animations/player/player_Attack4.csv")
+	{
+		animator.PlayQueue("Animations/player/player_Idle.csv");
+	}
 
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
+
+	trailDuration -= dt;
+
+	texture.loadFromFile("graphics/2_Player/red/red_sliding.bmp");
+	if (trailDuration <= 0)
+	{
+		if (trails.size() < 3)
+		{ // 잔상을 최대 3개까지 유지
+			sf::Sprite trail;
+			Animator trailAnimator;
+
+			trailAnimator.SetTarget(&trail);
+			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 220.f);
+			trail.setColor(sf::Color(0, 0, 0, 100));
+			trail.setPosition(GetPosition());
+			if (h < 0.f || jumpDirection < 0.f)
+			{
+				trail.setScale(-1, 1);
+			}
+			else
+			{
+				trail.setScale(1, 1);
+			}
+			//trail.setTexture(texture);
+			trails.push_back(trail);
+		}
+		else
+		{
+			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
+		}
+		trailDuration = 0.1f; // 잔상 유지 시간 초기화
+	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {	
+
 	SpriteGo::Draw(window);
 
-	window.draw(attackBox);
-	window.draw(grapBox);
-	window.draw(hitBox);
+	for (const auto& trail : trails)
+	{
+		window.draw(trail, shader);
+	}
+
+	if (SCENE_MANAGER.GetDeveloperMode())
+	{
+		window.draw(attackBox);
+		window.draw(grapBox);
+		window.draw(hitBox);
+	}
+
 }
 
 
