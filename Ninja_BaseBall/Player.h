@@ -12,6 +12,8 @@ class Player :
 public:
 	int normalAttack = 0;
 	bool isAttack = false;
+
+	//Turn THIS ON when monster Attacks Player.
 	bool getHit = false;
 
 	bool isAlive = true;
