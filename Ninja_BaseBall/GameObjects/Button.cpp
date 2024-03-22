@@ -324,6 +324,11 @@ void Button::LoadCsv()
 			MessageBox(NULL, L"File could not be opened.", L"Error", MB_OK);
 			return;
 		}
+
+		if (obj->GetAnimator().IsPlaying())
+		{
+			obj->GetAnimator().Stop();
+		}
 		
 		std::wstring line;
 		std::getline(inFile, line);
