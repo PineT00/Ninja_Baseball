@@ -193,6 +193,10 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 
 void Button::SaveSelectedAreasWithDialog()
 {
+	std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
+
+	if (area.empty()) return; 
+
 	OPENFILENAME ofn;
 	wchar_t  szFileName[MAX_PATH] = L"";
 
@@ -227,7 +231,6 @@ void Button::SaveSelectedAreasWithDialog()
 
 		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
 		std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
-		std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
 		std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
 		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
 
