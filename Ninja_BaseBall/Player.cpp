@@ -52,6 +52,7 @@ void Player::SetBox(bool flip)
 void Player::Bitted()
 {
 	animator.Play("Animations/player/player_Damage1.csv");
+	velocity.x = -800.f;
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	getHit = false;
 
@@ -130,10 +131,7 @@ void Player::Update(float dt)
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 
-	if (getHit)
-	{
-		Bitted();
-	}
+
 
 	float v = 0;
 	if (isRightDashing || isLeftDashing)
@@ -268,6 +266,12 @@ void Player::Update(float dt)
 	{
 		velocity.y = v * speed;
 	}
+
+	if (getHit)
+	{
+		Bitted();
+	}
+
 
 	position += velocity * dt;
 	SetPosition(position);
@@ -460,11 +464,21 @@ void Player::Draw(sf::RenderWindow& window)
 
 	SpriteGo::Draw(window);
 
+	window.draw(attackBox);
+	window.draw(grapBox);
+	window.draw(hitBox);
+
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
-		window.draw(attackBox);
-		window.draw(grapBox);
-		window.draw(hitBox);
+		attackBox.setFillColor(sf::Color::Red);
+		grapBox.setFillColor(sf::Color::Blue);
+		hitBox.setFillColor(sf::Color::Yellow);
+	}
+	else
+	{
+		attackBox.setFillColor(sf::Color::Transparent);
+		grapBox.setFillColor(sf::Color::Transparent);
+		hitBox.setFillColor(sf::Color::Transparent);
 	}
 
 }
