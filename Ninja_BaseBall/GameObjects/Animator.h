@@ -95,10 +95,10 @@ public:
 	void Stop();
 
 	const std::string& GetCurrentClipId() { return this->currentClip->id; }
+	AnimationClip* GetCurrentClip() const { return currentClip; }
 
 	const int GetCurrentClipFrame() { return this->currentFrame; }
-
-	AnimationClip* GetCurrentClip() const { return currentClip; }
+	
 
 
 	sf::Sprite* GetTarget() const { return this->target; }

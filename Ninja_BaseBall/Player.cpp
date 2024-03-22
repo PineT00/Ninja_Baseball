@@ -90,7 +90,6 @@ void Player::Reset()
 
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
-	//SetPosition({ 0.f, 0.f });
 	animator.Play("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
 
@@ -152,12 +151,12 @@ void Player::Update(float dt)
 		h = 1;
 	}
 
-	//¿ÞÂÊ ´ë½Ã ¸ðÀ½
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
 	if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
 	{
 		if (InputManager::GetKeyDown(sf::Keyboard::Left))
 		{
-			isLeftDashing = true; // ´ë½¬ »óÅÂ È°¼ºÈ­
+			isLeftDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
 			animator.Play("Animations/player/player_Dash.csv");
 		}
 	}
@@ -175,13 +174,13 @@ void Player::Update(float dt)
 		isLeftDashing = false;
 	}
 
-	//¿À¸¥ÂÊ ´ë½Ã ¸ðÀ½
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
 
 	if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
 	{
 		if (InputManager::GetKeyDown(sf::Keyboard::Right))
 		{
-			isRightDashing = true; // ´ë½¬ »óÅÂ È°¼ºÈ­
+			isRightDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
 			animator.Play("Animations/player/player_Dash.csv");
 		}
 	}
@@ -200,7 +199,7 @@ void Player::Update(float dt)
 	}
 
 
-	//´ë½¬ ½ºÇÇµå
+	//ï¿½ë½¬ ï¿½ï¿½ï¿½Çµï¿½
 	if (isRightDashing || isLeftDashing)
 	{
 		velocity.x = h * dashSpeed;
@@ -210,7 +209,7 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
-	//Á¡ÇÁ
+	//ï¿½ï¿½ï¿½ï¿½
 
 	if (!isGrounded)
 	{
@@ -259,7 +258,7 @@ void Player::Update(float dt)
 
 
 
-	//ÀÌµ¿¿µ¿ª Á¦ÇÑ
+	//ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
@@ -299,6 +298,8 @@ void Player::Update(float dt)
 		}
 	}
 	else
+	//ï¿½Þºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
+
 	{
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{

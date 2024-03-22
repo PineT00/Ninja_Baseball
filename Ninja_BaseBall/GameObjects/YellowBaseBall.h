@@ -24,6 +24,10 @@ public :
     int hitCount=0;
     int maxHitCount=3;
     sf::Clock hitClock;
+
+    float updateInterval=0.1f;
+    float updateTimer=0.f;
+    
 protected:
     enum class YellowBaseBallState
     {
@@ -47,9 +51,11 @@ protected:
     sf::FloatRect damageBounds;
     sf::FloatRect attackBounds;
 
-    //hitBox는 플레이어에게 맞을 곳 attackBox는 플레이어를 때릴 곳
+    //damageBox 플레이어에게 맞을 곳 ,attackBox 플레이어를 때릴 곳
     sf::RectangleShape damageBox;
     sf::RectangleShape attackBox;
+
+    sf::Vector2f playerPosition;
 public:
     Player* player;
     YellowBaseBall(const std::string& name);
@@ -61,13 +67,6 @@ public:
     void Draw(sf::RenderWindow& window) override;
     void Update(float dt) override;
     void OnDamage(int damage) override;
-    void DashTowards(const sf::Vector2f& target,float dt);
-    void Attack();
-    void RetreatAfterAction();
-    void MoveTowards(const sf::Vector2f& target, float speed, float dt);
-    static sf::Vector2f Normalize(const sf::Vector2f& source);
-    void GetCurrentAnimationName();
-    void SetPosition(const sf::Vector2f& pos) override;
-    void Intro();
-    void DrawBox();
+    void TargetDirection(const sf::Vector2f& playerPosition) override;
+    void SetBox(bool flip) override;
 };
