@@ -19,6 +19,7 @@ public:
 
 	SpriteGo(const std::string& name = "");
 	sf::Texture* GetTexture() { return const_cast<sf::Texture*>(sprite.getTexture()); }
+
 	void SetTexture(const sf::Texture& texture);
 	void SetTexture(const std::string& textureId);
 

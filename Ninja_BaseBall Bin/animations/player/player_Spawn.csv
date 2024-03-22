@@ -1,0 +1,13 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,8,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/2_Player/red/red_set.bmp,0,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,300,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,600,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,900,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,1200,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,1500,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,1800,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,2100,0,300,340,7,0,0
+graphics/2_Player/red/red_set.bmp,2400,0,300,340,7,0,0

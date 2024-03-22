@@ -1,0 +1,6 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,6,1,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/2_Player/red/red_damage.bmp,0,0,316.034,231.726,7,0,0
+graphics/2_Player/red/red_damage.bmp,316.034,0,352.365,156.721,7,0,0

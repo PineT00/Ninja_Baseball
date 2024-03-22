@@ -8,6 +8,12 @@ std::list<sf::Keyboard::Key> InputManager::ingKeyList;
 
 sf::Vector2f InputManager::mousePos;
 
+InputManager::SFGM_COMBO InputManager::combo;
+float InputManager::comboTimer = 0.f;
+float InputManager::comboTimeLimit = 1.f;
+bool InputManager::doComboRecord = false;
+
+
 void InputManager::Init()
 {
 	// Horizontal
@@ -74,12 +80,16 @@ void InputManager::UpdateEvent(const sf::Event& event)
 		{
 			downKeyList.push_back(event.key.code);
 			ingKeyList.push_back(event.key.code);
+			if (doComboRecord)
+				combo.push_back({ event.key.code, KEY_STATE::DOWN });
 		}
 		break;
 
 	case sf::Event::KeyReleased:
 		ingKeyList.remove(event.key.code);
 		upKeyList.push_back(event.key.code);
+		if (doComboRecord)
+			combo.push_back({ event.key.code, KEY_STATE::UP });
 		break;
 
 	case sf::Event::MouseButtonPressed:
@@ -173,4 +183,76 @@ bool InputManager::GetMouseButtonUp(sf::Mouse::Button mouse)
 bool InputManager::GetMouseButton(sf::Mouse::Button mouse)
 {
 	return std::find(ingKeyList.begin(), ingKeyList.end(), MouseButtonToKey(mouse)) != ingKeyList.end();
+}
+
+
+
+bool InputManager::IsPerfectCombo(const SFGM_COMBO& combo)
+{
+	auto c = combo.begin();
+	auto input = InputManager::combo.begin();
+	while (c != combo.end() && input != InputManager::combo.end())
+	{
+		if (*c != *input)
+			break;
+		c++;
+		input++;
+		if (c == combo.end())
+			return true;
+	}
+	return false;
+}
+bool InputManager::IsExllentCombo(const SFGM_COMBO& combo)
+{
+	auto c = combo.begin();
+	for (auto& input : InputManager::combo)
+	{
+		if (c->second == KEY_STATE::UP)
+			c++;
+		if (c == combo.end())
+			return true;
+		if (input.second == KEY_STATE::UP)
+			continue;
+		if (input == *c)
+			c++;
+		else
+			return false;
+		if (c == combo.end())
+			return true;
+	}
+	return false;
+}
+bool InputManager::IsComboSuccess(const SFGM_COMBO& combo)
+{
+	auto c = combo.begin();
+	for (auto& input : InputManager::combo)
+	{
+		if (c->second == KEY_STATE::UP)
+			c++;
+		if (c == combo.end())
+			return true;
+		if (input == *c)
+			c++;
+		if (c == combo.end())
+			return true;
+	}
+	return false;
+}
+void InputManager::ComboRecord(float timeLimit)
+{
+	if (!doComboRecord)
+	{
+		combo.clear();
+		comboTimeLimit = timeLimit;
+		comboTimer = 0.f;
+		doComboRecord = true;
+	}
+}
+void InputManager::StopComboRecord()
+{
+	doComboRecord = false;
+}
+void InputManager::ClearCombo()
+{
+	combo.clear();
 }

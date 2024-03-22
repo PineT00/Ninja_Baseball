@@ -8,7 +8,7 @@ SpriteGo::SpriteGo(const std::string& name)
 
 void SpriteGo::SetTexture(const sf::Texture& texture)
 {
-	sprite.setTexture(texture);
+	sprite.setTexture(texture, true);
 }
 
 void SpriteGo::SetTexture(const std::string& textureId)
