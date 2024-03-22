@@ -41,19 +41,19 @@ void SceneDev1::Init()
 
 
     Player2* player2 = new Player2("Player2");
-    player2->SetPosition({ 300.f, 250.f });
+    player2->SetPosition({ 300.f, 2500.f });
     AddGameObject(player2);
 
 
     player = new Player("Player");
-    player->SetPosition({ 100.f, 250.f });
+    player->SetPosition({ 100.f, 2500.f });
     AddGameObject(player, World);
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
-    //monster = new YellowBaseBall("Monster");
-    //AddGameObject(monster);
+    monster = new YellowBaseBall("Monster");
+    AddGameObject(monster);
 
     Scene::Init();
 }
