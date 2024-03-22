@@ -37,8 +37,8 @@ protected:
 	std::vector<std::string> guidlines = { "Select Frame Bound", "Select Pivot"};
 
 	SpriteGo* spriteSheet = nullptr;
-	TextGo* textFPS = nullptr;
-	TextGo* textGuidline = nullptr;
+	TextGo* textFPS;
+	TextGo* textGuidline;
 	InputField* inputfieldFPS = nullptr;
 	// TODO : Auto Slice ±â´É
 	InputField* inputfieldRow = nullptr;
@@ -101,8 +101,7 @@ public:
 	void SetLoopType(const AnimationLoopType looptype);
 
 	InputField* GetFPS() const { return inputfieldFPS; }
-	GameStatus GetStatus() const { return status; }
-	TextGo* GetGuidline() const { return textGuidline; }
+	GameStatus GetStatus() const { return this->status; }
 
 	void SetStatus(GameStatus newStatus);
 	bool IsWithinWorldView(const sf::Vector2f& point);

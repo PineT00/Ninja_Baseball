@@ -253,7 +253,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 				std::cout << "Custom Pivot, Selected Pivot : " << customPivot.x << " : " << customPivot.y << std::endl;
 				isCustomPivot = false;
 			}
-			else if(!isCustomPivot && selectedAreas.size() > selectedAreasPivot.size())
+			else
 			{
 				textGuidline->SetText(guidlines[1]);
 			}
@@ -304,7 +304,6 @@ void SceneAnimationTool::UpdateGame(float dt)
 			selectedAreas.clear();
 			selectedAreasPivot.clear();
 			selectedLoopType = AnimationLoopType::Single; // 기본 값
-			textGuidline->SetText(guidlines[0]);
 			customPivots.clear();
 		}
 
@@ -329,9 +328,6 @@ void SceneAnimationTool::UpdateGame(float dt)
 	{
 		if (selectedAreas.empty()) return;
 		// 마지막 선택된 영역 삭제
-
-		std::cout << "selected Area deleted!" << std::endl;
-
 		if (selectedAreas.size() > selectedAreasPivot.size())
 		{
 			selectedAreas.erase(selectedAreas.end() - 1);
@@ -341,8 +337,6 @@ void SceneAnimationTool::UpdateGame(float dt)
 			selectedAreas.erase(selectedAreas.end() - 1);
 			selectedAreasPivot.erase(selectedAreasPivot.end() - 1);
 			customPivots.erase(customPivots.end() - 1);
-			std::cout << "selected Pivot deleted!" << std::endl;
-
 		}
 	}
 }

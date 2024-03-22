@@ -266,7 +266,6 @@ void Button::SetFramePivot()
 	{
 		customPivotList.push_back({ 0,0 });
 		std::cout << "Selected Pivot : " << (int)frameOrigin << std::endl;
-		sceneAnimationTool->GetGuidline()->SetText("Select Frame Bound");
 	}
 	pivotList.push_back(frameOrigin);
 }
@@ -303,6 +302,7 @@ void Button::StopPreView(PreviewCharacter* obj)
 void Button::AutoSlice(const std::vector<int> intValues)
 {
 	// 슬라이스 후 저장 준비
+	
 }
 
 void Button::LoadCsv()
