@@ -34,8 +34,11 @@ protected:
 	std::vector<sf::Vector2f> customPivots;
 	std::wstring atlasPath;
 
+	std::vector<std::string> guidlines = { "Select Frame Bound", "Select Pivot"};
+
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
+	TextGo* textGuidline;
 	InputField* inputfieldFPS = nullptr;
 	// TODO : Auto Slice ±â´É
 	InputField* inputfieldRow = nullptr;

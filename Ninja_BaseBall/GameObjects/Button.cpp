@@ -193,6 +193,18 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 
 void Button::SaveSelectedAreasWithDialog()
 {
+	std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
+	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
+	std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
+	AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
+	
+	if (area.empty())
+	{
+		
+		return;
+	}
+	if (area.size() != pivotList.size()) return;
+
 	OPENFILENAME ofn;
 	wchar_t  szFileName[MAX_PATH] = L"";
 
@@ -226,10 +238,6 @@ void Button::SaveSelectedAreasWithDialog()
 		}
 
 		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
-		std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
-		std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
-		std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
-		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
 
 		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
 		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "," << (int)loopType <<"\n\n";
@@ -254,6 +262,10 @@ void Button::SaveSelectedAreasWithDialog()
 
 void Button::SetFramePivot()
 {
+	std::vector<sf::FloatRect> selectedAreas = sceneAnimationTool->GetSelectedAreas();
+
+	if (selectedAreas.empty()) return;
+
 	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
 	std::vector<sf::Vector2f>& customPivotList = sceneAnimationTool->GetCustomPivot();
 	Origins frameOrigin = (Origins)(std::stoi(name.substr(name.size() -1)));
