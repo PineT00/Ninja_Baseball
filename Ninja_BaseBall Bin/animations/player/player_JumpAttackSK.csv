@@ -1,5 +1,5 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
-,1,0
-
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,3,0,,,,,
+,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
 graphics/player_Red.png,2398.94,69.0327,302.921,230.291,9,134.632,212.576

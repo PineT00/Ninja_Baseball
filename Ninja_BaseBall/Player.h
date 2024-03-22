@@ -36,13 +36,14 @@ protected:
 	float speed = 150.f;
 	float dashSpeed = 400.f;
 
-	float gravity = 1300.f;
+	float gravity = 1400.f;
 	float jumpY = 0.f;
+	int jumpDirection = 0;
+	int dashDirection = 0;
 
 	sf::Vector2f velocity;
 
 	bool isGrounded = true;
-	bool isGrip = false;
 
 	//대시관련 변수
 	float dashTimer = 0.5f;
@@ -69,7 +70,10 @@ protected:
 	float attackTime = 0.2f;
 	bool attackTimeOn = false;
 
-	int jumpDirection = 0;
+	//잡기 타이머
+	bool isGrip = false;
+	float gripTimer = 0.f;
+	float gripTime = 2.f;
 
 	//피격, 타격시 추가입력 통제용
 	bool inputOn = true;

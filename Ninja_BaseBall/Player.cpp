@@ -39,13 +39,13 @@ void Player::SetBox(bool flip)
 {
 	if (flip)
 	{
-		attackBox.setOrigin({ 150.f, 150.f });
-		grapBox.setOrigin({ 100.f, 150.f });
+		attackBox.setOrigin({ 150.f, 100.f });
+		grapBox.setOrigin({ 100.f, 100.f });
 	}
 	else
 	{
-		attackBox.setOrigin({ -120.f, 150.f });
-		grapBox.setOrigin({ -70.f, 150.f });
+		attackBox.setOrigin({ -120.f, 100.f });
+		grapBox.setOrigin({ -70.f, 100.f });
 	}
 }
 
@@ -84,7 +84,7 @@ void Player::Init()
 	
 	attackBox.setSize({ 20, 20 });
 	grapBox.setSize({ 20,20 });
-	hitBox.setSize({ 70,80 });
+	hitBox.setSize({ 70,90 });
 
 
 	attackBox.setOrigin({ -120.f, 150.f });
@@ -261,7 +261,7 @@ void Player::Update(float dt)
 		}
 	}
 
-	if (isGrounded && InputManager::GetKeyDown(sf::Keyboard::Space))
+	if (isGrounded && !isLeftDashing && !isRightDashing && InputManager::GetKeyDown(sf::Keyboard::W))
 	{
 		isGrounded = false;
 		jumpY = GetPosition().y;
@@ -339,11 +339,9 @@ void Player::Update(float dt)
 
 	if (dashAttackTimeOn)
 	{
-		velocity.x = jumpDirection * 800.f;
+		velocity.x = dashDirection * 800.f;
 		DashAttack();
 		dashAttackTime -= dt;
-
-
 	}
 	if (dashAttackTime < dashAttackTimer)
 	{
@@ -418,7 +416,7 @@ void Player::Update(float dt)
 				default:
 					break;
 			}
-
+			player2->getHit;
 
 		}
 	}
@@ -435,7 +433,7 @@ void Player::Update(float dt)
 	if (grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
 	{
 		isGrip = true;
-		animator.Play("Animations/player/player_Grip.csv");
+		gripTime -= dt;
 	}
 
 
@@ -445,28 +443,30 @@ void Player::Update(float dt)
 		//점프중일때 기술
 		if (!isGrounded)
 		{
-
+			if (InputManager::GetKeyDown(sf::Keyboard::Q))
+			{
+				animator.Play("Animations/player/player_JumpAttackSK.csv"); //점프옆차기
+				animator.PlayQueue("Animations/player/player_Jump.csv");
+			}
 		}
 
 		//대시중일때 기술
-		if (isLeftDashing || isRightDashing)
+		if (isGrounded && (isLeftDashing || isRightDashing))
 		{
-			if (InputManager::GetKeyDown(sf::Keyboard::W))
+			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
-				jumpDirection = h;
+				dashDirection = h;
 				dashAttackTimeOn = true;
-					
 			}
 		}
 
 		//잡기중일때 기술
-		if (isGrip)
+		if (isGrip && isGrounded)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
-
+				animator.Play("Animations/player/player_GripAttack1.csv");
 			}
-
 		}
 
 		//콤보 기록용
@@ -479,7 +479,6 @@ void Player::Update(float dt)
 
 		if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
 		{
-
 			animator.Play("Animations/player/player_DashAttack.csv");
 			InputManager::StopComboRecord();
 		}
