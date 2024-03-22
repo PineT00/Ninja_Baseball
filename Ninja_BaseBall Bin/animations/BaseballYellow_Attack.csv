@@ -1,7 +1,6 @@
 ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,20,0,,,,,
+,1,1,,,,,
+,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/monster-Ball.png,102.086,124.418,-105.15,87.2699,4,0,0
-graphics/monster-Ball.png,102.086,124.418,-105.15,87.2699,4,0,0
-graphics/monster-Ball.png,209.635,120.626,-106.814,90.5595,4,0,0
-graphics/monster-Ball.png,209.635,120.626,-106.814,90.5595,4,0,0
+graphics/3_Enemy/baseball/yBaseball_punch.bmp,718.975,30.4501,-324.405,272.16,7,0,0
+graphics/3_Enemy/baseball/yBaseball_punch.bmp,333.82,54.7501,-294.03,247.86,7,0,0

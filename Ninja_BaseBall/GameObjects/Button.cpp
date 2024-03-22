@@ -5,6 +5,8 @@
 #include "InputField.h"
 #include "PreviewCharacter.h"
 
+std::wstring Button::emptyWstring = std::wstring(L"");
+
 Button::Button(ButtonIdentifier identifier, const std::string& name)
 	: SpriteGo(name), buttonIdentifier(identifier)
 {
@@ -83,6 +85,9 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 		break;
 	case ButtonIdentifier::autoslice :
 		AutoSlice(intValues);
+		break;
+	case ButtonIdentifier::loadcsv :
+		LoadCsv();
 		break;
 	}
 }
@@ -170,7 +175,7 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(OPENFILENAMEW);
 	ofn.hwndOwner = NULL;
-	ofn.lpstrFilter = L"Image Files\0*.png;*.jpg;*.jpeg\0All Files\0*.*\0";
+	ofn.lpstrFilter = L"Image Files\0*.png;*.jpg;*.jpeg;*.bmp\0All Files\0*.*\0";
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
@@ -188,6 +193,18 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 
 void Button::SaveSelectedAreasWithDialog()
 {
+	std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
+	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
+	std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
+	AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
+	
+	if (area.empty())
+	{
+		
+		return;
+	}
+	if (area.size() != pivotList.size()) return;
+
 	OPENFILENAME ofn;
 	wchar_t  szFileName[MAX_PATH] = L"";
 
@@ -221,10 +238,6 @@ void Button::SaveSelectedAreasWithDialog()
 		}
 
 		std::string fp = sFp.substr(sFp.find("graphics"), sFp.size());
-		std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
-		std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
-		std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
-		AnimationLoopType& loopType = sceneAnimationTool->GetSelectedLoopType();
 
 		outFile << "ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)\n";
 		outFile << "," << sceneAnimationTool->GetFPS()->GetText() << "," << (int)loopType <<"\n\n";
@@ -249,6 +262,10 @@ void Button::SaveSelectedAreasWithDialog()
 
 void Button::SetFramePivot()
 {
+	std::vector<sf::FloatRect> selectedAreas = sceneAnimationTool->GetSelectedAreas();
+
+	if (selectedAreas.empty()) return;
+
 	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
 	std::vector<sf::Vector2f>& customPivotList = sceneAnimationTool->GetCustomPivot();
 	Origins frameOrigin = (Origins)(std::stoi(name.substr(name.size() -1)));
@@ -298,6 +315,92 @@ void Button::AutoSlice(const std::vector<int> intValues)
 {
 	// 슬라이스 후 저장 준비
 	
+}
+
+void Button::LoadCsv()
+{
+	OPENFILENAME ofn;
+	wchar_t szFileName[MAX_PATH] = L"";
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = L"CSV Files (*.csv)\0*.csv\0All Files (*.*)\0*.*\0";
+	ofn.lpstrFile = szFileName;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	ofn.lpstrDefExt = L"csv";
+
+	if (GetOpenFileName(&ofn)) {
+		std::wifstream inFile(szFileName);
+		if (!inFile.is_open()) {
+			MessageBox(NULL, L"File could not be opened.", L"Error", MB_OK);
+			return;
+		}
+
+		if (obj->GetAnimator().IsPlaying())
+		{
+			obj->GetAnimator().Stop();
+		}
+		
+		std::wstring line;
+		std::getline(inFile, line);
+		std::getline(inFile, line);
+
+		std::wistringstream iss(line);
+		std::wstring id, fps, loopType;
+
+		std::vector<sf::FloatRect>& selectedAreas = sceneAnimationTool->GetSelectedAreas();
+		std::vector<Origins>& selectedAreasPivot = sceneAnimationTool->GetSelectedAreasPivot();
+		std::vector<sf::Vector2f>& customPivot = sceneAnimationTool->GetCustomPivot();
+
+		selectedAreas.clear();
+		selectedAreasPivot.clear();
+		customPivot.clear();
+		sceneAnimationTool->SetAtlasPath(emptyWstring);
+		sceneAnimationTool->SetIsAtlasPath(false);
+
+		std::getline(iss, id, L',');
+		std::getline(iss, fps, L',');
+		std::getline(iss, loopType, L',');
+
+		sceneAnimationTool->SetFPS(fps);
+		sceneAnimationTool->SetLoopType((AnimationLoopType)std::stoi(loopType));
+
+		std::getline(inFile, line);
+		std::getline(inFile, line);
+
+		while (std::getline(inFile, line)) 
+		{
+			if (line.empty()) continue; 
+
+			std::wistringstream textureStream(line);
+			std::wstring texturePath, left, top, width, height, origin, customX, customY;
+			std::getline(textureStream, texturePath, L',');
+			std::getline(textureStream, left, L',');
+			std::getline(textureStream, top, L',');
+			std::getline(textureStream, width, L',');
+			std::getline(textureStream, height, L',');
+			std::getline(textureStream, origin, L',');
+			std::getline(textureStream, customX, L',');
+			std::getline(textureStream, customY, L',');
+
+			if (sceneAnimationTool->GetAtlasPath() == L"")
+			{
+				std::wstring formattedPath = pathFormat + texturePath;
+
+				sceneAnimationTool->SetIsAtlasPath(false);
+				sceneAnimationTool->SetAtlasPath(formattedPath);
+			}
+			selectedAreas.push_back({ std::stof(left),std::stof(top), std::stof(width), std::stof(height) });
+			selectedAreasPivot.push_back((Origins)std::stoi(origin));
+			customPivot.push_back({ std::stof(customX), std::stof(customY) });
+
+			std::wcout << line << std::endl;
+		}
+		sceneAnimationTool->SetLoadedFromCsv(true);
+
+		inFile.close(); 
+	}
 }
 
 sf::FloatRect Button::GetLocalBounds()

@@ -19,7 +19,9 @@ public :
 		pivot,
 		preload,
 		autoslice,
+		loadcsv,
 	};
+	static std::wstring emptyWstring;
 
 protected:
 	Button(const Button&) = delete;
@@ -33,6 +35,7 @@ protected:
 
 	std::vector<int> intValues;
 	std::wstring stringValue;
+	std::wstring pathFormat = L"D:/Kyungil/SFML/Ninja_Baseball/Ninja_BaseBall Bin/";
 
 	sf::Text buttonText;
 	sf::RectangleShape shape;
@@ -78,6 +81,7 @@ public:
 	void PlayPreView(PreviewCharacter* obj);
 	void StopPreView(PreviewCharacter* obj);
 	void AutoSlice(const std::vector<int> intValues);
+	void LoadCsv();
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

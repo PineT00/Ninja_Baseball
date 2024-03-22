@@ -12,12 +12,30 @@ protected:
     Player* player = nullptr;
     Animator enemyAnimator;
 
-    float speed = 100.f;
+    float speed = 150.f;
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
     bool isDead = false;
-    bool isAttacking = false;
+    bool isAttack = false;
+
+    float attackTimer = 0.f;
+    float attackCooldown = 2.f;
+    float prepareAttackDistance = 30.f;
+    float retreatDistance = 10.f;
+    float prepareAttackTimer = 3.f;
+    float prepareAttackDuration = 1.f;
+    float attackDistance = 5.f;
+    float acceptableYDistance = 15.f;
+
+    sf::FloatRect playerBounds;
+    sf::FloatRect damageBounds;
+    sf::FloatRect attackBounds;
+    sf::FloatRect playerHitBox;
+
+    sf::RectangleShape damageBox;
+    sf::RectangleShape attackBox;
+    sf::Vector2f attackBoxSize = { 20, 20 };
     
 public:
     Enemy(const std::string& name);
@@ -33,4 +51,15 @@ public:
     void SetSpeed(float newSpeed) { speed = newSpeed; }
     float GetHealth() const { return health; }
     void SetPosition(const sf::Vector2f& position) override { sprite.setPosition(position); }
+
+    void DashTowards(const sf::Vector2f& target, float dt);
+    virtual void Attack();
+
+    void MoveTowards(const sf::Vector2f& target, float dt);
+    static sf::Vector2f Normalize(const sf::Vector2f& source);
+    virtual void TargetDirection(const sf::Vector2f& playerPosition);
+    virtual void SetBox(bool flip);
+
+    void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
+    bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
 };

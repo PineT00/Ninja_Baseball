@@ -1,0 +1,5 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,1,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/baseball/ybaseball_damaged.bmp,1375.02,107.19,-265.693,190.378,9,-137.554,187.763
