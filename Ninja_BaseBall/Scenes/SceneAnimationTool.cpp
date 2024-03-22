@@ -76,6 +76,11 @@ void SceneAnimationTool::Init()
 	buttonAutoSlice->SetButtonText(font, "Auto Slice", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.35f }, Origins::MC);
 	AddGameObject(buttonAutoSlice, Layers::Ui);
 
+	buttonLoadCsv = new Button(Button::ButtonIdentifier::loadcsv, "buttonloadcsv");
+	buttonLoadCsv->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.1f }, sf::Color::White, Origins::MC);
+	buttonLoadCsv->SetButtonText(font, "Load CSV", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.1f }, Origins::MC);
+	AddGameObject(buttonLoadCsv, Layers::Ui);
+
 	editorBorder.setOutlineColor(sf::Color::Red);
 	editorBorder.setFillColor(sf::Color::Transparent);
 	editorBorder.setOutlineThickness(2.f);
@@ -280,10 +285,13 @@ void SceneAnimationTool::UpdateGame(float dt)
 		spriteSheet->SetPosition({ 0,0 });
 		spriteSheet->SetOrigin(Origins::TL);
 
-		selectedAreas.clear();
-		selectedAreasPivot.clear();
-		selectedLoopType = AnimationLoopType::Single; // 기본 값
-		customPivots.clear();
+		if (!isLoadedFromCsv)
+		{
+			selectedAreas.clear();
+			selectedAreasPivot.clear();
+			selectedLoopType = AnimationLoopType::Single; // 기본 값
+			customPivots.clear();
+		}
 
 		previewCharacter->GetAnimator().ClearFrames();
 
@@ -363,9 +371,20 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 }
 
 
-void SceneAnimationTool::SetAtlasPath(const std::wstring& str)
+void SceneAnimationTool::SetAtlasPath(std::wstring& str)
 {
 	atlasPath = str;
+	std::cout << Utils::MyString::WideStringToString(str) << std::endl;
+}
+
+void SceneAnimationTool::SetFPS(const std::wstring& fps)
+{
+	inputfieldFPS->SetText(Utils::MyString::WideStringToString(fps));
+}
+
+void SceneAnimationTool::SetLoopType(const AnimationLoopType looptype)
+{
+	selectedLoopType = looptype;
 }
 
 void SceneAnimationTool::SetStatus(GameStatus newStatus)
