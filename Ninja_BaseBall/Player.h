@@ -20,6 +20,7 @@ protected:
 	Player2* player2 = nullptr;
 
 	Animator animator;
+	Animator animatorEffect;
 
 	std::vector<sf::Sprite> trails;
 
@@ -46,11 +47,18 @@ protected:
 	bool rightDashReady = false;
 	bool isRightDashing = false;
 
+	float hitTimer = 0.2f;
+	float hitTime = 0.f;
+
+
 	int jumpDirection = 0;
 
+	
 	SpriteGo playerShadow;
+	sf::Sprite OnHitEffect;
 
 
+	//충돌박스
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
 	sf::RectangleShape hitBox;

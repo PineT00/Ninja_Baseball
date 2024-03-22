@@ -51,10 +51,7 @@ void Player::SetBox(bool flip)
 
 void Player::Bitted()
 {
-	animator.Play("Animations/player/player_Damage1.csv");
-	velocity.x = -800.f;
-	animator.PlayQueue("Animations/player/player_Idle.csv");
-	getHit = false;
+
 
 }
 
@@ -68,6 +65,7 @@ void Player::Init()
 	SpriteGo::Init();
 
 	animator.SetTarget(&sprite);
+	animator.SetTarget(&OnHitEffect);
 
 	hasHitBox = true;
 
@@ -119,6 +117,8 @@ void Player::Reset()
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
+
+	OnHitEffect.setPosition(hitBox.getPosition());
 
 	combo = new ComboCommands();
 
@@ -269,11 +269,23 @@ void Player::Update(float dt)
 
 	if (getHit)
 	{
-		Bitted();
+		hitTime += dt;
+		velocity.x = 800.f;
+		animator.Play("Animations/player/player_Damage1.csv");
+		animator.PlayQueue("Animations/player/player_Idle.csv");
+		animatorEffect.Play();
+
+	}
+
+	if (hitTime > hitTimer)
+	{
+		getHit = false;
+		hitTime = 0.f;
 	}
 
 
 	position += velocity * dt;
+
 	SetPosition(position);
 	playerShadow.SetPosition(GetPosition());
 
@@ -329,6 +341,7 @@ void Player::Update(float dt)
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
 			animator.Play("Animations/player/player_Attack1.csv");
+			
 		}
 	}
 
@@ -412,7 +425,7 @@ void Player::Update(float dt)
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
-
+	OnHitEffect.setPosition(hitBox.getPosition());
 
 
 	//ÀÜ»óÈ¿°ú
