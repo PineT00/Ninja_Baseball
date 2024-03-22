@@ -113,4 +113,5 @@ namespace Utils
 		return sf::Vector2f(std::cos(angleRadians), std::sin(angleRadians));
 
 	}
+	
 }

@@ -39,6 +39,7 @@ protected:
 
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
+	
 	sf::RectangleShape hitBox;
 	
 public:

@@ -10,6 +10,7 @@ class YellowBaseBall;
 class Stage1;
 class Player;
 class YellowBaseBall;
+// class Enemy;
 
 class SceneDev1 : public Scene
 {

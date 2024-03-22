@@ -34,9 +34,7 @@ protected:
         INTRO,
         MOVE,
         DASH,
-        PREPARE_ATTACK,
         ATTACK,
-        RETREAT,
         CATCH,
         HURT,
         DEAD,
@@ -68,5 +66,5 @@ public:
     void Update(float dt) override;
     void OnDamage(int damage) override;
     void TargetDirection(const sf::Vector2f& playerPosition) override;
-    void SetBox(bool flip) override;
+    void Attack() override;
 };

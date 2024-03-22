@@ -318,8 +318,6 @@ void Player::Update(float dt)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
 	}
-
-
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
