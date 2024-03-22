@@ -307,11 +307,6 @@ void SceneAnimationTool::UpdateGame(float dt)
 			customPivots.clear();
 		}
 
-		selectedAreas.clear();
-		selectedAreasPivot.clear();
-		selectedLoopType = AnimationLoopType::Single; // ±âº» °ª
-		customPivots.clear();
-
 		previewCharacter->GetAnimator().ClearFrames();
 
 		textureBorder.setPosition(0, 0);
