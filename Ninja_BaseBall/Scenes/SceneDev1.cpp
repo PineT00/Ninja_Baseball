@@ -45,8 +45,7 @@ void SceneDev1::Init()
     AddGameObject(player2);
 
     player = new Player("Player");
-
-    player->SetPosition({ 900.f, 2500.f });
+    player->SetPosition({ 200.f, 500.f });
     AddGameObject(player, World);
 
 
@@ -82,8 +81,8 @@ void SceneDev1::Enter()
 	Scene::Enter();
     status = GameStatus::Game;
 
-    player2->SetActive(false);
-    player->SetActive(false);
+    //player2->SetActive(false);
+    //player->SetActive(false);
 }
 
 void SceneDev1::Exit()

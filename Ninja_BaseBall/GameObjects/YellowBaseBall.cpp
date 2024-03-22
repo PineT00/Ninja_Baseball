@@ -73,7 +73,7 @@ void YellowBaseBall::Draw(sf::RenderWindow& window)
         window.draw(damageBox);
         window.draw(attackBox);
     }
-
+    
 }
 
 void YellowBaseBall::Update(float dt)
@@ -81,6 +81,8 @@ void YellowBaseBall::Update(float dt)
     Enemy::Update(dt);
     
     //sprite.setPosition(sprite.getPosition());
+
+    
 }
 
 void YellowBaseBall::OnDamage(int damage)

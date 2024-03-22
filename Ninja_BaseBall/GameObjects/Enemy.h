@@ -7,6 +7,15 @@ class Player;
 
 class Enemy:public SpriteGo
 {
+public :
+    enum class EnemyState
+    {
+        IDLE,
+        MOVE,
+        ATTACK,
+    };
+    EnemyState currentState;
+    sf::Vector2f lastPosition;
 protected:
     SceneDev1* Scene;
     Player* player;
@@ -16,9 +25,13 @@ protected:
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
+    
     bool isDead = false;
     bool isAttack = false;
+    bool isReadyToDash=false;
+    bool isDash =false;
 
+    float dashDelay = 0.5f;
     float attackTimer = 0.f;
     float attackCooldown = 2.f;
     float prepareAttackDistance = 100.f;
@@ -28,14 +41,23 @@ protected:
     float prepareAttackDuration = 1.f;
     float attackDistance = 5.f;
     float acceptableYDistance = 15.f;
-    bool isReadyToDash=false;
-    float dashTimer = 1.5f;
+
+    float dashDuration = 0.5f;
+    
+    float dashTimer = 0.0f;
     float dashSpeed=300.f;
-    float dashCooldown = 1.f; // 대쉬 쿨다운 추가
+    float dashCooldown = 3.f; // 대쉬 쿨다운 추가
     float dashCooldownTimer = 0.f; // 대쉬 쿨다운 타이머
     float ySpeedIncreaseFactor =50.f;
     float minDistanceX = 30.f;
     float maxDistanceX = 100.f;
+    float dashDistance = 50.f;
+    float minDashDistance = 30.f;
+
+    float attackOffsetX;
+    float attackOffsetY;
+    float attackOffset = 20.f;
+    
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
     sf::FloatRect attackBounds;
@@ -79,6 +101,6 @@ public:
     virtual void DashToPlayer(float dt);
     virtual void MoveToPlayer(float dt);
     virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
-
+    virtual void MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
     
 };
