@@ -40,6 +40,12 @@ void SceneAnimationTool::Init()
 	textFPS->SetOrigin(Origins::MR);
 	AddGameObject(textFPS, Layers::Ui);
 
+	textGuidline = new TextGo("textguidline");
+	textGuidline->Set(font, "Select Frame Bound", 20, sf::Color::White);
+	textGuidline->SetPosition(windowSize.x * 0.2f, windowSize.y * 0.18f);
+	textGuidline->SetOrigin(Origins::BL);
+	AddGameObject(textGuidline, Layers::Ui);
+
 	inputfieldFPS = new InputField("inputfieldfps");
 	inputfieldFPS->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
 	inputfieldFPS->SetOrigin(Origins::ML);
@@ -231,7 +237,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 
 			if (isCustomPivot)
 			{
-
+				textGuidline->SetText(guidlines[0]);
 				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top };
 				sf::Vector2f customPivot = (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect);
 
@@ -241,8 +247,13 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 				}
 
 				customPivots.push_back(customPivot);
+
 				std::cout << "Custom Pivot, Selected Pivot : " << customPivot.x << " : " << customPivot.y << std::endl;
 				isCustomPivot = false;
+			}
+			else
+			{
+				textGuidline->SetText(guidlines[1]);
 			}
 		}
 			
@@ -317,6 +328,7 @@ void SceneAnimationTool::UpdateGame(float dt)
 		{
 			selectedAreas.erase(selectedAreas.end() - 1);
 			selectedAreasPivot.erase(selectedAreasPivot.end() - 1);
+			customPivots.erase(customPivots.end() - 1);
 		}
 	}
 }
@@ -367,6 +379,21 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 
 		window.setView(worldView);
 		window.draw(rectangle);
+	}
+
+	for (int i = 0; i < customPivots.size(); ++i)
+	{
+		if (customPivots[i] == sf::Vector2f(0, 0)) continue;
+
+		sf::Sprite pivotImg;
+		sf::Vector2f area = { selectedAreas[i].left , selectedAreas[i].top };
+
+		pivotImg.setTexture(*TEXTURE_MANAGER.GetResource("D:/Kyungil/SFML/Ninja_Baseball/Ninja_BaseBall Bin/graphics/pivot.png"));
+		pivotImg.setPosition(area + customPivots[i]);
+		Utils::Origin::SetOrigin(pivotImg, Origins::MC);
+
+		window.setView(worldView);
+		window.draw(pivotImg);
 	}
 }
 
