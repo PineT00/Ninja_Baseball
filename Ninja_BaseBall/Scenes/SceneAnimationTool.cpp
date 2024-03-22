@@ -390,12 +390,13 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 	{
 		if (customPivots[i] == sf::Vector2f(0, 0)) continue;
 
-		sf::Sprite pivotImg;
+		sf::RectangleShape pivotImg;
 		sf::Vector2f area = { selectedAreas[i].left , selectedAreas[i].top };
 
-		pivotImg.setTexture(*TEXTURE_MANAGER.GetResource("D:/Kyungil/SFML/Ninja_Baseball/Ninja_BaseBall Bin/graphics/pivot.png"));
+		pivotImg.setFillColor(sf::Color::Green);
+		pivotImg.setSize({ 10,10 });
 		pivotImg.setPosition(area + customPivots[i]);
-		Utils::Origin::SetOrigin(pivotImg, Origins::MC);
+		pivotImg.setOrigin({5,5});
 
 		window.setView(worldView);
 		window.draw(pivotImg);
