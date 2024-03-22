@@ -49,11 +49,32 @@ void Player::SetBox(bool flip)
 	}
 }
 
+void Player::Bitted()
+{
+	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
+	animator.Play("Animations/player/player_Damage1.csv");
+	animator.PlayQueue("Animations/player/player_Idle.csv");
+}
+
+void Player::Death()
+{
+	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
+	animator.Play("Animations/player/player_Damage3.csv");
+	inputOn = false;
+}
+
+void Player::DashAttack()
+{
+	animator.Play("Animations/player/player_DashAttack.csv");
+	inputOn = false;
+}
+
 void Player::Init()
 {
 	SpriteGo::Init();
 
 	animator.SetTarget(&sprite);
+	animatorEffect.SetTarget(&OnHitEffect);
 
 	hasHitBox = true;
 
@@ -63,14 +84,17 @@ void Player::Init()
 	
 	attackBox.setSize({ 20, 20 });
 	grapBox.setSize({ 20,20 });
-	hitBox.setSize({ 50,50 });
+	hitBox.setSize({ 70,80 });
 
 
 	attackBox.setOrigin({ -120.f, 150.f });
 	grapBox.setOrigin({ -70.f, 150.f });
-	hitBox.setOrigin({ 20.f, 150.f });
+	hitBox.setOrigin({ 35.f, 150.f });
 
-	
+	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
+	playerShadow.SetOrigin({90.f, 35.f});
+
+	float hp = maxHp;
 }
 
 void Player::Reset()
@@ -90,7 +114,10 @@ void Player::Reset()
 
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
-	animator.Play("Animations/player/player_Idle.csv");
+
+	//µîÀå¾Ö´Ï¸ÞÀÌ¼Ç
+	animator.Play("Animations/player/player_Spawn.csv");
+	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
 
 
@@ -102,6 +129,9 @@ void Player::Reset()
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
+	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
+	OnHitEffect.setScale({1.5f, 1.5f});
+
 	combo = new ComboCommands();
 
 	combo->SetCombo();
@@ -112,94 +142,105 @@ void Player::Update(float dt)
 {
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
+	animatorEffect.Update(dt);
 
 	float v = 0;
-	if (isRightDashing || isLeftDashing)
-	{
-		v = 0;
-	}
-	else
-	{
-		if (InputManager::GetKey(sf::Keyboard::Up))
-		{
-			v = -1;
-		}
-		else if (InputManager::GetKey(sf::Keyboard::Down))
-		{
-			v = 1;
-		}
-	}
-
-
 	float h = 0;
 
-	if (InputManager::GetKeyDown(sf::Keyboard::Right) && isGrounded)
+	if (inputOn)
 	{
-		rightDashReady = true;
-	}
-	if (InputManager::GetKeyDown(sf::Keyboard::Left) && isGrounded)
-	{
-		leftDashReady = true;
-	}
 
-	if (InputManager::GetKey(sf::Keyboard::Left) && isGrounded)
-	{
-		h = -1;
-	}
-	else if (InputManager::GetKey(sf::Keyboard::Right) && isGrounded)
-	{
-		h = 1;
-	}
-
-	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
-	if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
-	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Left))
+		if (isRightDashing || isLeftDashing)
 		{
-			isLeftDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
-			animator.Play("Animations/player/player_Dash.csv");
+			v = 0;
 		}
-	}
-	if (leftDashTime > dashTimer)
-	{
-		leftDashTime = 0.f;
-		leftDashReady = false;
-	}
-	if (leftDashReady)
-	{
-		leftDashTime += dt;
-	}
-	if (InputManager::GetKeyUp(sf::Keyboard::Left))
-	{
-		isLeftDashing = false;
-	}
-
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
-
-	if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
-	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Right))
+		else
 		{
-			isRightDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
-			animator.Play("Animations/player/player_Dash.csv");
+			if (InputManager::GetKey(sf::Keyboard::Up))
+			{
+				v = -1;
+			}
+			else if (InputManager::GetKey(sf::Keyboard::Down))
+			{
+				v = 1;
+			}
 		}
-	}
-	if (rightDashTime > dashTimer)
-	{
-		rightDashTime = 0.f;
-		rightDashReady = false;
-	}
-	if (rightDashReady)
-	{
-		rightDashTime += dt;
-	}
-	if (InputManager::GetKeyUp(sf::Keyboard::Right))
-	{
-		isRightDashing = false;
+
+
+
+
+		if (InputManager::GetKeyDown(sf::Keyboard::Right) && isGrounded)
+		{
+			rightDashReady = true;
+		}
+		if (InputManager::GetKeyDown(sf::Keyboard::Left) && isGrounded)
+		{
+			leftDashReady = true;
+		}
+
+		if (InputManager::GetKey(sf::Keyboard::Left) && isGrounded)
+		{
+			h = -1;
+		}
+		else if (InputManager::GetKey(sf::Keyboard::Right) && isGrounded)
+		{
+			h = 1;
+		}
+
+		//´ë½Ã±â´É
+		{
+			//¿ÞÂÊ ´ë½Ã ¸ðÀ½
+			if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
+			{
+				if (InputManager::GetKeyDown(sf::Keyboard::Left))
+				{
+					isLeftDashing = true; // ´ë½¬ »óÅÂ È°¼ºÈ­
+					animator.Play("Animations/player/player_Dash.csv");
+				}
+			}
+			if (leftDashTime > dashTimer)
+			{
+				leftDashTime = 0.f;
+				leftDashReady = false;
+			}
+			if (leftDashReady)
+			{
+				leftDashTime += dt;
+			}
+			if (InputManager::GetKeyUp(sf::Keyboard::Left))
+			{
+				isLeftDashing = false;
+			}
+
+			//¿À¸¥ÂÊ ´ë½Ã ¸ðÀ½
+
+			if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
+			{
+				if (InputManager::GetKeyDown(sf::Keyboard::Right))
+				{
+					isRightDashing = true; // ´ë½¬ »óÅÂ È°¼ºÈ­
+					animator.Play("Animations/player/player_Dash.csv");
+				}
+			}
+			if (rightDashTime > dashTimer)
+			{
+				rightDashTime = 0.f;
+				rightDashReady = false;
+			}
+			if (rightDashReady)
+			{
+				rightDashTime += dt;
+			}
+			if (InputManager::GetKeyUp(sf::Keyboard::Right))
+			{
+				isRightDashing = false;
+			}
+		}
+
 	}
 
 
-	//ï¿½ë½¬ ï¿½ï¿½ï¿½Çµï¿½
+	//´ë½¬ ½ºÇÇµå
 	if (isRightDashing || isLeftDashing)
 	{
 		velocity.x = h * dashSpeed;
@@ -209,7 +250,7 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½
+	//Á¡ÇÁ
 
 	if (!isGrounded)
 	{
@@ -247,8 +288,78 @@ void Player::Update(float dt)
 		velocity.y = v * speed;
 	}
 
+	if (getHit)
+	{
+		getHit = false;
+		inputOn = false;
+		hitTimeOn = true;
+
+		hp -= 25.f;
+
+		if (hp <= 0.f)
+		{
+			isAlive = false;
+		}
+
+	}
+
+	if (hitTimeOn)
+	{
+		if (!isAlive)
+		{
+			hitTime += dt;
+			isGrounded = false;
+			jumpY = GetPosition().y;
+			Death();
+			velocity.y = -800.f;
+			jumpDirection = -(sprite.getScale().x);
+		}
+		else
+		{
+			hitTime += dt;
+			velocity.x = -(sprite.getScale().x) * 800.f;
+			Bitted();
+
+		}
+	}
+
+
+	if (!isAlive && isGrounded && animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
+	{
+		animator.Play("Animations/player/player_Death2.csv");
+	}
+
+	if (hitTime > hitTimer)
+	{
+		hitTimeOn = false;
+		hitTime = 0.f;
+		inputOn = true;
+	}
+
+
+	if (dashAttackTimeOn)
+	{
+		velocity.x = jumpDirection * 800.f;
+		DashAttack();
+		dashAttackTime -= dt;
+
+
+	}
+	if (dashAttackTime < dashAttackTimer)
+	{
+		dashAttackTimeOn = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		isLeftDashing = false;
+		isRightDashing = false;
+		dashAttackTime = 0.3f;
+		inputOn = true;
+	}
+
+
 	position += velocity * dt;
+
 	SetPosition(position);
+	playerShadow.SetPosition(GetPosition());
 
 	if (isAttack)
 	{
@@ -258,7 +369,7 @@ void Player::Update(float dt)
 
 
 
-	//ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ÀÌµ¿¿µ¿ª Á¦ÇÑ
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
@@ -271,55 +382,95 @@ void Player::Update(float dt)
 		SetBox(h < 0);
 	}
 
+	if (attackTimeOn)
+	{
+		attackTime -= dt;
+	}
+
+	//°ø°Ý¹Ú½º¿Í ´ê¾ÒÀ»¶§
 	if (attackBox.getGlobalBounds().intersects(player2->GetHitBox()))
 	{
 
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
+			attackTimeOn = true;
+
 			normalAttack += 1;
 			switch (normalAttack)
 			{
 				case 1:
 					animator.Play("Animations/player/player_Attack1.csv");
+					attackTime = 0.5f;
 					break;
 				case 2:
 					animator.Play("Animations/player/player_Attack2.csv");
+					attackTime = 0.5f;
 					break;
 				case 3:
 					animator.Play("Animations/player/player_Attack3.csv");
+					attackTime = 0.5f;
 					break;
 				case 4:
 					animator.Play("Animations/player/player_Attack4.csv");
+					attackTime = 0.5f;
 					normalAttack = 0;
 					break;
 				default:
 					break;
 			}
+
+
 		}
 	}
 	else
-	//ï¿½Þºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
-
 	{
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
 			animator.Play("Animations/player/player_Attack1.csv");
+			
 		}
 	}
 
-
-	//ÄÞº¸¿ë ±â¼ú ¸ðÀ½
+	//Àâ±â¹Ú½º¿Í ´ê¾ÒÀ»¶§
+	if (grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
 	{
+		isGrip = true;
+		animator.Play("Animations/player/player_Grip.csv");
+
+	}
+	else
+	{
+
+	}
+
+
+	//±â¼ú ¸ðÀ½
+	{
+
+		//Á¡ÇÁÁßÀÏ¶§ ±â¼ú
+		if (!isGrounded)
+		{
+
+		}
+
+		//´ë½ÃÁßÀÏ¶§ ±â¼ú
 		if (isLeftDashing || isRightDashing)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::W))
 			{
-				animator.Play("Animations/player/player_DashAttack.csv");
+				jumpDirection = h;
+				dashAttackTimeOn = true;
+					
 			}
 		}
-		
 
+		//Àâ±âÁßÀÏ¶§ ±â¼ú
+		if (isGrip)
+		{
 
+		}
+
+		//ÄÞº¸ ±â·Ï¿ë
 		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
 			InputManager::StopComboRecord();
@@ -332,7 +483,6 @@ void Player::Update(float dt)
 
 			animator.Play("Animations/player/player_DashAttack.csv");
 			InputManager::StopComboRecord();
-			
 		}
 	}
 
@@ -364,19 +514,23 @@ void Player::Update(float dt)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
 	}
-	if (!isAttack && animator.GetCurrentClipId() == "Animations/player/player_Attack4.csv")
+	if (attackTimeOn && attackTime <= 0.f)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
+		attackTimeOn = false;
+		normalAttack = 0;
 	}
 
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
+	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
 
+
+	//ÀÜ»óÈ¿°ú
 	trailDuration -= dt;
 
-	texture.loadFromFile("graphics/2_Player/red/red_sliding.bmp");
 	if (trailDuration <= 0)
 	{
 		if (trails.size() < 3)
@@ -386,7 +540,7 @@ void Player::Update(float dt)
 
 			trailAnimator.SetTarget(&trail);
 			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
-			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 220.f);
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 250.f);
 			trail.setColor(sf::Color(0, 0, 0, 100));
 			trail.setPosition(GetPosition());
 			if (h < 0.f || jumpDirection < 0.f)
@@ -404,25 +558,40 @@ void Player::Update(float dt)
 		{
 			trails.erase(trails.begin()); // °¡Àå ¿À·¡µÈ ÀÜ»ó »èÁ¦
 		}
-		trailDuration = 0.1f; // ÀÜ»ó À¯Áö ½Ã°£ ÃÊ±âÈ­
+		trailDuration = 0.05f; // ÀÜ»ó À¯Áö ½Ã°£ ÃÊ±âÈ­
 	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {	
+	playerShadow.Draw(window);
+
+	//if (isLeftDashing || isRightDashing)
+	//{
+	//	for (const auto& trail : trails)
+	//	{
+	//		window.draw(trail, shader);
+	//	}
+	//}
 
 	SpriteGo::Draw(window);
 
-	for (const auto& trail : trails)
-	{
-		window.draw(trail, shader);
-	}
+	window.draw(attackBox);
+	window.draw(grapBox);
+	window.draw(hitBox);
+	window.draw(OnHitEffect,shader);
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
-		window.draw(attackBox);
-		window.draw(grapBox);
-		window.draw(hitBox);
+		attackBox.setFillColor(sf::Color::Red);
+		grapBox.setFillColor(sf::Color::Blue);
+		hitBox.setFillColor(sf::Color::Yellow);
+	}
+	else
+	{
+		attackBox.setFillColor(sf::Color::Transparent);
+		grapBox.setFillColor(sf::Color::Transparent);
+		hitBox.setFillColor(sf::Color::Transparent);
 	}
 
 }

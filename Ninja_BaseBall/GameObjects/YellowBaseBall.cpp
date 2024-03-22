@@ -63,8 +63,13 @@ void YellowBaseBall::Draw(sf::RenderWindow& window)
 {
     Enemy::Draw(window);
     
-    window.draw(damageBox);
-    window.draw(attackBox);
+
+    if (SCENE_MANAGER.GetDeveloperMode())
+    {
+        window.draw(damageBox);
+        window.draw(attackBox);
+    }
+
 }
 
 void YellowBaseBall::Update(float dt)

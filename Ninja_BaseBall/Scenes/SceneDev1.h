@@ -9,6 +9,7 @@ class InputField;
 class YellowBaseBall;
 class Stage1;
 class Player;
+class Player2;
 class YellowBaseBall;
 
 class SceneDev1 : public Scene
@@ -29,7 +30,8 @@ protected :
 	YellowBaseBall* yellowEnemy;
 	sf::Vector2f windowSize;
 public:
-	Player* player;
+	Player* player = nullptr;
+	Player2* player2 = nullptr;
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 
