@@ -65,7 +65,7 @@ void Player::Init()
 	SpriteGo::Init();
 
 	animator.SetTarget(&sprite);
-	animator.SetTarget(&OnHitEffect);
+	animatorEffect.SetTarget(&OnHitEffect);
 
 	hasHitBox = true;
 
@@ -118,7 +118,7 @@ void Player::Reset()
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
-	OnHitEffect.setPosition(hitBox.getPosition());
+	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y + 200);
 
 	combo = new ComboCommands();
 
@@ -271,9 +271,10 @@ void Player::Update(float dt)
 	{
 		hitTime += dt;
 		velocity.x = 800.f;
+		animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
 		animator.Play("Animations/player/player_Damage1.csv");
 		animator.PlayQueue("Animations/player/player_Idle.csv");
-		animatorEffect.Play();
+
 
 	}
 
@@ -474,12 +475,12 @@ void Player::Draw(sf::RenderWindow& window)
 		}
 	}
 
-
 	SpriteGo::Draw(window);
 
 	window.draw(attackBox);
 	window.draw(grapBox);
 	window.draw(hitBox);
+	window.draw(OnHitEffect,shader);
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
