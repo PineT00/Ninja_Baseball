@@ -17,6 +17,7 @@ protected:
 	Player* player = nullptr;
 
 	Animator animator;
+	Animator animatorEffect;
 
 	std::vector<sf::Sprite> trails;
 
@@ -70,6 +71,9 @@ public:
 	void SetBox(bool flip);
 
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
+
+	void Bitted();
+	void Death();
 
 	//기술모음
 	void DashAttack();

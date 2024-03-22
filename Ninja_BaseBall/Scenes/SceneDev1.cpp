@@ -39,14 +39,12 @@ void SceneDev1::Init()
     stage = new Stage1();
     AddGameObject(stage);
 
-
-    Player2* player2 = new Player2("Player2");
-    player2->SetPosition({ 300.f, 2500.f });
+    player2 = new Player2("Player2");
+    player2->SetPosition({ 400.f, 2500.f });
     AddGameObject(player2);
 
-
     player = new Player("Player");
-    player->SetPosition({ 100.f, 2500.f });
+    player->SetPosition({ 900.f, 2500.f });
     AddGameObject(player, World);
 
     hud = new UiHUD();
@@ -71,6 +69,9 @@ void SceneDev1::Enter()
 {
 	Scene::Enter();
     status = GameStatus::Game;
+
+    player2->SetActive(false);
+    player->SetActive(false);
 }
 
 void SceneDev1::Exit()
@@ -169,6 +170,14 @@ void SceneDev1::UpdateGame(float dt)
     {
         stage->clearStage1_4 = true;
     }
+    
+    if (InputManager::GetKeyDown(sf::Keyboard::Z))
+    {
+        player2->SetActive(true);
+        player->SetActive(true);
+    }
+
+
 }
 
 void SceneDev1::UpdateGameover(float dt)

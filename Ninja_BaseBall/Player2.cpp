@@ -47,9 +47,24 @@ void Player2::SetBox(bool flip)
 	}
 }
 
+void Player2::Bitted()
+{
+	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
+	animator.Play("Animations/player/player_Damage1.csv");
+	animator.PlayQueue("Animations/player/player_Idle.csv");
+}
+
+void Player2::Death()
+{
+	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
+	animator.Play("Animations/player/player_Damage3.csv");
+	//inputOn = false;
+}
+
 void Player2::DashAttack()
 {
 	velocity.x + 800.f;
+	animator.Play("Animations/player/player_DashAttack.csv");
 }
 
 void Player2::Init()
