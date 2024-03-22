@@ -186,6 +186,12 @@ void Animator::ClearEvent()
 	eventList.clear();
 }
 
+void Animator::ClearFrames()
+{
+	if (currentClip->frames.empty()) return;
+	currentClip->frames.clear();
+}
+
 bool AnimationClip::loadFromFile(const std::string& filePath)
 {
 	rapidcsv::Document doc(filePath);
