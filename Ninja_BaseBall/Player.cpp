@@ -82,7 +82,7 @@ void Player::Reset()
 
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
-	SetPosition({ 0.f, 0.f });
+	
 	animator.Play("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
 

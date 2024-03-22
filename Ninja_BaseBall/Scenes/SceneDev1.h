@@ -26,12 +26,8 @@ protected :
 	Stage1* stage = nullptr;
 	
 	UiHUD* hud = nullptr;
-	YellowBaseBall* yellowEnemy = nullptr;
-
+	YellowBaseBall* yellowEnemy;
 	sf::Vector2f windowSize;
-	
-	YellowBaseBall* monster = nullptr;
-
 public:
 	Player* player;
 	SceneDev1(SceneIDs id);
