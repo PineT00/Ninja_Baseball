@@ -49,6 +49,11 @@ void Player::SetBox(bool flip)
 	}
 }
 
+void Player::DashAttack()
+{
+	velocity.x + 800.f;
+}
+
 void Player::Init()
 {
 	SpriteGo::Init();
@@ -70,7 +75,8 @@ void Player::Init()
 	grapBox.setOrigin({ -70.f, 150.f });
 	hitBox.setOrigin({ 20.f, 150.f });
 
-	
+	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
+	playerShadow.SetOrigin({90.f, 35.f});
 }
 
 void Player::Reset()
@@ -90,8 +96,10 @@ void Player::Reset()
 
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
-	//SetPosition({ 0.f, 0.f });
-	animator.Play("Animations/player/player_Idle.csv");
+
+	//등장애니메이션
+	animator.Play("Animations/player/player_Spawn.csv");
+	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
 
 
@@ -250,6 +258,7 @@ void Player::Update(float dt)
 
 	position += velocity * dt;
 	SetPosition(position);
+	playerShadow.SetPosition(GetPosition());
 
 	if (isAttack)
 	{
@@ -307,18 +316,34 @@ void Player::Update(float dt)
 	}
 
 
-	//콤보용 기술 모음
+	//기술 모음
 	{
+
+		//점프중일때 기술
+		if (!isGrounded)
+		{
+
+		}
+
+		//대시중일때 기술
 		if (isLeftDashing || isRightDashing)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::W))
 			{
+				DashAttack();
 				animator.Play("Animations/player/player_DashAttack.csv");
+				animator.PlayQueue("Animations/player/player_Idle.csv");
 			}
 		}
-		
+
+		//잡기중일때 기술
+		if (isHolding)
+		{
+
+		}
 
 
+		//콤보 기록용
 		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
 			InputManager::StopComboRecord();
@@ -373,9 +398,11 @@ void Player::Update(float dt)
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
+
+
+	//잔상효과
 	trailDuration -= dt;
 
-	texture.loadFromFile("graphics/2_Player/red/red_sliding.bmp");
 	if (trailDuration <= 0)
 	{
 		if (trails.size() < 3)
@@ -385,7 +412,7 @@ void Player::Update(float dt)
 
 			trailAnimator.SetTarget(&trail);
 			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
-			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 220.f);
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 250.f);
 			trail.setColor(sf::Color(0, 0, 0, 100));
 			trail.setPosition(GetPosition());
 			if (h < 0.f || jumpDirection < 0.f)
@@ -403,19 +430,24 @@ void Player::Update(float dt)
 		{
 			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
 		}
-		trailDuration = 0.1f; // 잔상 유지 시간 초기화
+		trailDuration = 0.05f; // 잔상 유지 시간 초기화
 	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {	
+	playerShadow.Draw(window);
+
+	if (isLeftDashing || isRightDashing)
+	{
+		for (const auto& trail : trails)
+		{
+			window.draw(trail, shader);
+		}
+	}
+
 
 	SpriteGo::Draw(window);
-
-	for (const auto& trail : trails)
-	{
-		window.draw(trail, shader);
-	}
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{

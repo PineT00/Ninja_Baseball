@@ -17,7 +17,6 @@ protected:
 	Animator animator;
 
 	std::vector<sf::Sprite> trails;
-	sf::Texture texture;
 
 	float trailDuration = 0.1f;
 
@@ -30,7 +29,7 @@ protected:
 	sf::Vector2f velocity;
 
 	bool isGrounded = true;
-
+	bool isHolding = false;
 
 
 
@@ -49,6 +48,10 @@ protected:
 	int normalAttack = 0;
 	bool isAttack = false;
 
+
+	SpriteGo playerShadow;
+
+
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
 	sf::RectangleShape hitBox;
@@ -63,6 +66,9 @@ public:
 	void SetAttackOn();
 	void SetAttackOff();
 	void SetBox(bool flip);
+
+	//기술모음
+	void DashAttack();
 
 	void Init() override;
 	void Reset() override;

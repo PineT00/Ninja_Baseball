@@ -52,8 +52,8 @@ void SceneDev1::Init()
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
-    monster = new YellowBaseBall("Monster");
-    AddGameObject(monster);
+    //monster = new YellowBaseBall("Monster");
+    //AddGameObject(monster);
 
     Scene::Init();
 }
