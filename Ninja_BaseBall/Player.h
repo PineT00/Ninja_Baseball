@@ -52,7 +52,7 @@ protected:
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
 	sf::RectangleShape hitBox;
-
+	
 public:
 	Player(const std::string& name = "");
 	~Player();
@@ -69,5 +69,6 @@ public:
 	void Update(float dt) override;
 
 	void Draw(sf::RenderWindow& window) override;
+	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
 };
 
