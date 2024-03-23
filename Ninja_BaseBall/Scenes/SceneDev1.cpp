@@ -123,8 +123,7 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    std::cout<<yellowEnemy->GetPosition().x<<std::endl;
-    std::cout<<yellowEnemy->GetPosition().y<<std::endl;
+
     
     if (player->GetPosition().x > xMax)
     {

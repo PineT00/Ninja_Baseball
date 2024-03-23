@@ -83,6 +83,7 @@ void YellowBaseBall::Update(float dt)
     Enemy::Update(dt);
     
     sprite.setPosition(sprite.getPosition());
+    
     attackBox.setPosition(sprite.getPosition());
     damageBox.setPosition(sprite.getPosition());
 
@@ -144,10 +145,11 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 void YellowBaseBall::Attack()
 {
     Enemy::Attack();
+    currentEnemy = EnemyState::ATTACK;
 }
 
-void YellowBaseBall::DashToPlayer()
+void YellowBaseBall::DashToPlayer(float dt)
 {
-    Enemy::DashToPlayer();
+    Enemy::DashToPlayer(dt);
     currentEnemy = EnemyState::DASH;
 }
