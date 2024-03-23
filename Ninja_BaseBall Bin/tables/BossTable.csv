@@ -1,0 +1,2 @@
+ID,NAME,ANIMATIONCHASE,ANIMATIONPUNCHONE,ANIMATIONPUNCHTWO,ANIMATIONWINDATTACK,ANIMATIONGUNATTACK,ANIMATIONCRYING,ANIMATIONDEAD
+0,WINDYPLANE,animations/Boss/Phase1/bossIdle.csv,animations/Boss/Phase1/bossPunchOneShot.csv,animations/Boss/Phase1/bossPunchTwoShot.csv,animations/Boss/Phase1/bossWindShot.csv,animations/Boss/Phase1/bossShootGun.csv,animations/Boss/Phase1/bossCrying.csv,animations/Boss/Phase1/bossOnDamaged.csv

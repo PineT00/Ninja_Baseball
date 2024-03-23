@@ -5,6 +5,7 @@ public :
 	enum class Types 
 	{
 		Enemy,
+		Boss,
 		Item,
 		Player
 	};
