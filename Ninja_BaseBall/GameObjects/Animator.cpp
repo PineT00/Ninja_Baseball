@@ -68,7 +68,10 @@ void Animator::Update(float dt)
 		}
 	}
 
-	SetFrame(currentClip->frames[currentFrame]);
+	if (currentClip->GetTotalFrame() >= 1)
+	{
+		SetFrame(currentClip->frames[currentFrame]);
+	}
 }
 
 void Animator::Play(const std::string& clipId, bool clearQueue)
@@ -190,6 +193,7 @@ void Animator::ClearFrames()
 {
 	if (currentClip->frames.empty()) return;
 	currentClip->frames.clear();
+	currentFrame = -1;
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)
