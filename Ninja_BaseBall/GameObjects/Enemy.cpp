@@ -40,54 +40,63 @@ void Enemy::Update(float dt)
     // sf::Vector2f playerPosition = player->GetPosition();
     // sf::Vector2f currentPosition = sprite.getPosition();
     // TargetDirection(playerPosition);
-    //
-    // float yDistance = std::abs(playerPosition.y - currentPosition.y);
     // float xDistance = std::abs(playerPosition.x - currentPosition.x);
     //
-    // // 대쉬 조건 검사
-    // if (!isDash && xDistance <= 500 && xDistance > 200) {
-    //     // 대쉬 시작
+    // // 플레이어와의 X축 거리가 500일 때 대쉬 조건을 충족
+    // if (xDistance <= 500 && !isDash) {
     //     isDash = true;
     // }
     //
+    // // 대쉬 실행
     // if (isDash) {
-    //     // 대쉬 실행
-    //     DashToPlayer(dt);
+    //     // 대쉬 중 플레이어와의 거리가 200 이하가 되면 대쉬를 멈춤
+    //     if (xDistance <= 200) {
+    //         isDash = false;
+    //     } else {
+    //         // 대쉬 속도로 플레이어에게 접근
+    //         DashToPlayer(dt);
+    //     }
     // } else {
-    //     // 일반 이동 로직
-    //     MoveToPlayerX(dt, playerPosition, currentPosition);
+    //     // 플레이어에게 일반적으로 접근
+    //     MoveTowards(playerPosition, dt);
     // }
     //
     // enemyAnimator.Update(dt);
-    // UpdateDashState(dt);
 
     if (isDead || player == nullptr) return;
     
     sf::Vector2f playerPosition = player->GetPosition();
     sf::Vector2f currentPosition = sprite.getPosition();
     TargetDirection(playerPosition);
+
+    float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
 
-    // 플레이어와의 X축 거리가 500일 때 대쉬 조건을 충족
-    if (xDistance <= 500 && !isDash) {
-        isDash = true;
+    // Y축 위치 조정
+    if (yDistance > acceptableYDistance) {
+        currentPosition.y += (playerPosition.y > currentPosition.y ? 1 : -1) * speed * dt;
+    } else {
+        // Y축이 맞춰져 있고, X축 거리가 대쉬 조건을 만족하는 경우
+        if (!isDash && xDistance <= 500 && xDistance > 200) {
+            isDash = true; // 대쉬 시작
+        } else if (!isDash) {
+            // Y축이 맞춰져 있으나 대쉬 조건을 만족하지 않는 경우, X축으로 접근
+            currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
+        }
     }
 
-    // 대쉬 실행
     if (isDash) {
-        // 대쉬 중 플레이어와의 거리가 200 이하가 되면 대쉬를 멈춤
-        if (xDistance <= 200) {
+        DashToPlayer(dt);
+        // 대쉬 후, 특정 조건(예: 거리)을 만족하면 대쉬 중지
+        if (xDistance <= 200 || yDistance > acceptableYDistance) {
             isDash = false;
-        } else {
-            // 대쉬 속도로 플레이어에게 접근
-            DashToPlayer(dt);
         }
     } else {
-        // 플레이어에게 일반적으로 접근
-        MoveTowards(playerPosition, dt);
+        sprite.setPosition(currentPosition);
     }
 
     enemyAnimator.Update(dt);
+    UpdateDashState(dt);
 }
 
 void Enemy::LateUpdate(float dt)
