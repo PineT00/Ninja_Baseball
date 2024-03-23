@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "BossTable.h"
 #include "rapidcsv.h"
+#include "rapidjson/rapidjson.h"
 
 BossData BossTable::Undefined = BossData();
 
