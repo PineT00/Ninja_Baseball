@@ -85,8 +85,9 @@ protected:
 	//충돌박스
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
-	
 	sf::RectangleShape hitBox;
+
+	sf::FloatRect enemyHitBox;
 	
 public:
 	Player(const std::string& name = "");

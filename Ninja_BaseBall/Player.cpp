@@ -139,6 +139,8 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
+	enemyHitBox = player2->GetHitBox();
+
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 	animatorEffect.Update(dt);
@@ -385,7 +387,7 @@ void Player::Update(float dt)
 	}
 
 	//잡기박스와 닿았을때
-	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
 		isGrip = true;
@@ -405,7 +407,7 @@ void Player::Update(float dt)
 	}
 
 	//공격박스와 닿았을때
-	if (!isGrip && attackBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
