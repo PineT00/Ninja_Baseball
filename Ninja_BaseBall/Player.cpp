@@ -148,7 +148,7 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	enemyHitBox = player2->GetHitBox();
+	//enemyHitBox = player2->GetHitBox();
 
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
