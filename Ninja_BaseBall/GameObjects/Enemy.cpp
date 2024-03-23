@@ -115,43 +115,34 @@ void Enemy::Attack()
 
 void Enemy::MoveTowards(const sf::Vector2f& target, float dt)
 {
-    // float minDistance = 100.0f;
-    // sf::Vector2f toTarget = target - sprite.getPosition();
-    // float distanceToTarget = Utils::MyMath::Magnitude(toTarget);
-    //
-    // if (distanceToTarget > minDistance)
-    // {
-    //     sf::Vector2f direction = Normalize(toTarget);
-    //     float moveDistance = speed * dt;
-    //     sf::Vector2f moveStep = direction * std::min(moveDistance, distanceToTarget - minDistance);
-    //     position += moveStep;
-    //     sprite.setPosition(position);
-    // }
-    // else
-    // {
-    //     Attack();
-    // }
     sf::Vector2f currentPosition = sprite.getPosition();
-    float yDistance = std::abs(target.y - currentPosition.y);
-    float xDistance = std::abs(target.x - currentPosition.x);
+    float distanceToTarget = Utils::MyMath::Distance(target, currentPosition);
+    
+    const float minDistance = 500.0f;  
+    
+    if (distanceToTarget > minDistance)
+    {
+        float yDistance = std::abs(target.y - currentPosition.y);
+        float xDistance = std::abs(target.x - currentPosition.x);
 
-    sf::Vector2f moveDirection(0.0f, 0.0f);
+        sf::Vector2f moveDirection(0.0f, 0.0f);
 
-    // Y축으로 이동 처리
-    if (yDistance > acceptableYDistance) {
-        moveDirection.y = (target.y > currentPosition.y) ? 1.0f : -1.0f;
-    }
 
-    // X축으로의 이동은 Y축이 맞춰진 후에만 시작
-    if (yDistance <= acceptableYDistance) {
-        moveDirection.x = (target.x > currentPosition.x) ? 1.0f : -1.0f;
-    }
+        if (yDistance > acceptableYDistance) {
+            moveDirection.y = (target.y > currentPosition.y) ? 1.0f : -1.0f;
+        }
 
-    // 정규화된 방향 벡터를 사용하여 이동
-    if (moveDirection != sf::Vector2f(0.0f, 0.0f)) {
-        sf::Vector2f normalizedDirection = Normalize(moveDirection);
-        sprite.move(normalizedDirection * speed * dt);
-        position = sprite.getPosition(); // 스프라이트 위치 업데이트 후 내부 위치도 업데이트
+
+        if (yDistance <= acceptableYDistance) {
+            moveDirection.x = (target.x > currentPosition.x) ? 1.0f : -1.0f;
+        }
+
+
+        if (moveDirection != sf::Vector2f(0.0f, 0.0f)) {
+            sf::Vector2f normalizedDirection = Normalize(moveDirection);
+            sprite.move(normalizedDirection * speed * dt);
+            position = sprite.getPosition(); 
+        }
     }
 }
 
