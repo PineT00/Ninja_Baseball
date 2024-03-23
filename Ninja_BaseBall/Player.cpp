@@ -416,7 +416,7 @@ void Player::Update(float dt)
 				default:
 					break;
 			}
-			player2->getHit;
+			//player2->getHit;
 
 		}
 	}
