@@ -101,12 +101,21 @@ void Player::Reset()
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
+
 	animator.AddEvent("Animations/player/player_Attack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_Attack1.csv", 3, AttackOff);
+	animator.AddEvent("Animations/player/player_Attack2.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_Attack2.csv", 3, AttackOff);
+	animator.AddEvent("Animations/player/player_Attack3.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_Attack3.csv", 3, AttackOff);
+	animator.AddEvent("Animations/player/player_Attack4.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_Attack4.csv", 3, AttackOff);
 
 	animator.AddEvent("Animations/player/player_DashAttack.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_DashAttack.csv", 3, AttackOff);
 
+	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 3, AttackOff);
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
