@@ -81,12 +81,11 @@ void Player2::Init()
 
 	attackBox.setSize({ 20, 20 });
 	grapBox.setSize({ 20,20 });
-	hitBox.setSize({ 50,50 });
-
+	hitBox.setSize({ 70,90 });
 
 	attackBox.setOrigin({ -120.f, 150.f });
 	grapBox.setOrigin({ -70.f, 150.f });
-	hitBox.setOrigin({ 20.f, 150.f });
+	hitBox.setOrigin({ 35.f, 150.f });
 
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });

@@ -36,7 +36,7 @@ protected:
 	float speed = 150.f;
 	float dashSpeed = 400.f;
 
-	float gravity = 1400.f;
+	float gravity = 1800.f;
 	float jumpY = 0.f;
 	int jumpDirection = 0;
 	int dashDirection = 0;
@@ -45,7 +45,7 @@ protected:
 
 	bool isGrounded = true;
 
-	//대시관련 변수
+	//Dash
 	float dashTimer = 0.5f;
 
 	float leftDashTime = 0.f;
@@ -60,22 +60,23 @@ protected:
 	float dashAttackTime = 0.3f;
 	bool dashAttackTimeOn = false;
 
-	//피격 타이머
+	//Hit
 	float hitTimer = 0.15f;
 	float hitTime = 0.f;
 	bool hitTimeOn = false;
 
-	//공격 타이머
+	//Attack Time
 	float attackTimer = 0.f;
-	float attackTime = 0.2f;
+	float attackTime = 0.3f;
 	bool attackTimeOn = false;
 
-	//��� Ÿ�̸�
+	//Grip Time
 	bool isGrip = false;
 	float gripTimer = 0.f;
 	float gripTime = 2.f;
+	float gripCoolTime = 1.f;
 
-	//피격, 타격시 추가입력 통제용
+	//Turn Input on / off
 	bool inputOn = true;
 
 	SpriteGo playerShadow;

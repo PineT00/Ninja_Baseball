@@ -86,7 +86,6 @@ void Player::Init()
 	grapBox.setSize({ 20,20 });
 	hitBox.setSize({ 70,90 });
 
-
 	attackBox.setOrigin({ -120.f, 150.f });
 	grapBox.setOrigin({ -70.f, 150.f });
 	hitBox.setOrigin({ 35.f, 150.f });
@@ -385,8 +384,28 @@ void Player::Update(float dt)
 		attackTime -= dt;
 	}
 
+	//잡기박스와 닿았을때
+	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	{
+		animator.Play("Animations/player/player_Grip.csv");
+		isGrip = true;
+		inputOn = false;
+		attackTimeOn = true;
+		attackTime = 2.f;
+	}
+
+
+	if (gripCoolTime > 0.f)
+	{
+		gripCoolTime -= dt;
+		if (gripCoolTime <= 0.f)
+		{
+			gripCoolTime = 0.f;
+		}
+	}
+
 	//공격박스와 닿았을때
-	if (attackBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	if (!isGrip && attackBox.getGlobalBounds().intersects(player2->GetHitBox()))
 	{
 
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
@@ -429,12 +448,7 @@ void Player::Update(float dt)
 		}
 	}
 
-	//잡기박스와 닿았을때
-	if (grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
-	{
-		isGrip = true;
-		gripTime -= dt;
-	}
+
 
 
 	//기술 모음
@@ -466,6 +480,7 @@ void Player::Update(float dt)
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
 				animator.Play("Animations/player/player_GripAttack1.csv");
+				attackTime = 2.f;
 			}
 		}
 
@@ -517,7 +532,11 @@ void Player::Update(float dt)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
 		attackTimeOn = false;
+		inputOn = true;
 		normalAttack = 0;
+
+		isGrip = false;
+		gripCoolTime = 2.f;
 	}
 
 	attackBox.setPosition({ GetPosition() });

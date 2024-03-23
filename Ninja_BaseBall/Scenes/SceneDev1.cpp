@@ -45,17 +45,13 @@ void SceneDev1::Init()
     AddGameObject(player2);
 
     player = new Player("Player");
-    player->SetPosition({ 200.f, 500.f });
+    player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
 
     yellowEnemy = new YellowBaseBall("YellowEnemy");
-    yellowEnemy->SetPosition({ 1000.f, 500.f });
+    yellowEnemy->SetPosition({ 1200.f, 500.f });
     AddGameObject(yellowEnemy, World);
-
-    //Player2* player2 = new Player2("Player2");
-    //player->SetPosition({ 200.f, 250.f });
-    //AddGameObject(player2);
 
 
     hud = new UiHUD();
@@ -80,9 +76,11 @@ void SceneDev1::Enter()
 {
 	Scene::Enter();
     status = GameStatus::Game;
+    xMax = 500.f; //카메라 시작 지점
 
-    //player2->SetActive(false);
-    //player->SetActive(false);
+    player2->SetActive(false);
+    player->SetActive(false);
+    yellowEnemy->SetActive(false);
 }
 
 void SceneDev1::Exit()
@@ -123,8 +121,9 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    std::cout<<yellowEnemy->GetPosition().x<<std::endl;
-    std::cout<<yellowEnemy->GetPosition().y<<std::endl;
+    //std::cout<<yellowEnemy->GetPosition().x<<std::endl;
+    //std::cout<<yellowEnemy->GetPosition().y<<std::endl;
+
     if (player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
@@ -138,6 +137,7 @@ void SceneDev1::UpdateGame(float dt)
     {
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
+        yellowEnemy->SetActive(true);
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
