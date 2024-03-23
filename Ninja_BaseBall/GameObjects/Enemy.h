@@ -57,7 +57,7 @@ protected:
     float attackOffsetX;
     float attackOffsetY;
     float attackOffset = 20.f;
-    float minDistance=200.f;                       
+    float minDistance=500.f;                       
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;

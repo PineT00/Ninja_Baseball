@@ -39,7 +39,7 @@ void Enemy::Update(float dt)
     
     sf::Vector2f playerPosition = player->GetPosition();
     sf::Vector2f currentPosition = sprite.getPosition();
-
+    TargetDirection(playerPosition);
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
 
