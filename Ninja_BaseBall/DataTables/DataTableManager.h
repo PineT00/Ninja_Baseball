@@ -35,3 +35,4 @@ inline T* DataTableManager::Get(DataTable::Types type)
 }
 
 #define DATATABLE_MANAGER (DataTableManager::Instance())
+#define BOSS_TABLE (DATATABLE_MANAGER.Get<BossTable>(DataTable::Types::Boss))

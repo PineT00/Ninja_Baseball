@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BossTable.cpp" />
     <ClCompile Include="ComboCommands.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
     <ClCompile Include="GameObjects\Animator.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="GameObjects\UiHUD.cpp" />
     <ClCompile Include="GameObjects\InputField.cpp" />
     <ClCompile Include="GameObjects\PreviewCharacter.cpp" />
+    <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="Utils\MyString.cpp" />
     <ClCompile Include="Scenes\SceneAnimationTool.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -177,8 +179,10 @@
     <ClCompile Include="Scenes\SceneGame.cpp" />
     <ClCompile Include="Utils\Sort.cpp" />
     <ClCompile Include="Utils\Vector2.cpp" />
+    <ClCompile Include="GameObjects\WindyPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BossTable.h" />
     <ClInclude Include="ComboCommands.h" />
     <ClInclude Include="GameObjects\Button.h" />
     <ClInclude Include="GameObjects\Animator.h" />
@@ -196,6 +200,7 @@
     <ClInclude Include="GameObjects\UiHUD.h" />
     <ClInclude Include="GameObjects\InputField.h" />
     <ClInclude Include="GameObjects\PreviewCharacter.h" />
+    <ClInclude Include="Scenes\SceneDevBoss.h" />
     <ClInclude Include="Utils\MyString.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="GameObjects\YellowBaseBall.h" />
@@ -219,6 +224,7 @@
     <ClInclude Include="Scenes\SceneGame.h" />
     <ClInclude Include="Utils\Sort.h" />
     <ClInclude Include="Utils\Vector2.h" />
+    <ClInclude Include="GameObjects\WindyPlane.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
