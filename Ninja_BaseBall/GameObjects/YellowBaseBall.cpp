@@ -153,9 +153,9 @@ void YellowBaseBall::Attack()
     currentEnemy = EnemyState::ATTACK;
 }
 
-void YellowBaseBall::DashToPlayer(float dt)
+void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
 {
-    Enemy::DashToPlayer(dt);
+    Enemy::DashToPlayer(dt,currentPosition);
     if(isDash)
     {
         currentEnemy = EnemyState::DASH;

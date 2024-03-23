@@ -59,9 +59,11 @@ protected:
     float dashStartY;
     float dashStartX;
 
-    float dashDirection;
+    sf::Vector2f dashDirection;
     float dashTargetDistance;
     float dashCurrentDistance;
+    sf::Vector2f dashStartPosition;
+    float dashMaxDistance=300;
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
@@ -78,6 +80,7 @@ public:
     void Init() override;
     void Release() override;
     void Reset() override;
+    
     void Update(float dt) override;
     void LateUpdate(float dt) override;
     void FixedUpdate(float dt) override;
@@ -102,9 +105,11 @@ public:
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
     virtual void UpdateDashState(float dt);
-    virtual void DashToPlayer(float dt);
+    virtual void DashToPlayer(float dt, sf::Vector2f& currentPosition);
     virtual void MoveToPlayer(float dt);
     virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
     virtual void MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
-    //virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
+    virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
+    virtual void UpdateDashCooldown(float dt);
+    virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
 };
