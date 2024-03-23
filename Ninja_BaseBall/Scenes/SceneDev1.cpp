@@ -5,6 +5,7 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 #include "InputField.h"
+// #include "Enemy.h"
 #include "YellowBaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
@@ -44,11 +45,12 @@ void SceneDev1::Init()
     AddGameObject(player2);
 
     player = new Player("Player");
-    player->SetPosition({ 900.f, 2500.f });
+    player->SetPosition({ 200.f, 500.f });
     AddGameObject(player, World);
 
 
     yellowEnemy = new YellowBaseBall("YellowEnemy");
+    yellowEnemy->SetPosition({ 1000.f, 500.f });
     AddGameObject(yellowEnemy, World);
 
     //Player2* player2 = new Player2("Player2");
@@ -79,8 +81,8 @@ void SceneDev1::Enter()
 	Scene::Enter();
     status = GameStatus::Game;
 
-    player2->SetActive(false);
-    player->SetActive(false);
+    //player2->SetActive(false);
+    //player->SetActive(false);
 }
 
 void SceneDev1::Exit()
@@ -121,11 +123,11 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-
+    std::cout<<yellowEnemy->GetPosition().x<<std::endl;
+    std::cout<<yellowEnemy->GetPosition().y<<std::endl;
     if (player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
-
     }
     float camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
     float camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);

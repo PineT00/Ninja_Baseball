@@ -512,13 +512,13 @@ void Player::Update(float dt)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
 	}
+
 	if (attackTimeOn && attackTime <= 0.f)
 	{
 		animator.PlayQueue("Animations/player/player_Idle.csv");
 		attackTimeOn = false;
 		normalAttack = 0;
 	}
-
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });

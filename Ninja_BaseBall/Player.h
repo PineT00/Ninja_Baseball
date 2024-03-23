@@ -45,7 +45,7 @@ protected:
 
 	bool isGrounded = true;
 
-	//´ë½Ã°ü·Ã º¯¼ö
+	//ëŒ€ì‹œê´€ë ¨ ë³€ìˆ˜
 	float dashTimer = 0.5f;
 
 	float leftDashTime = 0.f;
@@ -60,12 +60,12 @@ protected:
 	float dashAttackTime = 0.3f;
 	bool dashAttackTimeOn = false;
 
-	//ÇÇ°İ Å¸ÀÌ¸Ó
+	//í”¼ê²© íƒ€ì´ë¨¸
 	float hitTimer = 0.15f;
 	float hitTime = 0.f;
 	bool hitTimeOn = false;
 
-	//°ø°İ Å¸ÀÌ¸Ó
+	//ê³µê²© íƒ€ì´ë¨¸
 	float attackTimer = 0.f;
 	float attackTime = 0.2f;
 	bool attackTimeOn = false;
@@ -75,15 +75,16 @@ protected:
 	float gripTimer = 0.f;
 	float gripTime = 2.f;
 
-	//ÇÇ°İ, Å¸°İ½Ã Ãß°¡ÀÔ·Â ÅëÁ¦¿ë
+	//í”¼ê²©, íƒ€ê²©ì‹œ ì¶”ê°€ì…ë ¥ í†µì œìš©
 	bool inputOn = true;
 
 	SpriteGo playerShadow;
 	sf::Sprite OnHitEffect;
 
-	//Ãæµ¹¹Ú½º
+	//ì¶©ëŒë°•ìŠ¤
 	sf::RectangleShape attackBox;
 	sf::RectangleShape grapBox;
+	
 	sf::RectangleShape hitBox;
 	
 public:
@@ -102,7 +103,7 @@ public:
 	void Bitted();
 	void Death();
 
-	//±â¼ú¸ğÀ½
+	//ê¸°ìˆ ëª¨ìŒ
 	void DashAttack();
 
 	void Init() override;
