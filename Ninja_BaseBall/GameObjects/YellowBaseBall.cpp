@@ -35,8 +35,7 @@ void YellowBaseBall::Reset()
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     health = maxHealth;
     isDead = false;
-    isAttack = false;
-   
+
     //SetOrigin(Origins::BC);
     
     if (sceneDev1 != nullptr)
