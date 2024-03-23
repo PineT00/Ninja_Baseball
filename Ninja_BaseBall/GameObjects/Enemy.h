@@ -57,6 +57,7 @@ protected:
     float attackOffsetX;
     float attackOffsetY;
     float attackOffset = 20.f;
+    float minDistance=200.f;                       
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
@@ -98,7 +99,7 @@ public:
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
     virtual void UpdateDashState(float dt);
     virtual void UpdateAttackState(float dt);
-    virtual void DashToPlayer(float dt);
+    virtual void DashToPlayer();
     virtual void MoveToPlayer(float dt);
     virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
     virtual void MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);

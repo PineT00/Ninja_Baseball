@@ -36,29 +36,38 @@ void Enemy::Reset()
 void Enemy::Update(float dt)
 {
     if (isDead || player == nullptr) return;
-    TargetDirection(player->GetPosition());
+    
     sf::Vector2f playerPosition = player->GetPosition();
     sf::Vector2f currentPosition = sprite.getPosition();
 
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
 
-    // Y축 정렬 로직
+    // Y축 위치 맞추기
     if (yDistance > acceptableYDistance) {
-        // Y축으로 플레이어에게 접근
-        MoveTowards(sf::Vector2f(currentPosition.x, playerPosition.y), dt);
-    } else if (xDistance > minDistanceX && !isDash) { // X축 이동 로직
-        // X축으로 플레이어에게 접근
-        MoveTowards(sf::Vector2f(playerPosition.x, currentPosition.y), dt);
+        currentPosition.y += (playerPosition.y > currentPosition.y ? 1 : -1) * speed * dt;
+    } else {
+        // Y축이 일치하면 X축 거리 유지 로직
+        if (xDistance > minDistance) {
+            currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
+        }
     }
 
-    // 대쉬 조건 확인 및 실행
-    if (xDistance <= dashDistance && !isDash) {
-        DashToPlayer(dt);
+    sprite.setPosition(currentPosition);
+
+    // 대쉬 조건: Y축이 일치하고, X축 거리가 적절한 범위 내에 있을 때
+    if (yDistance <= acceptableYDistance && xDistance > minDistance && xDistance <= dashDistance && !isDash && isReadyToDash) {
+        DashToPlayer();
     }
 
-    UpdateAttackState(dt); // 공격 상태 업데이트
-    enemyAnimator.Update(dt); // 애니메이터 업데이트
+    // 공격 조건 검사
+    if (player->GetHitBox().intersects(attackBox.getGlobalBounds())) {
+        Attack();
+    }
+
+    UpdateAttackState(dt);
+    enemyAnimator.Update(dt);
+    UpdateDashState(dt);
 }
 
 void Enemy::LateUpdate(float dt)
@@ -203,7 +212,7 @@ void Enemy::UpdateAttackState(float dt)
     }
 }
 
-void Enemy::DashToPlayer(float dt)
+void Enemy::DashToPlayer()
 {
     if (!isReadyToDash || !player || isDash) return;
 
@@ -212,7 +221,7 @@ void Enemy::DashToPlayer(float dt)
 
     // 대쉬 거리가 최소 거리보다 크고, 대쉬 쿨다운이 끝났을 때만 대쉬 실행
     if (distance > minDashDistance && distance <= dashDistance) {
-        sprite.move(direction * dashSpeed * dt);
+        sprite.move(direction * dashSpeed);
         isDash = true;
     }
 
@@ -234,7 +243,7 @@ void Enemy::MoveToPlayer(float dt)
     if(target.y == this->GetPosition().y)
     {
         isReadyToDash=true;
-        DashToPlayer(dt);
+        DashToPlayer();
     }
     
 }
