@@ -46,7 +46,7 @@ void YellowBaseBall::Reset()
     
     playerBounds = player->GetGlobalBounds();
     playerPosition = player->GetPosition();
-    updateTimer = 0.f;
+    updateTimer = 0.f;                     
     
     // damageBounds = sprite.getGlobalBounds();
     // attackBounds = sprite.getGlobalBounds();
@@ -88,6 +88,11 @@ void YellowBaseBall::Update(float dt)
     damageBox.setPosition(sprite.getPosition());
 
     currentEnemy = EnemyState::MOVE;
+
+    if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    {
+        Attack();
+    }
     switch (currentEnemy)
     {
     case EnemyState::IDLE:
@@ -97,19 +102,19 @@ void YellowBaseBall::Update(float dt)
         yellowBaseBallAnimator.Play("animations/BaseballYellow_Move.csv");
         break;
     case EnemyState::ATTACK:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Attack.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Attack.csv");
         break;
     case EnemyState::HURT:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Hurt.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Hurt.csv");
         break;
     case EnemyState::DEAD:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Dead.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Dead.csv");
         break;
     case EnemyState::CATCH:
         yellowBaseBallAnimator.Play("animations/BaseballYellow_Catch.csv");
         break;
     case EnemyState::DASH:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Dash.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Dash.csv");
         break;
     }
 }
@@ -151,5 +156,9 @@ void YellowBaseBall::Attack()
 void YellowBaseBall::DashToPlayer(float dt)
 {
     Enemy::DashToPlayer(dt);
-    currentEnemy = EnemyState::DASH;
+    if(isDash)
+    {
+        currentEnemy = EnemyState::DASH;
+    }
+    
 }

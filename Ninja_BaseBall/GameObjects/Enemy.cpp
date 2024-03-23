@@ -35,35 +35,10 @@ void Enemy::Reset()
 
 void Enemy::Update(float dt)
 {
-    // if (isDead || player == nullptr) return;
-    //
-    // sf::Vector2f playerPosition = player->GetPosition();
-    // sf::Vector2f currentPosition = sprite.getPosition();
-    // TargetDirection(playerPosition);
-    // float xDistance = std::abs(playerPosition.x - currentPosition.x);
-    //
-    // // 플레이어와의 X축 거리가 500일 때 대쉬 조건을 충족
-    // if (xDistance <= 500 && !isDash) {
-    //     isDash = true;
-    // }
-    //
-    // // 대쉬 실행
-    // if (isDash) {
-    //     // 대쉬 중 플레이어와의 거리가 200 이하가 되면 대쉬를 멈춤
-    //     if (xDistance <= 200) {
-    //         isDash = false;
-    //     } else {
-    //         // 대쉬 속도로 플레이어에게 접근
-    //         DashToPlayer(dt);
-    //     }
-    // } else {
-    //     // 플레이어에게 일반적으로 접근
-    //     MoveTowards(playerPosition, dt);
-    // }
-    //
-    // enemyAnimator.Update(dt);
-
     if (isDead || player == nullptr) return;
+    if (dashCooldownTimer > 0) {
+        dashCooldownTimer -= dt;
+    }
     
     sf::Vector2f playerPosition = player->GetPosition();
     sf::Vector2f currentPosition = sprite.getPosition();
@@ -88,10 +63,14 @@ void Enemy::Update(float dt)
     if (isDash) {
         DashToPlayer(dt);
         // 대쉬 후, 특정 조건(예: 거리)을 만족하면 대쉬 중지
-        if (xDistance <= 200 || yDistance > acceptableYDistance) {
+        if (dashCooldownTimer <= 0&&xDistance <= 200 || yDistance > acceptableYDistance) {
             isDash = false;
         }
-    } else {
+    }else if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    {
+        Attack();
+    }
+    else {
         sprite.setPosition(currentPosition);
     }
 
@@ -142,11 +121,9 @@ void Enemy::Attack()
     attackTimer = attackCooldown;
     if(player != nullptr)
     {
-        if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
-        {
-            //player->OnDamage(damage);
-            std::cout << "Player Hit" << std::endl;
-        }
+        //player->OnDamage(damage);
+        std::cout << "Player Hit" << std::endl;
+        
     }
 }
 
@@ -236,6 +213,10 @@ void Enemy::DashToPlayer(float dt)
     sf::Vector2f direction = Normalize(targetPosition - sprite.getPosition());
     sprite.move(direction * dashSpeed * dt);
 
+    if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    {
+        Attack();
+    }
     // 대쉬 상태 업데이트 (필요한 경우)
     UpdateDashState(dt);
 }
