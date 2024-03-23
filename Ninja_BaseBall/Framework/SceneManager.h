@@ -11,6 +11,7 @@ enum class SceneIDs
 	SceneAnimationTool,
 	SceneDev1,
 	TestScene,
+	SceneDevBoss,
 	COUNT,
 };
 
@@ -25,8 +26,9 @@ protected:
 	SceneManager& operator=(SceneManager&&)		 = delete;
 
 	std::vector<Scene*> scenes; 
-	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
-	SceneIDs startScene = SceneIDs::SceneDev1;
+
+	 //SceneIDs startScene = SceneIDs::SceneAnimationTool;
+	 SceneIDs startScene = SceneIDs::SceneDevBoss;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 
@@ -34,7 +36,7 @@ protected:
 	std::vector<std::string> FontResourceNames = {};
 	std::vector<std::string> SoundResourceNames = {};
 
-	bool isDeveloperMode = false; //개발자 모드용 변수
+	bool isDeveloperMode = false; //개발?�� 모드?�� �??��
 
 public:
 
@@ -47,7 +49,7 @@ public:
 	Scene* GetCurrentScene() { return scenes[(int)currentScene]; }
 	Scene* GetScene(SceneIDs id) { return scenes[(int)id]; }
 	
-	bool GetDeveloperMode() { return isDeveloperMode; } //개발자 모드용 메소드
+	bool GetDeveloperMode() { return isDeveloperMode; } //개발?�� 모드?�� 메소?��
 
 	void LoadAllResources();
 	void ChangeScene(SceneIDs id);
