@@ -123,7 +123,7 @@ void Player::Reset()
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
 
-	//µîÀå¾Ö´Ï¸ÞÀÌ¼Ç
+	//ï¿½ï¿½ï¿½ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿?
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
@@ -153,7 +153,7 @@ void Player::Update(float dt)
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 	animatorEffect.Update(dt);
-
+	std::cout<<position.x<<","<<position.y<<std::endl;
 	float v = 0;
 	float h = 0;
 
@@ -197,14 +197,14 @@ void Player::Update(float dt)
 			h = 1;
 		}
 
-		//´ë½Ã±â´É
+		//ï¿½ï¿½Ã±ï¿½ï¿½
 		{
-			//¿ÞÂÊ ´ë½Ã ¸ðÀ½
+			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
 			if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Left))
 				{
-					isLeftDashing = true; // ´ë½¬ »óÅÂ È°¼ºÈ­
+					isLeftDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -222,13 +222,13 @@ void Player::Update(float dt)
 				isLeftDashing = false;
 			}
 
-			//¿À¸¥ÂÊ ´ë½Ã ¸ðÀ½
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
 
 			if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Right))
 				{
-					isRightDashing = true; // ´ë½¬ »óÅÂ È°¼ºÈ­
+					isRightDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -250,7 +250,7 @@ void Player::Update(float dt)
 	}
 
 
-	//´ë½¬ ½ºÇÇµå
+	//ï¿½ë½¬ ï¿½ï¿½ï¿½Çµï¿½
 	if (isRightDashing || isLeftDashing)
 	{
 		velocity.x = h * dashSpeed;
@@ -260,7 +260,7 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
-	//Á¡ÇÁ
+	//ï¿½ï¿½ï¿½ï¿½
 
 	if (!isGrounded)
 	{
@@ -377,7 +377,7 @@ void Player::Update(float dt)
 
 
 
-	//ÀÌµ¿¿µ¿ª Á¦ÇÑ
+	//ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
@@ -394,6 +394,7 @@ void Player::Update(float dt)
 	{
 		attackTime -= dt;
 	}
+
 
 	//Àâ±â¹Ú½º¿Í ´ê¾ÒÀ»¶§
 	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
@@ -459,13 +460,14 @@ void Player::Update(float dt)
 		}
 	}
 
+	if (grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	{
+		isGrip = true;
+		animator.Play("Animations/player/player_Grip.csv");
+	}
 
-
-
-	//±â¼ú ¸ðÀ½
 	{
 
-		//Á¡ÇÁÁßÀÏ¶§ ±â¼ú
 		if (!isGrounded)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
@@ -485,6 +487,7 @@ void Player::Update(float dt)
 			}
 		}
 
+
 		//Àâ±âÁßÀÏ¶§ ±â¼ú
 		if (isGrip && isGrounded)
 		{
@@ -495,7 +498,7 @@ void Player::Update(float dt)
 			}
 		}
 
-		//ÄÞº¸ ±â·Ï¿ë
+		//ï¿½Þºï¿½ ï¿½ï¿½Ï¿ï¿?
 		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
 			InputManager::StopComboRecord();
@@ -556,13 +559,13 @@ void Player::Update(float dt)
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
 
 
-	//ÀÜ»óÈ¿°ú
+	//ï¿½Ü»ï¿½È¿ï¿½ï¿½
 	trailDuration -= dt;
 
 	if (trailDuration <= 0)
 	{
 		if (trails.size() < 3)
-		{ // ÀÜ»óÀ» ÃÖ´ë 3°³±îÁö À¯Áö
+		{ // ï¿½Ü»ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ 3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			sf::Sprite trail;
 			Animator trailAnimator;
 
@@ -584,9 +587,9 @@ void Player::Update(float dt)
 		}
 		else
 		{
-			trails.erase(trails.begin()); // °¡Àå ¿À·¡µÈ ÀÜ»ó »èÁ¦
+			trails.erase(trails.begin()); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü»ï¿½ ï¿½ï¿½ï¿½ï¿½
 		}
-		trailDuration = 0.05f; // ÀÜ»ó À¯Áö ½Ã°£ ÃÊ±âÈ­
+		trailDuration = 0.05f; // ï¿½Ü»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ê±ï¿½È­
 	}
 }
 

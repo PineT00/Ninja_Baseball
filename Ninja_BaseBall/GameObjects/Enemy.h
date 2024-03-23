@@ -13,8 +13,12 @@ public :
         IDLE,
         MOVE,
         ATTACK,
+        DASH,
+        HURT,
+        DEAD,
+        CATCH,
     };
-    EnemyState currentState;
+    EnemyState currentEnemy=EnemyState::IDLE;
     sf::Vector2f lastPosition;
 protected:
     SceneDev1* Scene;
@@ -30,34 +34,34 @@ protected:
     bool isAttack = false;
     bool isReadyToDash=false;
     bool isDash =false;
+    bool isDashing = false;
+    bool isWaiting = false;
+    bool isPosYLocked = false;
 
-    float dashDelay = 0.5f;
-    float attackTimer = 0.f;
-    float attackCooldown = 2.f;
-    float prepareAttackDistance = 100.f;
-    float dashTriggerDistance = 100.f;
-    float retreatDistance = 10.f;
-    float prepareAttackTimer = 3.f;
-    float prepareAttackDuration = 1.f;
-    float attackDistance = 5.f;
-    float acceptableYDistance = 15.f;
+    float waitTimer=0.f;
+    float waitDuration=0.5f;
 
     float dashDuration = 0.5f;
-    
     float dashTimer = 0.0f;
-    float dashSpeed=300.f;
-    float dashCooldown = 3.f; // 대쉬 쿨다운 추가
-    float dashCooldownTimer = 0.f; // 대쉬 쿨다운 타이머
-    float ySpeedIncreaseFactor =50.f;
-    float minDistanceX = 30.f;
-    float maxDistanceX = 100.f;
-    float dashDistance = 50.f;
+    float dashSpeed = 300.f;
+    float dashCooldown = 3.f;
+    float dashCooldownTimer = 0.f;
+    float acceptableYDistance = 15.f;
     float minDashDistance = 30.f;
+    float dashDistance = 50.f;
+    float maxDistance = 500.f;
+    float minDistance=200.f;
 
-    float attackOffsetX;
-    float attackOffsetY;
-    float attackOffset = 20.f;
-    float minDistance=500.f;                       
+    float attackTimer = 0.f;
+    float attackCooldown = 2.f;
+    float ySpeedIncreaseFactor = 1.5f;
+    float dashYPos;
+    float dashStartY;
+    float dashStartX;
+
+    float dashDirection;
+    float dashTargetDistance;
+    float dashCurrentDistance;
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
@@ -84,7 +88,7 @@ public:
     void SetPosition(const sf::Vector2f& position) override
     {
         SpriteGo::SetPosition(position);
-        sprite.setPosition(position);
+        //sprite.setPosition(position);
     }
 
     void DashTowards(const sf::Vector2f& target, float dt);
@@ -98,10 +102,9 @@ public:
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
     virtual void UpdateDashState(float dt);
-    virtual void UpdateAttackState(float dt);
-    virtual void DashToPlayer();
+    virtual void DashToPlayer(float dt);
     virtual void MoveToPlayer(float dt);
     virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
     virtual void MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
-    
+    //virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
 };

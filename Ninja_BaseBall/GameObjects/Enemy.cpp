@@ -3,9 +3,8 @@
 #include "Player.h"
 #include "SceneDev1.h"
 
-Enemy::Enemy(const std::string& name):SpriteGo(name)
+Enemy::Enemy(const std::string& name): SpriteGo(name), Scene(nullptr), player(nullptr), dashYPos(0)
 {
-    
 }
 
 void Enemy::Init()
@@ -36,36 +35,47 @@ void Enemy::Reset()
 void Enemy::Update(float dt)
 {
     if (isDead || player == nullptr) return;
+    if (dashCooldownTimer > 0) {
+        dashCooldownTimer -= dt;
+    }
     
     sf::Vector2f playerPosition = player->GetPosition();
     sf::Vector2f currentPosition = sprite.getPosition();
     TargetDirection(playerPosition);
+
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
-
-    // Y축 위치 맞추기
+    
+    // Y축 위치 조정
     if (yDistance > acceptableYDistance) {
         currentPosition.y += (playerPosition.y > currentPosition.y ? 1 : -1) * speed * dt;
     } else {
-        // Y축이 일치하면 X축 거리 유지 로직
-        if (xDistance > minDistance) {
-            currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
+        // Y축이 맞춰져 있고, X축 거리가 대쉬 조건을 만족하는 경우
+        if (!isDash && xDistance <= 500 && xDistance > 200) {
+            isDash = true; // 대쉬 시작
+            dashYPos = currentPosition.y; // 대쉬 시작 위치 저장
+            isPosYLocked = true; // Y축 이동 금지
+        } else if (!isDash) {
+            // Y축이 맞춰져 있으나 대쉬 조건을 만족하지 않는 경우, X축으로 접근
+            currentPosition.x += (playerPosition.x+200 > currentPosition.x ? 1 : -1) * speed * dt;
         }
     }
 
-    sprite.setPosition(currentPosition);
-
-    // 대쉬 조건: Y축이 일치하고, X축 거리가 적절한 범위 내에 있을 때
-    if (yDistance <= acceptableYDistance && xDistance > minDistance && xDistance <= dashDistance && !isDash && isReadyToDash) {
-        DashToPlayer();
-    }
-
-    // 공격 조건 검사
-    if (player->GetHitBox().intersects(attackBox.getGlobalBounds())) {
+    if (isDash) {
+        DashToPlayer(dt);
+        // 대쉬 후, 특정 조건(예: 거리)을 만족하면 대쉬 중지
+        if (xDistance <= 200 || yDistance > acceptableYDistance) {
+            isDash = false;
+            isPosYLocked = false;
+        }
+    }else if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    {
         Attack();
     }
+    else {
+        sprite.setPosition(currentPosition);
+    }
 
-    UpdateAttackState(dt);
     enemyAnimator.Update(dt);
     UpdateDashState(dt);
 }
@@ -110,15 +120,12 @@ void Enemy::DashTowards(const sf::Vector2f& target, float dt)
 
 void Enemy::Attack()
 {
-    if(!isAttack) return;
     attackTimer = attackCooldown;
-    isAttack = true;
     if(player != nullptr)
     {
-        if(player->GetHitBox().intersects(attackBox.getGlobalBounds()))
-        {
-            //player->OnDamage(damage);
-        }
+        //player->OnDamage(damage);
+        std::cout << "Player Hit" << std::endl;
+        
     }
 }
 
@@ -190,60 +197,69 @@ void Enemy::SetBox(bool flip)
 
 void Enemy::UpdateDashState(float dt)
 {
+    // 대쉬 쿨다운 관리
     if (!isReadyToDash) {
         dashCooldownTimer -= dt;
         if (dashCooldownTimer <= 0) {
             isReadyToDash = true;
-            dashCooldownTimer = dashCooldown; // 쿨다운 시간 재설정
+            dashCooldownTimer = dashCooldown;
         }
     }
 }
 
-void Enemy::UpdateAttackState(float dt)
+
+
+void Enemy::DashToPlayer(float dt)
 {
-    if(isAttack)
-    {
-        attackTimer -= dt;
-        if(attackTimer<=0)
-        {
-            isAttack = false;
-            attackTimer = attackCooldown;
-        }
+    if (!isDash || !player) return;
+
+    if (!isDashing) {
+        // 대쉬 시작 시 X, Y 위치 저장 및 대쉬 상태로 전환
+        dashStartX = sprite.getPosition().x;
+        dashStartY = sprite.getPosition().y;
+        isDashing = true;
+    }
+
+    sf::Vector2f playerPosition = player->GetPosition();
+    sf::Vector2f currentPosition = sprite.getPosition();
+    float xDirection = playerPosition.x > currentPosition.x ? 1.0f : -1.0f;
+
+    // 대쉬 중 Y축 위치는 변경하지 않음
+    sf::Vector2f dashVelocity(xDirection * dashSpeed * dt, 0);
+    sprite.move(dashVelocity);
+
+    // Y축 위치를 대쉬 시작 시점의 위치로 강제 설정
+    sprite.setPosition(sprite.getPosition().x, dashStartY);
+
+    if (attackBox.getGlobalBounds().intersects(player->GetHitBox())) {
+        Attack();
+    }
+
+    // 대쉬 종료 조건: X축 거리가 200 이상 떨어지면 대쉬 종료
+    if (std::abs(sprite.getPosition().x - dashStartX) <= 200) {
+        isDash = false;
+        isDashing = false; // 대쉬 상태 해제
     }
 }
 
-void Enemy::DashToPlayer()
+void Enemy::MoveToPlayer(float dt)
 {
     if (!isReadyToDash || !player || isDash) return;
 
     sf::Vector2f direction = Normalize(player->GetPosition() - sprite.getPosition());
     float distance = Utils::MyMath::Distance(player->GetPosition(), sprite.getPosition());
     
-    if (distance > minDashDistance && distance <= dashDistance) {
+    // 목표 거리를 200으로 설정하여 대쉬
+    if (distance > minDistance && distance <= dashDistance) {
         sprite.move(direction * dashSpeed);
         isDash = true;
     }
     
-    if (distance <= minDashDistance || dashTimer >= dashDuration) {
+    if (distance <= minDistance || dashTimer >= dashDuration) {
         isDash = false;
         isReadyToDash = false;
         dashCooldownTimer = dashCooldown; // 쿨다운 시작
     }
-}
-
-void Enemy::MoveToPlayer(float dt)
-{
-    if(!player) return;
-
-    sf::Vector2f target=player->GetPosition();
-    sf::Vector2f direction = Normalize(sf::Vector2f(target.x - this->GetPosition().x, target.y-this->GetPosition().y));
-    sprite.move(direction * speed * dt);
-    if(target.y == this->GetPosition().y)
-    {
-        isReadyToDash=true;
-        DashToPlayer();
-    }
-    
 }
 
 void Enemy::MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition)
@@ -263,7 +279,7 @@ void Enemy::MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, con
     }
     
     position += moveStep;
-    sprite.setPosition(position);
+    SetPosition(position);
     
     TargetDirection(targetPosition);
 }
@@ -273,5 +289,5 @@ void Enemy::MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf
     sf::Vector2f direction = Normalize(sf::Vector2f(targetPosition.x - currentPosition.x, 0.0f));
     float moveDistance = speed * dt;
     position.x += direction.x * moveDistance;
-    sprite.setPosition(position);
+    SetPosition(position);
 }
