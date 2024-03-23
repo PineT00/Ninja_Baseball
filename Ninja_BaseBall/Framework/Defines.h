@@ -56,3 +56,9 @@ enum class PlayerType
 	F_4,
 	F_117
 };
+
+enum class BossType
+{
+	WINDYPLANE,
+
+};
