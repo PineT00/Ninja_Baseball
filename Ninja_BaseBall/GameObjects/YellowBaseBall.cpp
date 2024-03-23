@@ -12,14 +12,14 @@ void YellowBaseBall::Init()
 {
     Enemy::Init();
     yellowBaseBallAnimator.SetTarget(&sprite);
-    yellowBaseBallAnimator.Play("animations/BaseballYellow_Idle.csv");
+    currentEnemy = EnemyState::IDLE;
     attackBox.setSize({20,20});
     damageBox.setSize({100,100});
-
+    
     attackBox.setFillColor(sf::Color::Red);
     damageBox.setFillColor(sf::Color::Blue);
 
-   
+    
 }
 
 void YellowBaseBall::Release()
@@ -37,7 +37,7 @@ void YellowBaseBall::Reset()
     isDead = false;
     isAttack = false;
    
-    SetOrigin(Origins::BC);
+    //SetOrigin(Origins::BC);
     
     if (sceneDev1 != nullptr)
     {
@@ -48,11 +48,11 @@ void YellowBaseBall::Reset()
     playerPosition = player->GetPosition();
     updateTimer = 0.f;
     
-    damageBounds = sprite.getGlobalBounds();
-    attackBounds = sprite.getGlobalBounds();
-
-    attackBox.setPosition({GetPosition()});
-    damageBox.setPosition({GetPosition()});
+    // damageBounds = sprite.getGlobalBounds();
+    // attackBounds = sprite.getGlobalBounds();
+    //
+    // attackBox.setPosition({GetPosition()});
+    // damageBox.setPosition({GetPosition()});
     
 }
 
@@ -82,10 +82,35 @@ void YellowBaseBall::Update(float dt)
 {
     Enemy::Update(dt);
     
-    //sprite.setPosition(sprite.getPosition());
+    sprite.setPosition(sprite.getPosition());
     attackBox.setPosition(sprite.getPosition());
     damageBox.setPosition(sprite.getPosition());
-    
+
+    currentEnemy = EnemyState::MOVE;
+    switch (currentEnemy)
+    {
+    case EnemyState::IDLE:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Idle.csv");
+        break;
+    case EnemyState::MOVE:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Move.csv");
+        break;
+    case EnemyState::ATTACK:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Attack.csv");
+        break;
+    case EnemyState::HURT:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Hurt.csv");
+        break;
+    case EnemyState::DEAD:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Dead.csv");
+        break;
+    case EnemyState::CATCH:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Catch.csv");
+        break;
+    case EnemyState::DASH:
+        yellowBaseBallAnimator.Play("animations/BaseballYellow_Dash.csv");
+        break;
+    }
 }
 
 void YellowBaseBall::OnDamage(int damage)
@@ -94,11 +119,11 @@ void YellowBaseBall::OnDamage(int damage)
 
     if (health <= 0)
     {
-        currentState = YellowBaseBallState::DEAD;
+        currentEnemy = EnemyState::DEAD;
     }
     else
     {
-        currentState = YellowBaseBallState::HURT;
+        currentEnemy = EnemyState::HURT;
     }
 }
 
@@ -119,4 +144,10 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 void YellowBaseBall::Attack()
 {
     Enemy::Attack();
+}
+
+void YellowBaseBall::DashToPlayer()
+{
+    Enemy::DashToPlayer();
+    currentEnemy = EnemyState::DASH;
 }

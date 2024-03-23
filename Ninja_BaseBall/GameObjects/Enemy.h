@@ -13,8 +13,12 @@ public :
         IDLE,
         MOVE,
         ATTACK,
+        DASH,
+        HURT,
+        DEAD,
+        CATCH,
     };
-    EnemyState currentState;
+    EnemyState currentEnemy=EnemyState::IDLE;
     sf::Vector2f lastPosition;
 protected:
     SceneDev1* Scene;
@@ -84,7 +88,7 @@ public:
     void SetPosition(const sf::Vector2f& position) override
     {
         SpriteGo::SetPosition(position);
-        sprite.setPosition(position);
+        //sprite.setPosition(position);
     }
 
     void DashTowards(const sf::Vector2f& target, float dt);
@@ -98,7 +102,6 @@ public:
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
     virtual void UpdateDashState(float dt);
-    virtual void UpdateAttackState(float dt);
     virtual void DashToPlayer();
     virtual void MoveToPlayer(float dt);
     virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);

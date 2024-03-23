@@ -59,13 +59,7 @@ void Enemy::Update(float dt)
     if (yDistance <= acceptableYDistance && xDistance > minDistance && xDistance <= dashDistance && !isDash && isReadyToDash) {
         DashToPlayer();
     }
-
-    // 공격 조건 검사
-    if (player->GetHitBox().intersects(attackBox.getGlobalBounds())) {
-        Attack();
-    }
-
-    UpdateAttackState(dt);
+    
     enemyAnimator.Update(dt);
     UpdateDashState(dt);
 }
@@ -110,14 +104,13 @@ void Enemy::DashTowards(const sf::Vector2f& target, float dt)
 
 void Enemy::Attack()
 {
-    if(!isAttack) return;
     attackTimer = attackCooldown;
-    isAttack = true;
     if(player != nullptr)
     {
-        if(player->GetHitBox().intersects(attackBox.getGlobalBounds()))
+        if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
         {
             //player->OnDamage(damage);
+            std::cout << "Player Hit" << std::endl;
         }
     }
 }
@@ -199,18 +192,7 @@ void Enemy::UpdateDashState(float dt)
     }
 }
 
-void Enemy::UpdateAttackState(float dt)
-{
-    if(isAttack)
-    {
-        attackTimer -= dt;
-        if(attackTimer<=0)
-        {
-            isAttack = false;
-            attackTimer = attackCooldown;
-        }
-    }
-}
+
 
 void Enemy::DashToPlayer()
 {
@@ -229,6 +211,11 @@ void Enemy::DashToPlayer()
         isReadyToDash = false;
         dashCooldownTimer = dashCooldown; // 쿨다운 시작
     }
+
+    if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    {
+        Attack();
+    }
 }
 
 void Enemy::MoveToPlayer(float dt)
@@ -236,9 +223,9 @@ void Enemy::MoveToPlayer(float dt)
     if(!player) return;
 
     sf::Vector2f target=player->GetPosition();
-    sf::Vector2f direction = Normalize(sf::Vector2f(target.x - this->GetPosition().x, target.y-this->GetPosition().y));
+    sf::Vector2f direction = Normalize(sf::Vector2f(target.x -GetPosition().x, target.y-this->GetPosition().y));
     sprite.move(direction * speed * dt);
-    if(target.y == this->GetPosition().y)
+    if(target.y == GetPosition().y)
     {
         isReadyToDash=true;
         DashToPlayer();
@@ -263,7 +250,7 @@ void Enemy::MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, con
     }
     
     position += moveStep;
-    sprite.setPosition(position);
+    SetPosition(position);
     
     TargetDirection(targetPosition);
 }
@@ -273,5 +260,5 @@ void Enemy::MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf
     sf::Vector2f direction = Normalize(sf::Vector2f(targetPosition.x - currentPosition.x, 0.0f));
     float moveDistance = speed * dt;
     position.x += direction.x * moveDistance;
-    sprite.setPosition(position);
+    SetPosition(position);
 }
