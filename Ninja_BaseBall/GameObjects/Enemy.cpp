@@ -3,9 +3,8 @@
 #include "Player.h"
 #include "SceneDev1.h"
 
-Enemy::Enemy(const std::string& name):SpriteGo(name)
+Enemy::Enemy(const std::string& name): SpriteGo(name), Scene(nullptr), player(nullptr), dashYPos(0)
 {
-    
 }
 
 void Enemy::Init()
@@ -46,7 +45,7 @@ void Enemy::Update(float dt)
 
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
-
+    
     // Y축 위치 조정
     if (yDistance > acceptableYDistance) {
         currentPosition.y += (playerPosition.y > currentPosition.y ? 1 : -1) * speed * dt;
@@ -54,17 +53,20 @@ void Enemy::Update(float dt)
         // Y축이 맞춰져 있고, X축 거리가 대쉬 조건을 만족하는 경우
         if (!isDash && xDistance <= 500 && xDistance > 200) {
             isDash = true; // 대쉬 시작
+            dashYPos = currentPosition.y; // 대쉬 시작 위치 저장
+            isPosYLocked = true; // Y축 이동 금지
         } else if (!isDash) {
             // Y축이 맞춰져 있으나 대쉬 조건을 만족하지 않는 경우, X축으로 접근
-            currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
+            currentPosition.x += (playerPosition.x+200 > currentPosition.x ? 1 : -1) * speed * dt;
         }
     }
 
     if (isDash) {
         DashToPlayer(dt);
         // 대쉬 후, 특정 조건(예: 거리)을 만족하면 대쉬 중지
-        if (dashCooldownTimer <= 0&&xDistance <= 200 || yDistance > acceptableYDistance) {
+        if (xDistance <= 200 || yDistance > acceptableYDistance) {
             isDash = false;
+            isPosYLocked = false;
         }
     }else if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
@@ -209,16 +211,35 @@ void Enemy::UpdateDashState(float dt)
 
 void Enemy::DashToPlayer(float dt)
 {
-    sf::Vector2f targetPosition = player->GetPosition();
-    sf::Vector2f direction = Normalize(targetPosition - sprite.getPosition());
-    sprite.move(direction * dashSpeed * dt);
+    if (!isDash || !player) return;
 
-    if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
-    {
+    if (!isDashing) {
+        // 대쉬 시작 시 X, Y 위치 저장 및 대쉬 상태로 전환
+        dashStartX = sprite.getPosition().x;
+        dashStartY = sprite.getPosition().y;
+        isDashing = true;
+    }
+
+    sf::Vector2f playerPosition = player->GetPosition();
+    sf::Vector2f currentPosition = sprite.getPosition();
+    float xDirection = playerPosition.x > currentPosition.x ? 1.0f : -1.0f;
+
+    // 대쉬 중 Y축 위치는 변경하지 않음
+    sf::Vector2f dashVelocity(xDirection * dashSpeed * dt, 0);
+    sprite.move(dashVelocity);
+
+    // Y축 위치를 대쉬 시작 시점의 위치로 강제 설정
+    sprite.setPosition(sprite.getPosition().x, dashStartY);
+
+    if (attackBox.getGlobalBounds().intersects(player->GetHitBox())) {
         Attack();
     }
-    // 대쉬 상태 업데이트 (필요한 경우)
-    UpdateDashState(dt);
+
+    // 대쉬 종료 조건: X축 거리가 200 이상 떨어지면 대쉬 종료
+    if (std::abs(sprite.getPosition().x - dashStartX) <= 200) {
+        isDash = false;
+        isDashing = false; // 대쉬 상태 해제
+    }
 }
 
 void Enemy::MoveToPlayer(float dt)

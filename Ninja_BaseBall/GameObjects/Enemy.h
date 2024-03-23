@@ -34,7 +34,9 @@ protected:
     bool isAttack = false;
     bool isReadyToDash=false;
     bool isDash =false;
+    bool isDashing = false;
     bool isWaiting = false;
+    bool isPosYLocked = false;
 
     float waitTimer=0.f;
     float waitDuration=0.5f;
@@ -53,6 +55,13 @@ protected:
     float attackTimer = 0.f;
     float attackCooldown = 2.f;
     float ySpeedIncreaseFactor = 1.5f;
+    float dashYPos;
+    float dashStartY;
+    float dashStartX;
+
+    float dashDirection;
+    float dashTargetDistance;
+    float dashCurrentDistance;
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
@@ -97,5 +106,5 @@ public:
     virtual void MoveToPlayer(float dt);
     virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
     virtual void MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
-    
+    //virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
 };
