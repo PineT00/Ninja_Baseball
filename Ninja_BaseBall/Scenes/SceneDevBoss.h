@@ -16,6 +16,7 @@ protected:
 	Player* player = nullptr;
 
 	sf::Vector2f windowSize;
+	sf::RectangleShape stageBound; // 실제 맵에서는 다르게 적용 필요
 
 public:
 	SceneDevBoss(SceneIDs id);

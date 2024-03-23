@@ -46,10 +46,8 @@ public :
 		}
 	};
 
-
 	enum class Status
 	{
-		IDLE,
 		CHASE,
 		PUNCHONESHOT,
 		PUNCHTWOSHOT,
@@ -72,7 +70,7 @@ protected:
 	Player* player = nullptr;
 	Animator animator;
 	ClipInfo currentClipInfo;
-	Status currentStatus = Status::IDLE;
+	Status currentStatus = Status::CHASE;
 
 	std::string currentClipId;
 	std::vector<ClipInfo> clipInfos;
@@ -82,11 +80,19 @@ protected:
 	
 	sf::Vector2f windowSize;
 	sf::Vector2f direction = { 1.f, 0.f };
+	
+	sf::RectangleShape hitBox;
+	sf::RectangleShape attackBox;
+	sf::RectangleShape rangedAttackBox;
 
-	float speed = 200.f;
+	float speed = 150.f;
 	float findTimer = 0.f;
 	float findInterval = 3.f;
+	float statusTimer = 0.f;
+	float statusInterval = 1.f;
+
 	bool isAlive = true;
+	bool isTwice = false;
 
 public:
 	WindyPlane(const std::string& name = "windyplane");
@@ -97,11 +103,24 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window);
 
+	void SetFlipX(bool flipX) override;
+
 	// 보스 움직임 패턴들
 	void ChasePlayer(float dt);
 
 	// 보스 공격 패턴들
 	void PunchOneTime();
+	void PunchTwoTime();
+	void GunAttack();
+	void WindAttack();
+	void Crying();
+	
+	// 보스 공격 패턴 이벤트들
+	void PunchOneTimeEvent();
+	void PunchTwoTimeEvent();
+	void GunAttackEvent();
+	void WindAttackEvent();
+	void CryingEvent();
 
 	// 플레이어 찾기
 	void FindPlayer();
@@ -111,5 +130,5 @@ public:
 	void OnDie();
 
 	// 상태
-
+	void PlayAnimation(Status status);
 };

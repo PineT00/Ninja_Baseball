@@ -11,6 +11,10 @@ SceneDevBoss::SceneDevBoss(SceneIDs id)
 
 void SceneDevBoss::Init()
 {
+    stageBound.setFillColor(sf::Color::Green);
+    stageBound.setSize({ windowSize.x, windowSize.y * 0.4f });
+    stageBound.setPosition(windowSize * 0.5f);
+    Utils::Origin::SetOrigin(stageBound, Origins::MC);
 
     worldView.setSize(windowSize);
     worldView.setCenter(0, 0);
@@ -93,6 +97,7 @@ void SceneDevBoss::UpdatePause(float dt)
 
 void SceneDevBoss::Draw(sf::RenderWindow& window)
 {
+    window.draw(stageBound);
     Scene::Draw(window);
 }
 
