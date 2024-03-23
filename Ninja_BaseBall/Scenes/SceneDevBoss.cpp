@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "SceneDevBoss.h"
+#include "WindyPlane.h"
+#include "Player.h"
 
 SceneDevBoss::SceneDevBoss(SceneIDs id)
 	: Scene(id)
@@ -9,7 +11,15 @@ SceneDevBoss::SceneDevBoss(SceneIDs id)
 
 void SceneDevBoss::Init()
 {
+
+    worldView.setSize(windowSize);
+    worldView.setCenter(0, 0);
+    uiView.setSize(windowSize);
+    uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
     // 보스 추가
+
+    windyPlane = new WindyPlane();
+    AddGameObject(windyPlane);
 
 	Scene::Init();
 }
@@ -25,12 +35,15 @@ void SceneDevBoss::Reset()
 void SceneDevBoss::Enter()
 {
 	Scene::Enter();
-    status = GameStatus::Game;
+
+    std::cout << "BOSS" << std::endl;
+
+    SetStatus(GameStatus::Game);
+
 }
 
 void SceneDevBoss::Exit()
 {
-
 	FRAMEWORK.SetTimeScale(1.f);
 	Scene::Exit();
 }
@@ -38,7 +51,7 @@ void SceneDevBoss::Exit()
 void SceneDevBoss::Update(float dt)
 {
     Scene::Update(dt);
-    SetStatus(status);
+    //SetStatus(status);
 
     switch (status)
     {
@@ -63,6 +76,7 @@ void SceneDevBoss::UpdateAwake(float dt)
 
 void SceneDevBoss::UpdateGame(float dt)
 {
+
 }
 
 void SceneDevBoss::UpdateGameover(float dt)

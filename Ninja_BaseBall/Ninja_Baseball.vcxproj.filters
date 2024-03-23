@@ -39,8 +39,9 @@
     <ClCompile Include="Utils\Sort.cpp" />
     <ClCompile Include="Utils\Vector2.cpp" />
     <ClCompile Include="ComboCommands.cpp" />
-    <ClCompile Include="SceneDevBoss.cpp" />
-    <ClCompile Include="WindyPlane.cpp" />
+    <ClCompile Include="Scenes\SceneDevBoss.cpp" />
+    <ClCompile Include="GameObjects\WindyPlane.cpp" />
+    <ClCompile Include="BossTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\Button.h" />
@@ -83,7 +84,8 @@
     <ClInclude Include="Utils\Sort.h" />
     <ClInclude Include="Utils\Vector2.h" />
     <ClInclude Include="ComboCommands.h" />
-    <ClInclude Include="SceneDevBoss.h" />
-    <ClInclude Include="WindyPlane.h" />
+    <ClInclude Include="Scenes\SceneDevBoss.h" />
+    <ClInclude Include="GameObjects\WindyPlane.h" />
+    <ClInclude Include="BossTable.h" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,9 @@
 #pragma once
 #include "Scene.h"
+
+class WindyPlane;
+class Player;
+
 class SceneDevBoss : public Scene
 {
 protected:
@@ -7,6 +11,9 @@ protected:
 	SceneDevBoss(SceneDevBoss&&) = delete;
 	SceneDevBoss& operator=(const SceneDevBoss&) = delete;
 	SceneDevBoss& operator=(SceneDevBoss&&) = delete;
+
+	WindyPlane* windyPlane = nullptr;
+	Player* player = nullptr;
 
 	sf::Vector2f windowSize;
 

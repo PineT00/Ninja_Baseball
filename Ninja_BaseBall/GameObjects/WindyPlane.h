@@ -3,6 +3,7 @@
 #include "Animator.h"
 
 class Player;
+class SceneDevBoss;
 
 class WindyPlane : public SpriteGo
 {
@@ -12,10 +13,14 @@ protected:
 	WindyPlane& operator=(const WindyPlane&) = delete;
 	WindyPlane& operator=(WindyPlane&&) = delete;
 
+	SceneDevBoss* sceneDevBoss = nullptr;
+	Player* player = nullptr;
 	Animator animator;
 
 	std::vector<std::function<void()>> bossAttackPatterns;
 	std::vector<std::function<void()>> bossMovePatterns;
+
+	std::vector<std::string> clipIds;
 
 	sf::Vector2f windowSize;
 	sf::Vector2f direction = { 1.f, 0.f };
