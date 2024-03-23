@@ -21,6 +21,10 @@ void SceneDevBoss::Init()
     windyPlane = new WindyPlane();
     AddGameObject(windyPlane);
 
+    player = new Player("player");
+    player->SetPosition({ -200, -100 });
+    AddGameObject(player);
+
 	Scene::Init();
 }
 

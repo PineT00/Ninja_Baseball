@@ -27,6 +27,9 @@ protected:
 
 	float speed = 200.f;
 
+	float findTimer = 0.f;
+	float findInterval = 3.f;
+
 public:
 	WindyPlane(const std::string& name = "windyplane");
 	~WindyPlane() override = default;
@@ -37,7 +40,11 @@ public:
 	void Draw(sf::RenderWindow& window);
 
 	// 보스 움직임 패턴들
-
+	void ChasePlayer();
 
 	// 보스 공격 패턴들
+	void PunchOneTime();
+
+	// 플레이어 찾기
+	void FindPlayer();
 };
