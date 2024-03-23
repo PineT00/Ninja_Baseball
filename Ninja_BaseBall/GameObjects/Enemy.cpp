@@ -84,7 +84,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 {
     SpriteGo::Draw(window);
 
-    if(InputManager::GetKeyDown(sf::Keyboard::F1))
+    if (SCENE_MANAGER.GetDeveloperMode())
     {
         window.draw(damageBox);
         window.draw(attackBox);
@@ -218,14 +218,12 @@ void Enemy::DashToPlayer()
 
     sf::Vector2f direction = Normalize(player->GetPosition() - sprite.getPosition());
     float distance = Utils::MyMath::Distance(player->GetPosition(), sprite.getPosition());
-
-    // 대쉬 거리가 최소 거리보다 크고, 대쉬 쿨다운이 끝났을 때만 대쉬 실행
+    
     if (distance > minDashDistance && distance <= dashDistance) {
         sprite.move(direction * dashSpeed);
         isDash = true;
     }
-
-    // 대쉬 종료 조건 (예: 거리 체크 또는 시간)
+    
     if (distance <= minDashDistance || dashTimer >= dashDuration) {
         isDash = false;
         isReadyToDash = false;
@@ -254,36 +252,19 @@ void Enemy::MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, con
     float moveDistance = speed * dt;
 
     sf::Vector2f moveStep;
-
-    // // Y축 위치를 우선적으로 맞춥니다.
-    // if (std::abs(targetPosition.y - currentPosition.y) > acceptableYDistance) {
-    //     moveStep.y = direction.y * moveDistance * ySpeedIncreaseFactor;
-    // } else {
-    //     // Y축 위치가 맞춰졌으면, X축 방향으로 이동합니다.
-    //     moveStep.y = 0; // Y축 이동 중지
-    // }
-    //
-    // // X축 이동은 Y축이 일정 범위 내로 맞춰진 후에 진행합니다.
-    // if (std::abs(currentPosition.y - targetPosition.y) <= acceptableYDistance) {
-    //     moveStep.x = direction.x * moveDistance;
-    // } else {
-    //     moveStep.x = 0; // Y축을 맞추는 중이면, X축 이동 중지
-    // }
-
+    
     // Y축 위치를 우선적으로 맞춥니다.
     if (std::abs(targetPosition.y - currentPosition.y) > acceptableYDistance) {
         moveStep.y = direction.y * moveDistance * ySpeedIncreaseFactor;
         moveStep.x = direction.x * moveDistance * 0.1f; // X축 이동 속도를 절반으로 줄임
     } else {
-        // Y축 위치가 맞춰졌으면, X축 방향으로 이동합니다.
-        moveStep.y = 0; // Y축 이동 중지
+        moveStep.y = 0; 
         moveStep.x = direction.x * moveDistance;
     }
     
     position += moveStep;
     sprite.setPosition(position);
-
-    // 플레이어의 방향에 따라 몬스터의 방향을 조정합니다.
+    
     TargetDirection(targetPosition);
 }
 

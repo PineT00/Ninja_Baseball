@@ -18,6 +18,8 @@ void YellowBaseBall::Init()
 
     attackBox.setFillColor(sf::Color::Red);
     damageBox.setFillColor(sf::Color::Blue);
+
+   
 }
 
 void YellowBaseBall::Release()
@@ -49,8 +51,8 @@ void YellowBaseBall::Reset()
     damageBounds = sprite.getGlobalBounds();
     attackBounds = sprite.getGlobalBounds();
 
-    attackBox.setPosition({sprite.getPosition()});
-    damageBox.setPosition({sprite.getPosition()});
+    attackBox.setPosition({GetPosition()});
+    damageBox.setPosition({GetPosition()});
     
 }
 
@@ -81,7 +83,8 @@ void YellowBaseBall::Update(float dt)
     Enemy::Update(dt);
     
     //sprite.setPosition(sprite.getPosition());
-
+    attackBox.setPosition(sprite.getPosition());
+    damageBox.setPosition(sprite.getPosition());
     
 }
 
@@ -103,9 +106,13 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < sprite.getPosition().x) {
         sprite.setScale(1.0f, 1.0f);
+        attackBox.setOrigin({200.f,150.f});
+        damageBox.setOrigin({50.f,150.f});
     }
     else {
         sprite.setScale(-1.0f, 1.0f);
+        attackBox.setOrigin({-200.f,150.f});
+        damageBox.setOrigin({50.f,150.f});
     }
 }
 
