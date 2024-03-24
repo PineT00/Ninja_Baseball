@@ -328,7 +328,7 @@ void Player::Update(float dt)
 
 		if (hp <= 0.f)
 		{
-			//isAlive = false;
+			isAlive = false;
 		}
 
 		invincible = true;
