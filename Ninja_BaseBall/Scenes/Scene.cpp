@@ -473,3 +473,4 @@ void Scene::SetStatus(GameStatus newStatus)
 		break;
 	}
 }
+

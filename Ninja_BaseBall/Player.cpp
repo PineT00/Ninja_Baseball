@@ -5,13 +5,12 @@
 #include "Player2.h"
 
 Player::Player(const std::string& name)
-	:SpriteGo(name)
+	: SpriteGo(name), combo(nullptr)
 {
 }
 
 Player::~Player()
-{
-}
+= default;
 
 void Player::TestInstance()
 {
@@ -294,6 +293,7 @@ void Player::Update(float dt)
 		if (position.y >= jumpY)
 		{
 			isGrounded = true;
+			isJumping = false;
 			SetPosition({ position.x, jumpY });
 		}
 	}
@@ -310,7 +310,7 @@ void Player::Update(float dt)
 	if (!isGrounded)
 	{
 		velocity.y += gravity * dt;
-
+		
 		if (jumpDirection != 0.f)
 		{
 			velocity.x = jumpDirection * speed;
@@ -351,7 +351,7 @@ void Player::Update(float dt)
 
 			hitTime += dt;
 			isGrounded = false;
-			isJumping = true;
+			
 			jumpY = GetPosition().y;
 			Death();
 			velocity.y = -800.f;
@@ -362,7 +362,7 @@ void Player::Update(float dt)
 			hitTime += dt;
 			velocity.x = -(sprite.getScale().x) * 800.f;
 			Bitted();
-
+			
 			invincible = false;
 			invincibleTime = 1.5f;
 

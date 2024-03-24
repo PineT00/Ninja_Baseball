@@ -90,5 +90,10 @@ public:
     virtual void DashToPlayer(float dt, sf::Vector2f& currentPosition);
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
-
+    virtual void CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies);
+   
+    // 적을 특정 방향으로 이동시킵니다.
+    void Move(const sf::Vector2f& offset) {
+        sprite.move(offset);
+    }
 };
