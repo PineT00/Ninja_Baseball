@@ -41,6 +41,7 @@ public :
 	};
 
 	const int PARTS_STATUS_COUNT = 5;
+	const int EFFECTS_COUNT = 30;
 
 protected:
 	WindyPlane(const WindyPlane&) = delete;
@@ -51,7 +52,7 @@ protected:
 	SceneDevBoss* sceneDevBoss = nullptr;
 	Player* player = nullptr;
 	Animator animator;
-	Animator effectAnimator;
+
 	ClipInfo currentClipInfo;
 	BossPartsStatus currentPartsStatus = BossPartsStatus::Wing;
 	WindyPlaneStatus currentStatus = WindyPlaneStatus::IDLE;
@@ -60,8 +61,11 @@ protected:
 
 	std::unordered_map<BossPartsStatus, BossData>& data;
 	std::vector<ClipInfo> clipInfos;
-	std::vector<std::function<void()>> bossAttackPatterns;
-	std::vector<std::function<void()>> bossMovePatterns;
+	std::vector<Animator> windEffects;
+	std::vector<sf::Sprite> windTargets;
+	std::vector<Animator> gunEffects;
+	std::vector<sf::Sprite> gunTargets;
+	std::vector<float> windEffectsSpeed;
 	std::vector<std::string> clipIds;
 	
 	sf::Vector2f windowSize;
@@ -69,10 +73,9 @@ protected:
 	sf::Vector2f windDirection;
 	sf::Vector2f up = { 0, -1.f };
 	
-	sf::Sprite spriteEffect;
-
 	sf::RectangleShape hitBox;
-	sf::RectangleShape attackBox;
+	sf::RectangleShape closeAttackBox;
+	sf::RectangleShape uppercutAttackBox;
 	sf::RectangleShape rangedAttackBox;
 
 	float speed = 100.f;
@@ -89,7 +92,7 @@ protected:
 
 	bool isAlive = true;
 	bool isAscending = false; // 현재 상승 중인지 여부
-
+	bool isAwake = true;
 
 
 public:
@@ -103,9 +106,6 @@ public:
 
 	void SetFlipX(bool flipX) override;
 
-	// Test
-	void UpdateWindAttack(float dt);
-
 	// 보스 움직임 패턴들
 	void ChasePlayer(float dt);
 
@@ -113,7 +113,7 @@ public:
 	void AttackOneTwo();
 	void AttackStraight();
 	void AttackUpperCut();
-	void AttackWind();
+	void AttackWind(float dt);
 	void AttackGun(); // NoWing은 AttackGunReady -> AttackGun
 	void AttackGunReady();
 	
@@ -125,7 +125,7 @@ public:
 	void AttackGunEvent();
 	void AttackGunReadyEvent();
 
-	void ApplyAttackEvent(bool isRanged);
+	void ApplyAttackEvent(bool isClosed, bool isRanged);
 
 
 	// 플레이어 찾기
@@ -141,4 +141,8 @@ public:
 	//void LoadAllEvents();
 	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void CheckEndFrame();
+	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
+
+	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
+
 };

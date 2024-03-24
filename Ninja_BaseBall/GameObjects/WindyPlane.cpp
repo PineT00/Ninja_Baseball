@@ -13,21 +13,23 @@ void WindyPlane::Init()
 {
 	SpriteGo::Init();
 	animator.SetTarget(&sprite);
-	effectAnimator.SetTarget(&spriteEffect);
-
 	// Hit, Attack Box
-	attackBox.setFillColor(sf::Color::Red);
-	attackBox.setSize({ 400,80 }); 
-	attackBox.setOrigin({ 0.f, 150.f });
-
-	rangedAttackBox.setFillColor(sf::Color::Blue);
-	rangedAttackBox.setSize({ 400, 120 });
-	rangedAttackBox.setOrigin({ -300.f, 100.f });
 
 	hitBox.setFillColor(sf::Color::Yellow);
 	hitBox.setSize({ 140,160 });
 	hitBox.setOrigin({ 35.f, 150.f });
 
+	closeAttackBox.setFillColor(sf::Color::Red);
+	closeAttackBox.setSize({ 500,80 }); 
+	closeAttackBox.setOrigin({ 0.f, 150.f });
+
+	uppercutAttackBox.setFillColor(sf::Color::Cyan);
+	uppercutAttackBox.setSize({ 100,100 });
+	uppercutAttackBox.setOrigin({ 0.f, 150.f });
+
+	rangedAttackBox.setFillColor(sf::Color::Blue);
+	rangedAttackBox.setSize({ 400, 120 });
+	rangedAttackBox.setOrigin({ -300.f, 100.f });
 
 	// 데이터 테이블로 가져온 클립 추가
 	clipInfos.resize(PARTS_STATUS_COUNT + 1);
@@ -38,9 +40,9 @@ void WindyPlane::Init()
 
 		for (int clipCount = 0; clipCount < data[clipInfos[parts].partsStatus].files.size(); ++clipCount)
 		{
-			clipInfos[parts].clips.push_back(data[clipInfos[parts].partsStatus].files[clipCount]); // 클립 추가
+			clipInfos[parts].clips.emplace_back(data[clipInfos[parts].partsStatus].files[clipCount]); // 클립 추가
 			bool status = parts == clipCount ? true : false;
-			clipInfos[parts].clipStatus.push_back(status);
+			clipInfos[parts].clipStatus.emplace_back(status);
 		}
 	}
 
@@ -65,7 +67,7 @@ void WindyPlane::Init()
 	}
 
 	std::function<void()> attackUpperCut = std::bind(&WindyPlane::AttackUpperCutEvent, this);
-	for (int i = 5; i <= 8; ++i)
+	for (int i = 5; i <= 9; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
 	}
@@ -97,7 +99,7 @@ void WindyPlane::Init()
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
 
-	for (int i = 5; i <= 8; ++i)
+	for (int i = 5; i <= 9; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
 	}
@@ -128,7 +130,7 @@ void WindyPlane::Init()
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
 
-	for (int i = 5; i <= 8; ++i)
+	for (int i = 5; i <= 9; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
 	}
@@ -157,6 +159,7 @@ void WindyPlane::Init()
 void WindyPlane::Reset()
 {
 	SetOrigin(Origins::BC);
+	SetPosition({ 500, 0 });
 }
 
 void WindyPlane::Update(float dt)
@@ -164,9 +167,10 @@ void WindyPlane::Update(float dt)
 	SpriteGo::Update(dt);
 	animator.Update(dt);
 
-	attackBox.setPosition(position);
+	closeAttackBox.setPosition(position);
 	rangedAttackBox.setPosition(position);
 	hitBox.setPosition(position);
+	uppercutAttackBox.setPosition(position);
 
 	// HP 마다 상태가 바뀐다.
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
@@ -188,17 +192,21 @@ void WindyPlane::Update(float dt)
 	if (InputManager::GetKeyDown(sf::Keyboard::Numpad3))
 	{
 		currentStatus = WindyPlaneStatus::WIND;
-
-		//UpdateWindAttack(dt);
 	}
 
 	switch (currentPartsStatus)
 	{
 	case BossPartsStatus::Wing:
+		if (currentStatus == WindyPlaneStatus::IDLE && isAwake)
+		{
+			isAwake = false;
+			AttackWind(dt);
+
+		}
 	case BossPartsStatus::NoWing:
 	case BossPartsStatus::NoProp:
 	{
-		if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+		if (closeAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
 		{
 			statusTimer += dt;
 
@@ -210,20 +218,27 @@ void WindyPlane::Update(float dt)
 				statusTimer = 0.f;
 				hitCount = 0;
 
-				if (dist <= 200)
+				if (currentStatus == WindyPlaneStatus::IDLE)
 				{
-					// OneTwo
-					currentStatus = WindyPlaneStatus::UPPERCUT;
-				}
-				else if (dist <= 400)
-				{
-					currentStatus = WindyPlaneStatus::ONETWO;
-				}
-				else if (dist <= 600)
-				{
-					currentStatus = WindyPlaneStatus::STRAIGHT;
+					if (dist <= 200)
+					{
+						// OneTwo
+						currentStatus = WindyPlaneStatus::UPPERCUT;
+					}
+					else if (dist <= 400)
+					{
+						currentStatus = WindyPlaneStatus::ONETWO;
+					}
+					else if (dist <= 600)
+					{
+						currentStatus = WindyPlaneStatus::STRAIGHT;
+					}
 				}
 			}
+		}
+		else
+		{
+			statusTimer = 0.f;
 		}
 	}
 		break;
@@ -245,9 +260,26 @@ void WindyPlane::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
 
-	window.draw(attackBox);
+	window.draw(closeAttackBox);
 	window.draw(rangedAttackBox);
-	window.draw(hitBox);
+	window.draw(hitBox); 
+	window.draw(uppercutAttackBox);
+
+	if (SCENE_MANAGER.GetDeveloperMode())
+	{
+		closeAttackBox.setFillColor(sf::Color::Red);
+		rangedAttackBox.setFillColor(sf::Color::Blue);
+		hitBox.setFillColor(sf::Color::Yellow);
+		uppercutAttackBox.setFillColor(sf::Color::Cyan);
+	}
+	else
+	{
+		closeAttackBox.setFillColor(sf::Color::Transparent);
+		rangedAttackBox.setFillColor(sf::Color::Transparent);
+		hitBox.setFillColor(sf::Color::Transparent);
+		uppercutAttackBox.setFillColor(sf::Color::Transparent);
+	}
+
 }
 
 void WindyPlane::SetFlipX(bool flipX)
@@ -256,15 +288,17 @@ void WindyPlane::SetFlipX(bool flipX)
 
 	if (flipX)
 	{
-		attackBox.setScale({ scale.x, scale.y });
+		closeAttackBox.setScale({ scale.x, scale.y });
 		rangedAttackBox.setScale({ scale.x, scale.y });
 		hitBox.setScale({ scale.x, scale.y });
+		uppercutAttackBox.setScale({ scale.x, scale.y });
 	}
 	else
 	{
-		attackBox.setScale({ -scale.x, scale.y });
+		closeAttackBox.setScale({ -scale.x, scale.y });
 		rangedAttackBox.setScale({ -scale.x, scale.y });
 		hitBox.setScale({ -scale.x, scale.y });
+		uppercutAttackBox.setScale({ -scale.x, scale.y });
 	}
 }
 
@@ -282,13 +316,13 @@ void WindyPlane::ChasePlayer(float dt)
 	{
 		direction = Utils::MyMath::GetNormal(player->GetPosition() - position);
 	}
-	std::cout << Utils::MyMath::GetNormal(direction + up).x << ":" << Utils::MyMath::GetNormal(direction + up).y << std::endl;
 
 	if (currentStatus == WindyPlaneStatus::WIND || currentStatus == WindyPlaneStatus::GUN)
 	{
 		if (!isAscending)
 		{
 			isAscending = true;
+			direction = 
 			windDirection = Utils::MyMath::GetNormal(direction + up);
 		}
 
@@ -321,28 +355,13 @@ void WindyPlane::AttackUpperCut()
 	currentStatus = WindyPlaneStatus::UPPERCUT;
 }
 
-void WindyPlane::AttackWind()
+void WindyPlane::AttackWind(float dt)
 {
+	direction.x = Utils::MyMath::GetNormal(player->GetPosition() - position).x;
+
 	currentStatus = WindyPlaneStatus::WIND;
-
-	originalY = position.y;
-	isAscending = true;
-	isWindAttacking = true;
-
 	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
-
-//void WindyPlane::UpdateWindAttack(float dt)
-//{
-//	if (isAscending) 
-//	{
-//		
-//	}
-//	else
-//	{
-//		
-//	}
-//}
 
 void WindyPlane::AttackGun()
 {
@@ -365,7 +384,7 @@ void WindyPlane::AttackOneTwoEvent()
 		currentStatus = WindyPlaneStatus::IDLE;
 	}
 	// 이 부분 모두 다르게 구성 필요
-	if (attackBox.getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) // 플레이어가 무적이 아닐 경우도 추가 필요
+	if (closeAttackBox.getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) // 플레이어가 무적이 아닐 경우도 추가 필요
 	{
 		++hitCount;
 		player->getHit = true;
@@ -378,7 +397,7 @@ void WindyPlane::AttackStraightEvent()
 {
 	currentSpeed = currentStatus == WindyPlaneStatus::STRAIGHT ? speed * 3.f : speed;
 
-	ApplyAttackEvent(true);
+	ApplyAttackEvent(true, false);
 
 }
 
@@ -386,7 +405,7 @@ void WindyPlane::AttackUpperCutEvent()
 {
 	currentSpeed = speed;
 
-	ApplyAttackEvent(true);
+	ApplyAttackEvent(false, false);
 }
 
 
@@ -395,7 +414,7 @@ void WindyPlane::AttackWindEvent()
 	// 윈드 이펙트 표시 필요
 	currentSpeed = speed;
 
-	ApplyAttackEvent(true);
+	ApplyAttackEvent(false, true);
 }
 
 void WindyPlane::AttackGunEvent()
@@ -403,7 +422,7 @@ void WindyPlane::AttackGunEvent()
 	// 총 이펙트 표시 필요
 	currentSpeed = speed;
 
-	ApplyAttackEvent(true);
+	ApplyAttackEvent(false, true);
 }
 
 void WindyPlane::AttackGunReadyEvent()
@@ -417,9 +436,9 @@ void WindyPlane::AttackGunReadyEvent()
 	}
 }
 
-void WindyPlane::ApplyAttackEvent(bool isRanged = false)
+void WindyPlane::ApplyAttackEvent(bool isClosed, bool isRanged)
 {
-	if ((isRanged ? rangedAttackBox : attackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) 
+	if ((isRanged ? rangedAttackBox : isClosed ? closeAttackBox : uppercutAttackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible())
 	{
 		player->getHit = true;
 	}
@@ -434,11 +453,15 @@ void WindyPlane::FindPlayer()
 
 void WindyPlane::OnDamaged(float damage)
 {
+	direction.x /= 10.f;
+	direction.y = 0.f;
+	currentStatus = WindyPlaneStatus::DAMAGED;
 }
 
 void WindyPlane::OnDamagedEvent()
 {
 	currentStatus = WindyPlaneStatus::IDLE;
+	direction = Utils::MyMath::GetNormal(player->GetPosition() - position);
 }
 
 void WindyPlane::OnDie()
