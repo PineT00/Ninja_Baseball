@@ -319,7 +319,8 @@ void Player::Update(float dt)
 
 
 
-	if (getHit && !hitTimeOn && !invincible)
+	//if (getHit && !hitTimeOn && !invincible)
+	if (getHit)
 	{
 		inputOn = false;
 		hitTimeOn = true;
@@ -464,7 +465,7 @@ void Player::Update(float dt)
 				default:
 					break;
 			}
-			//player2->getHit;
+			player2->getHit = true;
 
 		}
 	}
@@ -521,19 +522,19 @@ void Player::Update(float dt)
 
 
 
-		//ÄÞº¸ ±â·Ï¿ë
-		if (InputManager::GetKeyDown(sf::Keyboard::L))
-		{
-			InputManager::StopComboRecord();
-			InputManager::ClearCombo();
-			InputManager::ComboRecord(10.f);
-		}
+		////ÄÞº¸ ±â·Ï¿ë
+		//if (InputManager::GetKeyDown(sf::Keyboard::L))
+		//{
+		//	InputManager::StopComboRecord();
+		//	InputManager::ClearCombo();
+		//	InputManager::ComboRecord(10.f);
+		//}
 
-		if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
-		{
-			animator.Play("Animations/player/player_DashAttack.csv");
-			InputManager::StopComboRecord();
-		}
+		//if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
+		//{
+		//	animator.Play("Animations/player/player_DashAttack.csv");
+		//	InputManager::StopComboRecord();
+		//}
 	}
 
 
