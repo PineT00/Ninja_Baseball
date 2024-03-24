@@ -86,36 +86,38 @@ void YellowBaseBall::Update(float dt)
     attackBox.setPosition(sprite.getPosition());
     damageBox.setPosition(sprite.getPosition());
 
-    currentEnemy = EnemyState::MOVE;
+    //currentEnemy = EnemyState::MOVE;
 
     if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
         Attack();
     }
+    
     switch (currentEnemy)
     {
     case EnemyState::IDLE:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Idle.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
         break;
     case EnemyState::MOVE:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Move.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
         break;
     case EnemyState::ATTACK:
-        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Attack.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
         break;
     case EnemyState::HURT:
-        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Hurt.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Hurt.csv");
         break;
     case EnemyState::DEAD:
-        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Dead.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
         break;
     case EnemyState::CATCH:
-        yellowBaseBallAnimator.Play("animations/BaseballYellow_Catch.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
         break;
     case EnemyState::DASH:
-        yellowBaseBallAnimator.PlayQueue("animations/BaseballYellow_Dash.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
         break;
     }
+    yellowBaseBallAnimator.Update(dt);
 }
 
 void YellowBaseBall::OnDamage(int damage)
@@ -157,7 +159,23 @@ void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
     Enemy::DashToPlayer(dt,currentPosition);
     if(isDash)
     {
-        currentEnemy = EnemyState::DASH;
+        currentEnemy = EnemyState::MOVE;
     }
+    
+}
+
+void YellowBaseBall::NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition,
+    float xDistance, float yDistance)
+{
+    Enemy::NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
+    currentEnemy = EnemyState::MOVE;
+    //yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
+}
+
+void YellowBaseBall::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition)
+{
+    Enemy::StartDash(playerPosition, currentPosition);
+    currentEnemy = EnemyState::MOVE;
+    //yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
     
 }

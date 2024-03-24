@@ -106,6 +106,7 @@ void Enemy::DashTowards(const sf::Vector2f& target, float dt)
 void Enemy::Attack()
 {
     attackTimer = attackCooldown;
+    currentEnemy = EnemyState::ATTACK;
     if(player != nullptr)
     {
         //player->OnDamage(damage);
@@ -118,7 +119,7 @@ void Enemy::MoveTowards(const sf::Vector2f& target, float dt)
 {
     sf::Vector2f currentPosition = sprite.getPosition();
     float distanceToTarget = Utils::MyMath::Distance(target, currentPosition);
-    
+    currentEnemy = EnemyState::MOVE;
     const float minDistance = 500.0f;  
     
     if (distanceToTarget > minDistance)
@@ -185,7 +186,7 @@ void Enemy::DashToPlayer(float dt, sf::Vector2f& currentPosition)
 {
     // 대쉬 이동
     currentPosition += dashDirection * dashSpeed * dt;
-
+    currentEnemy = EnemyState::DASH;
     // 대쉬 종료 조건 (예: 일정 거리 이동)
     if (Utils::MyMath::Distance(dashStartPosition, currentPosition) >= dashMaxDistance) {
         isDash = false;
@@ -213,4 +214,5 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Ve
     if (xDistance > 200) {
         currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
     }
+    currentEnemy = EnemyState::MOVE;
 }
