@@ -60,21 +60,14 @@ enum class PlayerType
 enum class BossType
 {
 	WINDYPLANE,
-
-};
-
-enum class BossStatus
-{
-	CHASE,
-	PUNCHONESHOT,
-	PUNCHTWOSHOT,
-	WINDATTACK,
-	GUNATTACK,
-	CRYING,
-	DEAD,
 };
 
 enum class BossPartsStatus 
 {
-	Wing, NoWing, NoProp, OneArm, NoArm, UNDEFINED
+	Wing, 
+	NoWing, 
+	NoProp, 
+	OneArm, 
+	NoArm, 
+	UNDEFINED
 };

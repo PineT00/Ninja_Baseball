@@ -95,12 +95,6 @@ void SceneAnimationTool::Init()
 	editorBorder.setPosition(windowSize.x * 0.2f, windowSize.y * 0.2f);
 	editorBorder.setSize({ windowSize.x * 0.6f, windowSize.y * 0.6f });
 
-	preloadBorder.setOutlineColor(sf::Color::White);
-	preloadBorder.setFillColor(sf::Color::Transparent);
-	preloadBorder.setOutlineThickness(1.f);
-	preloadBorder.setPosition(windowSize.x * 0.05f, windowSize.y * 0.7f);
-	preloadBorder.setSize({ windowSize * 0.12f});
-
 	textureBorder.setOutlineColor(sf::Color::Cyan);
 	textureBorder.setFillColor(sf::Color::Transparent);
 	textureBorder.setOutlineThickness(5.f);
@@ -355,7 +349,6 @@ void SceneAnimationTool::Draw(sf::RenderWindow& window)
 	const sf::View& saveView = window.getView();
 	window.setView(uiView);
 	window.draw(editorBorder);
-	window.draw(preloadBorder);
 	window.setView(worldView);
 	window.draw(textureBorder);
 	window.setView(saveView);

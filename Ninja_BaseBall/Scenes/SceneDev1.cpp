@@ -10,7 +10,6 @@
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
-#include "YellowBaseBall.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
     : Scene(id)
@@ -102,25 +101,40 @@ void SceneDev1::Exit()
 
 void SceneDev1::Update(float dt)
 {
-    Scene::Update(dt);
-    SetStatus(status);
-    switch (status)
+
+    if (!(player->isImpacted))
     {
-    case GameStatus::Awake:
-        UpdateAwake(dt);
-        break;
-    case GameStatus::Game:
-        UpdateGame(dt);
-        break;
-    case GameStatus::GameOver:
-        UpdateGameover(dt);
-        break;
-    case GameStatus::Pause:
-        UpdatePause(dt);
-        break;
-    default:
-        break;
+        Scene::Update(dt);
+        SetStatus(status);
+
+        switch (status)
+        {
+        case GameStatus::Awake:
+            UpdateAwake(dt);
+            break;
+        case GameStatus::Game:
+            UpdateGame(dt);
+            break;
+        case GameStatus::GameOver:
+            UpdateGameover(dt);
+            break;
+        case GameStatus::Pause:
+            UpdatePause(dt);
+            break;
+        default:
+            break;
+        }
     }
+    else
+    {
+        player->impactTimer -= dt;
+        if (player->impactTimer <= 0.f)
+        {
+            player->isImpacted = false;
+            player->impactTimer = 0.15f;
+        }
+    }
+
 }
 
 void SceneDev1::UpdateAwake(float dt)
@@ -149,6 +163,7 @@ void SceneDev1::UpdateGame(float dt)
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
         //yellowEnemy->SetActive(true);
+
         //yellowEnemy2->SetActive(true);
 
         //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
@@ -250,7 +265,7 @@ void SceneDev1::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(0.f);
         break;
     case GameStatus::Game:
-        FRAMEWORK.SetTimeScale(1.f);
+        //FRAMEWORK.SetTimeScale(1.f);
         break;
     case GameStatus::GameOver:
         FRAMEWORK.SetTimeScale(0.f);

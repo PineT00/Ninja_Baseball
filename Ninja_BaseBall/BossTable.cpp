@@ -57,57 +57,11 @@ bool BossTable::Load() {
                 }
             }
 
-            // bossName을 키로 하고, 그 안의 std::unordered_map에 status와 data를 저장
             table[bossName][id] = data;
         }
     }
     return true;
 }
-
-
-//bool BossTable::Load() {
-//    Release();
-//
-//    std::ifstream ifs("animations/Boss/BossTable.json");
-//    if (!ifs.is_open()) {
-//        std::cerr << "Failed to open file for reading" << std::endl;
-//        return false;
-//    }
-//
-//    rapidjson::IStreamWrapper isw(ifs);
-//
-//    rapidjson::Document doc;
-//    doc.ParseStream(isw);
-//    ifs.close(); // std::ifstream은 스코프를 벗어나면 자동으로 닫히지만, 명시적으로 닫는 것이 좋습니다.
-//
-//    if (!doc.IsObject()) {
-//        std::cerr << "Document is not a JSON object" << std::endl;
-//        return false;
-//    }
-//
-//    const rapidjson::Value& boss = doc["boss"];
-//
-//    for (auto bossIt = boss.MemberBegin(); bossIt != boss.MemberEnd(); ++bossIt) {
-//        const rapidjson::Value& bossName = (*bossIt).value;
-//
-//        for (auto it = bossName.MemberBegin(); it != bossName.MemberEnd(); ++it) {
-//            BossPartsStatus id = GetBossPartsStatusFromString(it->name.GetString());
-//
-//            BossData data;
-//            data.status = id;
-//
-//            const rapidjson::Value& files = it->value["files"];
-//            if (files.IsArray()) {
-//                for (rapidjson::SizeType i = 0; i < files.Size(); i++) {
-//                    data.files.push_back(files[i].GetString());
-//                }
-//            }
-//            // Note: 여기서의 table[bossName][data.status] = data; 구문은 잘못된 것 같습니다.
-//            // bossName은 Value 객체이고, table의 키로 사용할 수 없습니다. 아마도 수정이 필요할 것입니다.
-//        }
-//    }
-//    return true;
-//}
 
 void BossTable::Release()
 {

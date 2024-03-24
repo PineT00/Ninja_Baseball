@@ -10,7 +10,20 @@ struct BossData;
 class WindyPlane : public SpriteGo
 {
 public :
-	
+	enum class WindyPlaneStatus
+	{
+		IDLE,
+		DAMAGED,
+		ONETWO,
+		STRAIGHT,
+		UPPERCUT,
+		WIND,
+		GUN,
+		GUNREADY,
+		FINAL,
+		DEATH
+	};
+
 	struct ClipInfo
 	{
 		BossPartsStatus partsStatus;
@@ -28,6 +41,7 @@ public :
 	};
 
 	const int PARTS_STATUS_COUNT = 5;
+	const int EFFECTS_COUNT = 30;
 
 protected:
 	WindyPlane(const WindyPlane&) = delete;
@@ -38,35 +52,48 @@ protected:
 	SceneDevBoss* sceneDevBoss = nullptr;
 	Player* player = nullptr;
 	Animator animator;
-	Animator effectAnimator;
+
 	ClipInfo currentClipInfo;
 	BossPartsStatus currentPartsStatus = BossPartsStatus::Wing;
+	WindyPlaneStatus currentStatus = WindyPlaneStatus::IDLE;
 
 	std::string currentClipId;
 
 	std::unordered_map<BossPartsStatus, BossData>& data;
 	std::vector<ClipInfo> clipInfos;
-	std::vector<std::function<void()>> bossAttackPatterns;
-	std::vector<std::function<void()>> bossMovePatterns;
+	std::vector<Animator> windEffects;
+	std::vector<sf::Sprite> windTargets;
+	std::vector<Animator> gunEffects;
+	std::vector<sf::Sprite> gunTargets;
+	std::vector<float> windEffectsSpeed;
 	std::vector<std::string> clipIds;
 	
 	sf::Vector2f windowSize;
 	sf::Vector2f direction = { 1.f, 0.f };
+	sf::Vector2f windDirection;
+	sf::Vector2f up = { 0, -1.f };
 	
-	sf::Sprite spriteEffect;
-
 	sf::RectangleShape hitBox;
-	sf::RectangleShape attackBox;
+	sf::RectangleShape closeAttackBox;
+	sf::RectangleShape uppercutAttackBox;
 	sf::RectangleShape rangedAttackBox;
 
-	float speed = 150.f;
+	float speed = 100.f;
+	float currentSpeed = speed;
 	float findTimer = 0.f;
 	float findInterval = 3.f;
 	float statusTimer = 0.f;
 	float statusInterval = 1.f;
 
+	float maxHp = 2000.f;
+	float hp = maxHp;
+
+	int hitCount = 0;
+
 	bool isAlive = true;
-	bool isTwice = false;
+	bool isAscending = false; // 현재 상승 중인지 여부
+	bool isAwake = true;
+
 
 public:
 	WindyPlane(const std::string& name = "windyplane");
@@ -83,26 +110,39 @@ public:
 	void ChasePlayer(float dt);
 
 	// 보스 공격 패턴들
-	void PunchOneTime();
-	void PunchTwoTime();
-	void GunAttack();
-	void WindAttack();
-	void Crying();
+	void AttackOneTwo();
+	void AttackStraight();
+	void AttackUpperCut();
+	void AttackWind(float dt);
+	void AttackGun(); // NoWing은 AttackGunReady -> AttackGun
+	void AttackGunReady();
 	
 	// 보스 공격 패턴 이벤트들
-	void PunchOneTimeEvent();
-	void PunchTwoTimeEvent();
-	void GunAttackEvent();
-	void WindAttackEvent();
-	void CryingEvent();
+	void AttackOneTwoEvent();
+	void AttackStraightEvent();
+	void AttackUpperCutEvent();
+	void AttackWindEvent();
+	void AttackGunEvent();
+	void AttackGunReadyEvent();
+
+	void ApplyAttackEvent(bool isClosed, bool isRanged);
+
 
 	// 플레이어 찾기
 	void FindPlayer();
 
 	// 피격
 	void OnDamaged(float damage);
+	void OnDamagedEvent();
 	void OnDie();
+	void OnDieEvent();
 
 	// 상태
-	void PlayAnimation(BossPartsStatus status);
+	//void LoadAllEvents();
+	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
+	void CheckEndFrame();
+	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
+
+	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
+
 };

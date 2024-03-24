@@ -18,6 +18,7 @@ public:
 		isHomeRun,
 	};
 
+	int life = 1;
 
 	int normalAttack = 0;
 	bool isAttack = false;
@@ -30,6 +31,17 @@ public:
 	int maxHp = 100;
 	int hp = maxHp;
 	int dmg = 20;
+
+	//impactTime
+	bool isImpacted = false;
+	float impactTimer = 0.15f;
+
+	//Grip Time
+	bool isGrip = false;
+	float gripTimer = 0.f;
+	float gripTime = 2.f;
+	float gripCoolTime = 1.f;
+	int gripAttackCount = 0;
 
 protected:
 	ComboCommands* combo;
@@ -82,11 +94,8 @@ protected:
 	float attackTime = 0.3f;
 	bool attackTimeOn = false;
 
-	//Grip Time
-	bool isGrip = false;
-	float gripTimer = 0.f;
-	float gripTime = 2.f;
-	float gripCoolTime = 1.f;
+
+
 
 	//Hit
 	float hitTimer = 0.15f;
@@ -98,6 +107,7 @@ protected:
 
 	//Turn Input on / off
 	bool inputOn = true;
+
 
 	SpriteGo playerShadow;
 	sf::Sprite OnHitEffect;
@@ -120,10 +130,12 @@ public:
 	void SetAttackOff();
 	void SetKickTimeOn();
 
-	void SetBox(bool flip);
+	void SetBox();
+	void SetGripBox();
 
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
 	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
+
 	void Bitted();
 	void Death();
 
@@ -141,5 +153,6 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
 	bool IsJumping () const { return isJumping; }
+	bool IsInvincible() const { return invincible; }
 };
 
