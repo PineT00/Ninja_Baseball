@@ -86,7 +86,7 @@ void YellowBaseBall::Update(float dt)
     attackBox.setPosition(sprite.getPosition());
     damageBox.setPosition(sprite.getPosition());
 
-    //currentEnemy = EnemyState::MOVE;
+    currentEnemy = EnemyState::MOVE;
 
     if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
@@ -123,27 +123,19 @@ void YellowBaseBall::Update(float dt)
 void YellowBaseBall::OnDamage(int damage)
 {
     Enemy::OnDamage(damage);
-
-    if (health <= 0)
-    {
-        currentEnemy = EnemyState::DEAD;
-    }
-    else
-    {
-        currentEnemy = EnemyState::HURT;
-    }
+    
 }
 
 void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < sprite.getPosition().x) {
         sprite.setScale(1.0f, 1.0f);
-        attackBox.setOrigin({200.f,150.f});
+        attackBox.setOrigin({175.f,125.f});
         damageBox.setOrigin({50.f,150.f});
     }
     else {
         sprite.setScale(-1.0f, 1.0f);
-        attackBox.setOrigin({-200.f,150.f});
+        attackBox.setOrigin({-175.f,125.f});
         damageBox.setOrigin({50.f,150.f});
     }
 }
@@ -151,7 +143,7 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 void YellowBaseBall::Attack()
 {
     Enemy::Attack();
-    currentEnemy = EnemyState::ATTACK;
+    //currentEnemy = EnemyState::ATTACK;
 }
 
 void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)

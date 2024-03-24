@@ -82,7 +82,7 @@ public:
     static sf::Vector2f Normalize(const sf::Vector2f& source);
     virtual void TargetDirection(const sf::Vector2f& playerPosition);
     virtual void SetBox(bool flip);
-
+    
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
     virtual void DashToPlayer(float dt, sf::Vector2f& currentPosition);

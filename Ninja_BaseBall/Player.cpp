@@ -123,7 +123,7 @@ void Player::Reset()
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
 
-	//ï¿½ï¿½ï¿½ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿?
+	//???????????
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
@@ -197,14 +197,14 @@ void Player::Update(float dt)
 			h = 1;
 		}
 
-		//ï¿½ï¿½Ã±ï¿½ï¿½
+		//?????
 		{
-			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
+			//???? ????????
 			if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Left))
 				{
-					isLeftDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
+					isLeftDashing = true; // ?–è ???? ????
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -222,13 +222,13 @@ void Player::Update(float dt)
 				isLeftDashing = false;
 			}
 
-			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½
+			//?????? ????????
 
 			if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Right))
 				{
-					isRightDashing = true; // ï¿½ë½¬ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
+					isRightDashing = true; // ?–è ???? ????
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -250,7 +250,7 @@ void Player::Update(float dt)
 	}
 
 
-	//ï¿½ë½¬ ï¿½ï¿½ï¿½Çµï¿½
+	//?–è ?????
 	if (isRightDashing || isLeftDashing)
 	{
 		velocity.x = h * dashSpeed;
@@ -260,20 +260,22 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½
+	//????
 
 	if (!isGrounded)
 	{
 		if (position.y >= jumpY)
 		{
 			isGrounded = true;
+			isJumping = false;
 			SetPosition({ position.x, jumpY });
 		}
 	}
 
-	if (isGrounded && !isLeftDashing && !isRightDashing && InputManager::GetKeyDown(sf::Keyboard::W))
+	if (!isJumping&&isGrounded && !isLeftDashing && !isRightDashing && InputManager::GetKeyDown(sf::Keyboard::W))
 	{
 		isGrounded = false;
+		isJumping = true;
 		jumpY = GetPosition().y;
 		animator.Play("Animations/player/player_Jump.csv");
 		velocity.y = -800.f;
@@ -319,6 +321,7 @@ void Player::Update(float dt)
 		{
 			hitTime += dt;
 			isGrounded = false;
+			
 			jumpY = GetPosition().y;
 			Death();
 			velocity.y = -800.f;
@@ -377,7 +380,7 @@ void Player::Update(float dt)
 
 
 
-	//ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//??????? ????
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
@@ -396,7 +399,7 @@ void Player::Update(float dt)
 	}
 
 
-	//Àâ±â¹Ú½º¿Í ´ê¾ÒÀ»¶§
+	//??????? ???????
 	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
@@ -416,7 +419,7 @@ void Player::Update(float dt)
 		}
 	}
 
-	//°ø°Ý¹Ú½º¿Í ´ê¾ÒÀ»¶§
+	//???????? ???????
 	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 
@@ -472,12 +475,12 @@ void Player::Update(float dt)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
-				animator.Play("Animations/player/player_JumpAttackSK.csv"); //Á¡ÇÁ¿·Â÷±â
+				animator.Play("Animations/player/player_JumpAttackSK.csv"); //??????????
 				animator.PlayQueue("Animations/player/player_Jump.csv");
 			}
 		}
 
-		//´ë½ÃÁßÀÏ¶§ ±â¼ú
+		//???????? ???
 		if (isGrounded && (isLeftDashing || isRightDashing))
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
@@ -488,7 +491,7 @@ void Player::Update(float dt)
 		}
 
 
-		//Àâ±âÁßÀÏ¶§ ±â¼ú
+		//???????? ???
 		if (isGrip && isGrounded)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
@@ -498,7 +501,7 @@ void Player::Update(float dt)
 			}
 		}
 
-		//ï¿½Þºï¿½ ï¿½ï¿½Ï¿ï¿?
+		//??? ?????
 		if (InputManager::GetKeyDown(sf::Keyboard::L))
 		{
 			InputManager::StopComboRecord();
@@ -559,13 +562,13 @@ void Player::Update(float dt)
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
 
 
-	//ï¿½Ü»ï¿½È¿ï¿½ï¿½
+	//??????
 	trailDuration -= dt;
 
 	if (trailDuration <= 0)
 	{
 		if (trails.size() < 3)
-		{ // ï¿½Ü»ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ 3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		{ // ????? ??? 3?????? ????
 			sf::Sprite trail;
 			Animator trailAnimator;
 
@@ -587,9 +590,9 @@ void Player::Update(float dt)
 		}
 		else
 		{
-			trails.erase(trails.begin()); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü»ï¿½ ï¿½ï¿½ï¿½ï¿½
+			trails.erase(trails.begin()); // ???? ?????? ??? ????
 		}
-		trailDuration = 0.05f; // ï¿½Ü»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ê±ï¿½È­
+		trailDuration = 0.05f; // ??? ???? ?©£? ????
 	}
 }
 
