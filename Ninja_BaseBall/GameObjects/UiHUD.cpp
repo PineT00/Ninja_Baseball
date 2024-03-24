@@ -25,6 +25,14 @@ void UiHUD::Init()
 	textFps.SetActive(false);
 	textFps.SetPosition({ referenceResolution.x, 0.f });
 
+	player1_Frame.SetTexture("");
+	player1_Name.SetTexture("");
+	player1_Portrait;
+
+	player1_Score;
+	player1_Life;
+
+
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetScene(SceneIDs::SceneGame));
 }

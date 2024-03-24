@@ -6,6 +6,7 @@
 class TextGo;
 class SpriteGo;
 class SceneGame;
+class SceneDev1;
 
 class UiHUD : public GameObject
 {
@@ -23,6 +24,15 @@ protected:
 	TextGo textFps;
 
 	SceneGame* sceneGame = nullptr;
+	SceneDev1* sceneDev1 = nullptr;
+
+	SpriteGo player1_Frame;
+	SpriteGo player1_Name;
+	sf::Sprite player1_Portrait;
+	TextGo player1_Score;
+	TextGo player1_Life;
+
+
 
 public:
 	UiHUD(const std::string& name = "hud");
