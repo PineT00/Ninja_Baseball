@@ -10,8 +10,18 @@ class Player :
     public SpriteGo
 {
 public:
+	enum class Status
+	{
+		isDead,
+		isAttack,
+		isKick,
+		isHomeRun,
+	};
+
+
 	int normalAttack = 0;
 	bool isAttack = false;
+	bool isHomerun = false;
 
 	//Turn THIS ON when monster Attacks Player.
 	bool getHit = false;
@@ -56,14 +66,16 @@ protected:
 	bool rightDashReady = false;
 	bool isRightDashing = false;
 
+
+	//Dash Attack
 	float dashAttackTimer = 0.f;
 	float dashAttackTime = 0.3f;
 	bool dashAttackTimeOn = false;
 
-	//Hit
-	float hitTimer = 0.15f;
-	float hitTime = 0.f;
-	bool hitTimeOn = false;
+	//Kick Attack
+	float kickTime = 1.f;
+	float kickTimer = 0.f;
+	bool kickTimeOn = false;
 
 	//Attack Time
 	float attackTimer = 0.f;
@@ -75,6 +87,14 @@ protected:
 	float gripTimer = 0.f;
 	float gripTime = 2.f;
 	float gripCoolTime = 1.f;
+
+	//Hit
+	float hitTimer = 0.15f;
+	float hitTime = 0.f;
+	bool hitTimeOn = false;
+
+	float invincibleTime = 1.5f;
+	bool invincible = false;
 
 	//Turn Input on / off
 	bool inputOn = true;
@@ -98,6 +118,8 @@ public:
 
 	void SetAttackOn();
 	void SetAttackOff();
+	void SetKickTimeOn();
+
 	void SetBox(bool flip);
 
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
@@ -107,6 +129,8 @@ public:
 
 	//기술모음
 	void DashAttack();
+	void DynamiteKick();
+
 
 	void Init() override;
 	void Reset() override;

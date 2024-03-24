@@ -1,0 +1,14 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,10,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/2_Player/red/red_legKick.bmp,0,0,311.644,273.742,7,0,0
+graphics/2_Player/red/red_legKick.bmp,349.863,0,305.575,275.286,7,0,0
+graphics/2_Player/red/red_legKick.bmp,695.077,0,308.458,275.286,7,0,0
+graphics/2_Player/red/red_legKick.bmp,1027.32,0,318.548,275.286,7,0,0
+graphics/2_Player/red/red_legKick.bmp,1366.04,0,327.196,275.286,7,0,0
+graphics/2_Player/red/red_legKick.bmp,1706.93,0,332.962,276.007,7,0,0
+graphics/2_Player/red/red_legKick.bmp,2057.91,0,322.872,277.448,7,0,0
+graphics/2_Player/red/red_legKick.bmp,2398.08,0,329.358,278.89,7,0,0
+graphics/2_Player/red/red_legKick.bmp,2742.58,0,329.358,279.61,7,0,0
+graphics/2_Player/red/red_legKick.bmp,3085.63,0,330.8,280.331,7,0,0
