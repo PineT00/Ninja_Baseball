@@ -27,9 +27,9 @@ public:
 	bool getHit = false;
 
 	bool isAlive = true;
-	float maxHp = 100.f;
-	float hp = maxHp;
-	float dmg = 20.f;
+	int maxHp = 100;
+	int hp = maxHp;
+	int dmg = 20;
 
 protected:
 	ComboCommands* combo;
@@ -123,14 +123,16 @@ public:
 	void SetBox(bool flip);
 
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
-
+	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
 	void Bitted();
 	void Death();
 
 	//기술모음
 	void DashAttack();
-	void DynamiteKick();
 
+	void OnDamage(int damage);
+
+	void DynamiteKick();
 
 	void Init() override;
 	void Reset() override;

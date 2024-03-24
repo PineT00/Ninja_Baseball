@@ -33,6 +33,7 @@ protected:
     bool isDead = false;
     bool isReadyToDash=false;
     bool isDash =false;
+    bool isAttack = false;
     
     float dashSpeed = 300.f;
     float dashCooldown = 3.f;
@@ -66,7 +67,7 @@ public:
     void LateUpdate(float dt) override;
     void FixedUpdate(float dt) override;
     void Draw(sf::RenderWindow& window) override;
-    virtual void OnDamage(int damage);
+    
     void SetSpeed(float newSpeed) { speed = newSpeed; }
     float GetHealth() const { return health; }
     void SetPosition(const sf::Vector2f& position) override
@@ -77,7 +78,8 @@ public:
 
     void DashTowards(const sf::Vector2f& target, float dt);
     virtual void Attack();
-
+    virtual void OnDamage(int damage);
+    
     void MoveTowards(const sf::Vector2f& target, float dt);
     static sf::Vector2f Normalize(const sf::Vector2f& source);
     virtual void TargetDirection(const sf::Vector2f& playerPosition);
@@ -88,4 +90,5 @@ public:
     virtual void DashToPlayer(float dt, sf::Vector2f& currentPosition);
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
+
 };

@@ -76,6 +76,13 @@ void Player::DashAttack()
 	inputOn = false;
 }
 
+
+void Player::OnDamage(int damage)
+{
+	getHit = true;
+	hp -= damage;
+}
+
 void Player::DynamiteKick()
 {
 	jumpY = GetPosition().y;
@@ -83,6 +90,7 @@ void Player::DynamiteKick()
 	animator.Play("Animations/player/player_DynamiteKick.csv");
 	isGrounded = false;
 	//inputOn = false;
+
 }
 
 void Player::Init()
@@ -319,7 +327,8 @@ void Player::Update(float dt)
 
 
 
-	if (getHit && !hitTimeOn && !invincible)
+	//if (getHit && !hitTimeOn && !invincible)
+	if (getHit)
 	{
 		inputOn = false;
 		hitTimeOn = true;
@@ -339,8 +348,24 @@ void Player::Update(float dt)
 		invincibleTime -= dt;
 		if (invincibleTime <= 0.f)
 		{
+
+			hitTime += dt;
+			isGrounded = false;
+			isJumping = true;
+			jumpY = GetPosition().y;
+			Death();
+			velocity.y = -800.f;
+			jumpDirection = -(sprite.getScale().x);
+		}
+		else
+		{
+			hitTime += dt;
+			velocity.x = -(sprite.getScale().x) * 800.f;
+			Bitted();
+
 			invincible = false;
 			invincibleTime = 1.5f;
+
 		}
 	}
 
@@ -352,6 +377,7 @@ void Player::Update(float dt)
 			{
 				hitTime += dt;
 				isGrounded = false;
+				isJumping = true;
 				jumpY = GetPosition().y + 100.f;
 				velocity.y = -800.f;
 				jumpDirection = -(sprite.getScale().x);
@@ -360,6 +386,7 @@ void Player::Update(float dt)
 			else
 			{
 				hitTime += dt;
+				isJumping = false;
 				velocity.x = -(sprite.getScale().x) * 800.f;
 				Bitted();
 
@@ -422,11 +449,6 @@ void Player::Update(float dt)
 			gripCoolTime = 0.f;
 		}
 	}
-
-
-	
-
-
 	if (isAttack)
 	{
 
@@ -464,7 +486,7 @@ void Player::Update(float dt)
 				default:
 					break;
 			}
-			//player2->getHit;
+			player2->getHit = true;
 
 		}
 	}
@@ -521,19 +543,19 @@ void Player::Update(float dt)
 
 
 
-		//콤보 기록용
-		if (InputManager::GetKeyDown(sf::Keyboard::L))
-		{
-			InputManager::StopComboRecord();
-			InputManager::ClearCombo();
-			InputManager::ComboRecord(10.f);
-		}
+		////콤보 기록용
+		//if (InputManager::GetKeyDown(sf::Keyboard::L))
+		//{
+		//	InputManager::StopComboRecord();
+		//	InputManager::ClearCombo();
+		//	InputManager::ComboRecord(10.f);
+		//}
 
-		if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
-		{
-			animator.Play("Animations/player/player_DashAttack.csv");
-			InputManager::StopComboRecord();
-		}
+		//if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
+		//{
+		//	animator.Play("Animations/player/player_DashAttack.csv");
+		//	InputManager::StopComboRecord();
+		//}
 	}
 
 
@@ -626,7 +648,7 @@ void Player::Update(float dt)
 	if (trailDuration <= 0)
 	{
 		if (trails.size() < 3)
-		{ // 잔상을 최대 3개까지 유지
+		{ 
 			sf::Sprite trail;
 			Animator trailAnimator;
 
