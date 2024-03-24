@@ -57,8 +57,8 @@ void SceneDev1::Init()
     // yellowEnemy2->SetPosition({ 1400.f, 500.f });
     // AddGameObject(yellowEnemy2, World);
 
-    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-
+    SpawnEnemy("YellowBaseBall", { 1400.f, 700.f });
+    SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
@@ -152,6 +152,18 @@ void SceneDev1::UpdateGame(float dt)
         //yellowEnemy2->SetActive(true);
 
         //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
+        for(auto& enemy : enemies)
+        {
+            if(enemy->GetName() == "YellowBaseBall")
+            {
+                enemy->SetActive(true);
+            }
+            if(enemy->GetName() == "YellowBaseBall2")
+            {
+                enemy->SetActive(true);
+            }
+        }
+
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
@@ -257,6 +269,15 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         enemy->SetPosition(position);
         AddGameObject(enemy, World);
         enemies.push_back(enemy);
+        enemy->SetActive(false);
+    }
+    if(type == "YellowBaseBall2")
+    {
+        YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall2");
+        enemy->SetPosition(position);
+        AddGameObject(enemy, World);
+        enemies.push_back(enemy);
+        enemy->SetActive(false);
     }
 }
 

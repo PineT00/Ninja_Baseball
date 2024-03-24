@@ -32,14 +32,14 @@ protected :
 	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
 
-	std::vector<Enemy*> enemies;
+	
 public:
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
 	Enemy* enemy = nullptr;
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
-
+	std::vector<Enemy*> enemies;
 	sf::Vector2f ClampByTileMap(const sf::Vector2f point);
 
 	void Init() override;
@@ -57,4 +57,5 @@ public:
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
+	
 };
