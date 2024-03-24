@@ -48,12 +48,10 @@ protected:
 
 	sf::Font font;
 	sf::RectangleShape editorBorder;
-	sf::RectangleShape preloadBorder;
 	sf::RectangleShape textureBorder;
 	sf::Vector2f windowSize;
 	sf::Vector2f leftDragStartPos;
 	sf::Vector2f rightDragStartPos;
-	sf::Vector2f preloadBoardPos = { windowSize.x * 0.05f, windowSize.y * 0.7f };
 	sf::Vector2f lastMousePos;
 	sf::Vector2f currentMousePos;
 
@@ -86,7 +84,6 @@ public:
 	std::wstring GetAtlasPath() const { return atlasPath; }
 	void SetAtlasPath(std::wstring& str);
 
-	sf::Vector2f GetPreloadBoardPos() const { return preloadBoardPos; }
 	std::vector<sf::FloatRect>& GetSelectedAreas() { return selectedAreas; }
 	std::vector<Origins>& GetSelectedAreasPivot() { return selectedAreasPivot; }
 	std::vector<sf::Vector2f>& GetCustomPivot() { return customPivots; }

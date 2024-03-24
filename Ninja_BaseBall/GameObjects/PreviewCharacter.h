@@ -28,4 +28,5 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	Animator& GetAnimator() { return animator; }
+	void AdjustScale();
 };
