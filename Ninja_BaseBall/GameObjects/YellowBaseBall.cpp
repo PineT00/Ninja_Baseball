@@ -13,7 +13,7 @@ void YellowBaseBall::SetState()
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
         break;
     case EnemyState::MOVE:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
         break;
     case EnemyState::ATTACK:
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
@@ -113,17 +113,31 @@ void YellowBaseBall::Update(float dt)
 {
     Enemy::Update(dt);
     
-    sprite.setPosition(sprite.getPosition());
+    //sprite.setPosition(sprite.getPosition());
     
     attackBox.setPosition(sprite.getPosition());
     damageBox.setPosition(sprite.getPosition());
 
     //currentEnemy = EnemyState::MOVE;
 
-    if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
-        YellowBaseBall::Attack();
+        Attack();
         SetState();
+    }
+    else
+    {
+        if (attackCooldown >= 2.f)
+        {
+            currentEnemy = EnemyState::IDLE;
+            SetState();
+        }
+        attackCooldown -= dt;
+        if (attackCooldown <= 0.f)
+        {
+            isAttackCoolOn = false;
+            attackCooldown = 2.f;
+        }
     }
     
     yellowBaseBallAnimator.Update(dt);
