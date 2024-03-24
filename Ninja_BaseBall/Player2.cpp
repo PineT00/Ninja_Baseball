@@ -367,7 +367,6 @@ void Player2::Update(float dt)
 			}
 		}
 
-
 		if (!isAlive && isGrounded && animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
 		{
 			animator.Play("Animations/player/player_Death2.csv");
@@ -380,6 +379,30 @@ void Player2::Update(float dt)
 			hitTime = 0.f;
 			inputOn = true;
 			getHit = false;
+		}
+
+
+		//몬스터용 잡히기 테스트
+		if (player->isGrip)
+		{
+			inputOn = false;
+			SetPosition( { player->GetAttackBox().left, player->GetAttackBox().top + 70.f } );
+			if (player->isAttack)
+			{
+				if (player->gripAttackCount == 3)
+				{
+					hitBox.setSize({ 0, 0 });
+					player->isGrip = false;
+					isAlive = false;
+					hitTimeOn = true;
+				}
+				else
+				{
+					Bitted();
+				}
+
+			}
+
 		}
 
 	}
@@ -501,14 +524,14 @@ void Player2::Update(float dt)
 		}
 
 		//잡기중일때 기술
-		if (isGrip && isGrounded)
-		{
-			if (InputManager::GetKeyDown(sf::Keyboard::E))
-			{
-				animator.Play("Animations/player/player_GripAttack1.csv");
-				attackTime = 2.f;
-			}
-		}
+		//if (isGrip && isGrounded)
+		//{
+		//	if (InputManager::GetKeyDown(sf::Keyboard::E))
+		//	{
+		//		animator.Play("Animations/player/player_GripAttack1.csv");
+		//		attackTime = 2.f;
+		//	}
+		//}
 
 		//다이너마이트 킥
 		if (InputManager::GetKey(sf::Keyboard::E))

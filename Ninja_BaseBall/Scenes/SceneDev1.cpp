@@ -124,7 +124,7 @@ void SceneDev1::Update(float dt)
         if (player->impactTimer <= 0.f)
         {
             player->isImpacted = false;
-            player->impactTimer = 0.3f;
+            player->impactTimer = 0.15f;
         }
     }
 
@@ -150,7 +150,7 @@ void SceneDev1::UpdateGame(float dt)
     {
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
-        yellowEnemy->SetActive(true);
+        //yellowEnemy->SetActive(true);
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {

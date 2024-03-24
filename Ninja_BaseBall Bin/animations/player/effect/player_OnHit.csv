@@ -1,8 +1,8 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
-,16,0
-
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,24,0,,,,,
+,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/7_Effect/Impact_Effect/Retro Impact Effect Pack 2 A.png,0.0668411,830.255,61.4093,67.806,4,0,0
-graphics/7_Effect/Impact_Effect/Retro Impact Effect Pack 2 A.png,61.7959,829.935,65.887,68.4457,4,0,0
+graphics/7_Effect/Impact_Effect/Retro Impact Effect Pack 2 A.png,0,830.255,63,67.806,4,0,0
+graphics/7_Effect/Impact_Effect/Retro Impact Effect Pack 2 A.png,63,829.935,65.887,68.4457,4,0,0
 graphics/7_Effect/Impact_Effect/Retro Impact Effect Pack 2 A.png,128.003,829.295,64.2878,69.4052,4,0,0
 graphics/7_Effect/Impact_Effect/Retro Impact Effect Pack 2 A.png,192.61,828.656,64.9275,70.3647,4,0,0
