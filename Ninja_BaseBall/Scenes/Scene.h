@@ -3,6 +3,7 @@ class GameObject;
 
 class Scene
 {
+	
 protected:
 	Scene(const Scene&) = delete;
 	Scene(Scene&&) = delete;
@@ -46,6 +47,19 @@ public:
 	virtual int FindAll(const std::string& name, std::list<GameObject*>& list, Layers layer = Layers::EveryThing);
 	virtual GameObject* AddGameObject(GameObject* gameObject, Layers layer = Layers::World);
 	virtual GameObject* AddGameObject(const std::string& name, Layers layer = Layers::World);
+
+	template <typename T>
+	std::list<T*> FindGameObjectsOfType()
+	{
+		std::list<T*> foundObjects;
+		for (GameObject* obj : gameObjects) {
+			T* castObj = dynamic_cast<T*>(obj);
+			if (castObj != nullptr) {
+				foundObjects.push_back(castObj);
+			}
+		}
+		return foundObjects;
+	};
 	virtual void RemoveGameObject(GameObject* gameObject);
 	virtual void RemoveGameObject(std::string name);
 	virtual void ResortGameObject(GameObject* obj);
@@ -60,4 +74,6 @@ public:
 
 	virtual GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
+
+
 };

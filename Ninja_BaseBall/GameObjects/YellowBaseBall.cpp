@@ -4,6 +4,35 @@
 #include "SceneDev1.h"
 #include "Player.h"
 
+void YellowBaseBall::SetState()
+{
+
+    switch (currentEnemy)
+    {
+    case EnemyState::IDLE:
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
+        break;
+    case EnemyState::MOVE:
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
+        break;
+    case EnemyState::ATTACK:
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
+        break;
+    case EnemyState::HURT:
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Hurt.csv");
+        break;
+    case EnemyState::DEAD:
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
+        break;
+    case EnemyState::CATCH:
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
+        break;
+    case EnemyState::DASH:
+        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
+        break;
+    }
+}
+
 YellowBaseBall::YellowBaseBall(const std::string& name) : Enemy(name), player(nullptr)
 {
 }
@@ -13,13 +42,7 @@ void YellowBaseBall::Init()
     Enemy::Init();
     yellowBaseBallAnimator.SetTarget(&sprite);
     currentEnemy = EnemyState::IDLE;
-    attackBox.setSize({20,20});
-    damageBox.setSize({100,100});
-    
-    attackBox.setFillColor(sf::Color::Red);
-    damageBox.setFillColor(sf::Color::Blue);
-
-    
+    SetState();
 }
 
 void YellowBaseBall::Release()
@@ -46,7 +69,13 @@ void YellowBaseBall::Reset()
     playerBounds = player->GetGlobalBounds();
     playerPosition = player->GetPosition();
     updateTimer = 0.f;                     
+
+
+    attackBox.setSize({20,20});
+    damageBox.setSize({100,100});
     
+    attackBox.setFillColor(sf::Color::Red);
+    damageBox.setFillColor(sf::Color::Blue);
     // damageBounds = sprite.getGlobalBounds();
     // attackBounds = sprite.getGlobalBounds();
     //
@@ -93,33 +122,10 @@ void YellowBaseBall::Update(float dt)
 
     if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
-        currentEnemy = EnemyState::ATTACK;
+        YellowBaseBall::Attack();
+        SetState();
     }
     
-    switch (currentEnemy)
-    {
-    case EnemyState::IDLE:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
-        break;
-    case EnemyState::MOVE:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
-        break;
-    case EnemyState::ATTACK:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
-        break;
-    case EnemyState::HURT:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Hurt.csv");
-        break;
-    case EnemyState::DEAD:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
-        break;
-    case EnemyState::CATCH:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
-        break;
-    case EnemyState::DASH:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
-        break;
-    }
     yellowBaseBallAnimator.Update(dt);
 }
 
@@ -147,7 +153,6 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 void YellowBaseBall::Attack()
 {
     Enemy::Attack();
-    currentEnemy = EnemyState::ATTACK;
 }
 
 void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
@@ -165,13 +170,13 @@ void YellowBaseBall::NormalMovement(float dt, sf::Vector2f& currentPosition, con
 {
     Enemy::NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
     currentEnemy = EnemyState::MOVE;
-    //yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
+    
 }
 
 void YellowBaseBall::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition)
 {
     Enemy::StartDash(playerPosition, currentPosition);
     currentEnemy = EnemyState::MOVE;
-    //yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
+   
     
 }

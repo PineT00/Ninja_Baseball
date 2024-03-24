@@ -10,8 +10,7 @@ class YellowBaseBall;
 class Stage1;
 class Player;
 class Player2;
-class YellowBaseBall;
-// class Enemy;
+class Enemy;
 
 class SceneDev1 : public Scene
 {
@@ -28,11 +27,15 @@ protected :
 	Stage1* stage = nullptr;
 	
 	UiHUD* hud = nullptr;
-	YellowBaseBall* yellowEnemy;
+	// YellowBaseBall* yellowEnemy;
+	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
+
+	std::vector<Enemy*> enemies;
 public:
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
+	Enemy* enemy = nullptr;
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 
@@ -52,4 +55,5 @@ public:
 
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
+	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
 };

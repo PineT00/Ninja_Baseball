@@ -5,13 +5,12 @@
 #include "Player2.h"
 
 Player::Player(const std::string& name)
-	:SpriteGo(name)
+	: SpriteGo(name), combo(nullptr)
 {
 }
 
 Player::~Player()
-{
-}
+= default;
 
 void Player::TestInstance()
 {
@@ -41,9 +40,9 @@ void Player::SetKickTimeOn()
 	velocity.y = -600.f;
 }
 
-void Player::SetBox(bool flip)
+void Player::SetBox()
 {
-	if (flip)
+	if (sprite.getScale().x < 0)
 	{
 		attackBox.setOrigin({ 150.f, 100.f });
 		grapBox.setOrigin({ 100.f, 100.f });
@@ -52,6 +51,18 @@ void Player::SetBox(bool flip)
 	{
 		attackBox.setOrigin({ -120.f, 100.f });
 		grapBox.setOrigin({ -70.f, 100.f });
+	}
+}
+
+void Player::SetGripBox()
+{
+	if (sprite.getScale().x < 0)
+	{
+		attackBox.setOrigin({ 120.f, 100.f });
+	}
+	else
+	{
+		attackBox.setOrigin({ -90.f, 100.f });
 	}
 }
 
@@ -122,10 +133,13 @@ void Player::Init()
 
 void Player::Reset()
 {
+
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
 	std::function<void()>KickOn = std::bind(&Player::SetKickTimeOn, this);
+	std::function<void()>GripAttackOn = std::bind(&Player::SetGripBox, this);
+	std::function<void()>GripAttackOff = std::bind(&Player::SetBox, this);
 
 	animator.AddEvent("Animations/player/player_Attack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_Attack1.csv", 3, AttackOff);
@@ -143,6 +157,13 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 3, AttackOff);
 
 	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 3, KickOn);
+
+	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, GripAttackOn);
+	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
+	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
+	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
+
+
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
@@ -294,6 +315,7 @@ void Player::Update(float dt)
 		if (position.y >= jumpY)
 		{
 			isGrounded = true;
+			isJumping = false;
 			SetPosition({ position.x, jumpY });
 		}
 	}
@@ -310,7 +332,7 @@ void Player::Update(float dt)
 	if (!isGrounded)
 	{
 		velocity.y += gravity * dt;
-
+		
 		if (jumpDirection != 0.f)
 		{
 			velocity.x = jumpDirection * speed;
@@ -333,7 +355,7 @@ void Player::Update(float dt)
 		inputOn = false;
 		hitTimeOn = true;
 
-		hp -= 25.f;
+		//hp -= 25.f;
 
 		if (hp <= 0.f)
 		{
@@ -351,7 +373,7 @@ void Player::Update(float dt)
 
 			hitTime += dt;
 			isGrounded = false;
-			isJumping = true;
+			
 			jumpY = GetPosition().y;
 			Death();
 			velocity.y = -800.f;
@@ -362,7 +384,7 @@ void Player::Update(float dt)
 			hitTime += dt;
 			velocity.x = -(sprite.getScale().x) * 800.f;
 			Bitted();
-
+			
 			invincible = false;
 			invincibleTime = 1.5f;
 
@@ -378,7 +400,7 @@ void Player::Update(float dt)
 				hitTime += dt;
 				isGrounded = false;
 				isJumping = true;
-				jumpY = GetPosition().y + 100.f;
+				jumpY = GetPosition().y + 50.f;
 				velocity.y = -800.f;
 				jumpDirection = -(sprite.getScale().x);
 				Death();
@@ -422,7 +444,7 @@ void Player::Update(float dt)
 	if (h != 0.f)
 	{
 		SetFlipX(h < 0);
-		SetBox(h < 0);
+		SetBox();
 	}
 
 	if (attackTimeOn)
@@ -431,7 +453,7 @@ void Player::Update(float dt)
 	}
 
 	//잡기박스와 닿았을때
-	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
+	if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
 		isGrip = true;
@@ -528,6 +550,7 @@ void Player::Update(float dt)
 			{
 				animator.Play("Animations/player/player_GripAttack1.csv");
 				attackTime = 2.f;
+				gripAttackCount += 1;
 			}
 		}
 
@@ -634,12 +657,34 @@ void Player::Update(float dt)
 
 		isGrip = false;
 		gripCoolTime = 2.f;
+		gripAttackCount = 0;
 	}
+
+	if (!isGrip)
+	{
+		gripAttackCount = 0;
+	}
+
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
+
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Num0))
+	{
+		isImpacted = true;
+	}
+
+
+	//if (isImpacted) {
+	//	sf::Time impactTime = impactClock.getElapsedTime();
+	//	if (impactTime.asSeconds() >= impactTimer) {
+	//		// 타격 시간이 종료되면 게임이 다시 진행됨
+	//		isImpacted = false;
+	//	}
+	//}
 
 
 	//잔상효과
@@ -697,15 +742,15 @@ void Player::Draw(sf::RenderWindow& window)
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
-		attackBox.setFillColor(sf::Color::Red);
 		grapBox.setFillColor(sf::Color::Blue);
 		hitBox.setFillColor(sf::Color::Yellow);
+		attackBox.setFillColor(sf::Color::Red);
 	}
 	else
 	{
-		attackBox.setFillColor(sf::Color::Transparent);
 		grapBox.setFillColor(sf::Color::Transparent);
 		hitBox.setFillColor(sf::Color::Transparent);
+		attackBox.setFillColor(sf::Color::Transparent);
 	}
 
 }

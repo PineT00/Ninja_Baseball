@@ -5,12 +5,11 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 #include "InputField.h"
-// #include "Enemy.h"
+#include "Enemy.h"
 #include "YellowBaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
-#include "YellowBaseBall.h"
 
 SceneDev1::SceneDev1(SceneIDs id) 
     : Scene(id)
@@ -49,10 +48,15 @@ void SceneDev1::Init()
     AddGameObject(player, World);
 
 
-    yellowEnemy = new YellowBaseBall("YellowEnemy");
-    yellowEnemy->SetPosition({ 1200.f, 500.f });
-    AddGameObject(yellowEnemy, World);
+    // yellowEnemy = new YellowBaseBall("YellowEnemy");
+    // yellowEnemy->SetPosition({ 1400.f, 700.f });
+    // AddGameObject(yellowEnemy, World);
+    //
+    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
+    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
+    // AddGameObject(yellowEnemy2, World);
 
+    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -66,6 +70,10 @@ void SceneDev1::Init()
 void SceneDev1::Release()
 {
     Scene::Release();
+    // for (Enemy* enemy : enemies) {
+    //     delete enemy;
+    // }
+    enemies.clear();
 }
 
 void SceneDev1::Reset()
@@ -80,7 +88,8 @@ void SceneDev1::Enter()
 
     player2->SetActive(false);
     player->SetActive(false);
-    yellowEnemy->SetActive(false);
+    //yellowEnemy->SetActive(false);
+    //yellowEnemy2->SetActive(false);
 }
 
 void SceneDev1::Exit()
@@ -92,26 +101,40 @@ void SceneDev1::Exit()
 
 void SceneDev1::Update(float dt)
 {
-    Scene::Update(dt);
-    SetStatus(status);
 
-    switch (status)
+    if (!(player->isImpacted))
     {
-    case GameStatus::Awake:
-        UpdateAwake(dt);
-        break;
-    case GameStatus::Game:
-        UpdateGame(dt);
-        break;
-    case GameStatus::GameOver:
-        UpdateGameover(dt);
-        break;
-    case GameStatus::Pause:
-        UpdatePause(dt);
-        break;
-    default:
-        break;
+        Scene::Update(dt);
+        SetStatus(status);
+
+        switch (status)
+        {
+        case GameStatus::Awake:
+            UpdateAwake(dt);
+            break;
+        case GameStatus::Game:
+            UpdateGame(dt);
+            break;
+        case GameStatus::GameOver:
+            UpdateGameover(dt);
+            break;
+        case GameStatus::Pause:
+            UpdatePause(dt);
+            break;
+        default:
+            break;
+        }
     }
+    else
+    {
+        player->impactTimer -= dt;
+        if (player->impactTimer <= 0.f)
+        {
+            player->isImpacted = false;
+            player->impactTimer = 0.15f;
+        }
+    }
+
 }
 
 void SceneDev1::UpdateAwake(float dt)
@@ -121,6 +144,11 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+    // for (Enemy* enemy : enemies) {
+    //     enemy->Update(dt);
+    // }
+    //
+    
     if (player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
@@ -134,7 +162,11 @@ void SceneDev1::UpdateGame(float dt)
     {
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
-        yellowEnemy->SetActive(true);
+        //yellowEnemy->SetActive(true);
+
+        //yellowEnemy2->SetActive(true);
+
+        //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
@@ -202,6 +234,11 @@ void SceneDev1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
     window.draw(cameraRect);
+
+    // for(Enemy* enemy : enemies)
+    // {
+    //     enemy->Draw(window);
+    // }
 }
 
 void SceneDev1::SetStatus(GameStatus newStatus)
@@ -216,7 +253,7 @@ void SceneDev1::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(0.f);
         break;
     case GameStatus::Game:
-        FRAMEWORK.SetTimeScale(1.f);
+        //FRAMEWORK.SetTimeScale(1.f);
         break;
     case GameStatus::GameOver:
         FRAMEWORK.SetTimeScale(0.f);
@@ -226,3 +263,16 @@ void SceneDev1::SetStatus(GameStatus newStatus)
         break;
     }
 }
+
+void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position)
+{
+    if(type == "YellowBaseBall")
+    {
+        YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
+        enemy->SetPosition(position);
+        AddGameObject(enemy, World);
+        enemies.push_back(enemy);
+    }
+}
+
+
