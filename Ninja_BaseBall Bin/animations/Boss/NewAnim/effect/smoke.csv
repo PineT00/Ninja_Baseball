@@ -1,0 +1,11 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_smoke_effect.bmp,11.205,13.7111,35.3,37.5236,9,18.9008,19.7346
+graphics/4_Boss/boss_smoke_effect.bmp,59.2908,9.5418,49.7536,46.6961,9,27.7953,24.1819
+graphics/4_Boss/boss_smoke_effect.bmp,115.159,0.369356,54.2008,62.8173,9,28.9071,33.6323
+graphics/4_Boss/boss_smoke_effect.bmp,170.194,0,57.8142,64.0206,9,31.9646,33.4458
+graphics/4_Boss/boss_smoke_effect.bmp,228.564,0,56.4244,63.7426,9,30.2969,32.3339
+graphics/4_Boss/boss_smoke_effect.bmp,285.266,0,57.2583,64.8544,9,28.6292,32.6119
+graphics/4_Boss/boss_smoke_effect.bmp,343.08,0,57.2583,65.1323,9,29.1851,34.0016

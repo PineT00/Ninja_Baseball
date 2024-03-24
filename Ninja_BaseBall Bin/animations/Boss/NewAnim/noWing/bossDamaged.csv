@@ -1,0 +1,9 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_attacked(no_wing).bmp,0,0,429.042,578.064,9,253.705,575.784
+graphics/4_Boss/boss_attacked(no_wing).bmp,496.309,0,440.38,580.407,9,254.914,576.322
+graphics/4_Boss/boss_attacked(no_wing).bmp,994.698,0,435.478,578.773,9,259.816,575.504
+graphics/4_Boss/boss_attacked(no_wing).bmp,1502.08,0,441.198,577.138,9,251.646,575.892
+graphics/4_Boss/boss_attacked(no_wing).bmp,2084.6,191.915,417.455,396.265,9,243.692,392.733

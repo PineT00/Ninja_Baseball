@@ -1,0 +1,17 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,5,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_straight(no_one_arm).bmp,179.619,169.127,476.292,462.875,9,286.224,447.749
+graphics/4_Boss/boss_straight(no_one_arm).bmp,1106.48,182.122,455.783,441.601,9,262.124,433.776
+graphics/4_Boss/boss_straight(no_one_arm).bmp,2009.25,187.99,433.776,433.776,9,257.234,427.419
+graphics/4_Boss/boss_straight(no_one_arm).bmp,2912.5,184.567,430.842,436.222,9,254.3,431.82
+graphics/4_Boss/boss_straight(no_one_arm).bmp,3807.44,187.012,436.711,433.287,9,258.701,428.886
+graphics/4_Boss/boss_straight(no_one_arm).bmp,4706.29,182.122,440.623,438.667,9,259.679,433.776
+graphics/4_Boss/boss_straight(no_one_arm).bmp,5605.13,189.457,437.688,430.842,9,261.635,426.441
+graphics/4_Boss/boss_straight(no_one_arm).bmp,6516.21,189.946,427.419,429.864,9,250.387,424.974
+graphics/4_Boss/boss_straight(no_one_arm).bmp,7298.48,190.379,516.691,429.991,9,366.946,424.522
+graphics/4_Boss/boss_straight(no_one_arm).bmp,8116.96,188.83,573.99,433.291,9,447.213,426.828
+graphics/4_Boss/boss_straight(no_one_arm).bmp,9020.07,192.728,566.606,428.63,9,445.146,423.208
+graphics/4_Boss/boss_straight(no_one_arm).bmp,9922.46,190.584,569.81,432.925,9,441.353,424.456
+graphics/4_Boss/boss_straight(no_one_arm).bmp,10881.9,187.517,532.372,432.602,9,383.551,428.074

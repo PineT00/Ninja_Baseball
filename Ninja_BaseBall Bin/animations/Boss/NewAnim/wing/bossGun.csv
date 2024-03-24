@@ -1,0 +1,8 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_gun.bmp,0,0,592.322,427.301,9,327.431,424.756
+graphics/4_Boss/boss_gun.bmp,612.165,0,574.481,428.317,9,309.832,426.557
+graphics/4_Boss/boss_gun.bmp,1187.82,0,592.085,428.317,9,329.197,425.383
+graphics/4_Boss/boss_gun.bmp,1799.27,0,576.828,425.97,9,311.105,424.868

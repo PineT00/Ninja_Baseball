@@ -1,0 +1,11 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_death.bmp,0,0,375.771,557.841,9,200.686,553.548
+graphics/4_Boss/boss_death.bmp,384.677,0,376.397,561.962,9,199.698,557.474
+graphics/4_Boss/boss_death.bmp,766.123,0,378.641,561.962,9,201.381,557.474
+graphics/4_Boss/boss_death.bmp,1152.06,0,374.153,559.718,9,197.454,556.913
+graphics/4_Boss/boss_death.bmp,1535.18,0,374.714,558.596,9,197.454,556.913
+graphics/4_Boss/boss_death.bmp,1921.12,0,374.154,559.718,9,195.771,558.035
+graphics/4_Boss/boss_death.bmp,2303.12,0,373.032,560.279,9,194.65,557.474
