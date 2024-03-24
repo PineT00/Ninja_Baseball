@@ -52,7 +52,9 @@ void YellowBaseBall::Reset()
     //
     // attackBox.setPosition({GetPosition()});
     // damageBox.setPosition({GetPosition()});
-    
+
+    std::function<void()> attackFunc = std::bind(&Enemy::Attack, this);
+    yellowBaseBallAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", 1, attackFunc);
 }
 
 void YellowBaseBall::FixedUpdate(float dt)
@@ -86,11 +88,11 @@ void YellowBaseBall::Update(float dt)
     attackBox.setPosition(sprite.getPosition());
     damageBox.setPosition(sprite.getPosition());
 
-    currentEnemy = EnemyState::MOVE;
+    //currentEnemy = EnemyState::MOVE;
 
     if(attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
-        Attack();
+        currentEnemy = EnemyState::ATTACK;
     }
     
     switch (currentEnemy)
@@ -123,6 +125,7 @@ void YellowBaseBall::Update(float dt)
 void YellowBaseBall::OnDamage(int damage)
 {
     Enemy::OnDamage(damage);
+    currentEnemy = EnemyState::HURT;
     
 }
 
@@ -143,7 +146,7 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 void YellowBaseBall::Attack()
 {
     Enemy::Attack();
-    //currentEnemy = EnemyState::ATTACK;
+    currentEnemy = EnemyState::ATTACK;
 }
 
 void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)

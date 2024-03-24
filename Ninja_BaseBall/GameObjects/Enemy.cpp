@@ -93,7 +93,6 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnDamage(int damage)
 {
-    
     health -= damage;
     
     if(health <= 0)
@@ -141,6 +140,7 @@ void Enemy::MoveTowards(const sf::Vector2f& target, float dt)
 
 
         if (yDistance > acceptableYDistance) {
+            
             moveDirection.y = (target.y > currentPosition.y) ? 1.0f : -1.0f;
         }
 
@@ -171,9 +171,13 @@ void Enemy::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < sprite.getPosition().x) {
         sprite.setScale(1.0f, 1.0f);
+        attackBox.setOrigin({175.f,125.f});
+        damageBox.setOrigin({50.f,150.f});
     }
     else {
         sprite.setScale(-1.0f, 1.0f);
+        attackBox.setOrigin({-175.f,125.f});
+        damageBox.setOrigin({50.f,150.f});
     }
 }
 

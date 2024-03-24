@@ -377,6 +377,7 @@ void Player::Update(float dt)
 			{
 				hitTime += dt;
 				isGrounded = false;
+				isJumping = true;
 				jumpY = GetPosition().y + 100.f;
 				velocity.y = -800.f;
 				jumpDirection = -(sprite.getScale().x);
@@ -385,6 +386,7 @@ void Player::Update(float dt)
 			else
 			{
 				hitTime += dt;
+				isJumping = false;
 				velocity.x = -(sprite.getScale().x) * 800.f;
 				Bitted();
 
@@ -447,11 +449,6 @@ void Player::Update(float dt)
 			gripCoolTime = 0.f;
 		}
 	}
-
-
-	
-
-
 	if (isAttack)
 	{
 
