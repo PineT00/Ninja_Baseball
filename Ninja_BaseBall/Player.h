@@ -17,9 +17,9 @@ public:
 	bool getHit = false;
 
 	bool isAlive = true;
-	float maxHp = 100.f;
-	float hp = maxHp;
-	float dmg = 20.f;
+	int maxHp = 100;
+	int hp = maxHp;
+	int dmg = 20;
 
 protected:
 	ComboCommands* combo;
@@ -107,7 +107,7 @@ public:
 
 	//기술모음
 	void DashAttack();
-
+	void OnDamage(int damage);
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;

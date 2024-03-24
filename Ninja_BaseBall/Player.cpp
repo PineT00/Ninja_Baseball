@@ -69,6 +69,13 @@ void Player::DashAttack()
 	inputOn = false;
 }
 
+void Player::OnDamage(int damage)
+{
+	getHit = true;
+	hp -= damage;
+	
+}
+
 void Player::Init()
 {
 	SpriteGo::Init();
@@ -321,7 +328,7 @@ void Player::Update(float dt)
 		{
 			hitTime += dt;
 			isGrounded = false;
-			
+			isJumping = true;
 			jumpY = GetPosition().y;
 			Death();
 			velocity.y = -800.f;
@@ -568,7 +575,7 @@ void Player::Update(float dt)
 	if (trailDuration <= 0)
 	{
 		if (trails.size() < 3)
-		{ // ????? ??? 3?????? ????
+		{ 
 			sf::Sprite trail;
 			Animator trailAnimator;
 

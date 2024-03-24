@@ -30,6 +30,8 @@ void Enemy::Reset()
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     sf::Vector2f targetPosition = player->GetPosition();
     playerPos= targetPosition;
+
+   
 }
 
 void Enemy::Update(float dt)
@@ -43,25 +45,27 @@ void Enemy::Update(float dt)
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
 
-    // 대쉬 쿨다운 업데이트
+    // dash cooldown logic
     if (dashCooldownTimer > 0) dashCooldownTimer -= dt;
 
-    // 대쉬 조건 체크
+    // dash check logic
     if (!isDash && xDistance >= 400 && yDistance <= acceptableYDistance && dashCooldownTimer <= 0) {
         StartDash(playerPosition, currentPosition);
     }
-
+   
     if (isDash) {
-        // 대쉬 이동 로직
+        // dash movement logic
         DashToPlayer(dt, currentPosition);
+        currentEnemy = EnemyState::DASH;
     } else {
-        // 일반 이동 로직
+        // normal movement logic
         NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
+        currentEnemy = EnemyState::MOVE;
     }
 
-    // 위치 업데이트
+    // position update
     sprite.setPosition(currentPosition);
-    // 애니메이션 및 기타 업데이트
+    // animation update
     enemyAnimator.Update(dt);
 }
 
@@ -89,7 +93,9 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnDamage(int damage)
 {
+    
     health -= damage;
+    
     if(health <= 0)
     {
         isDead = true;
@@ -114,9 +120,7 @@ void Enemy::Attack()
     currentEnemy = EnemyState::ATTACK;
     if(player != nullptr)
     {
-        //player->OnDamage(damage);
-        //std::cout << "Player Hit" << std::endl;
-        
+        player->OnDamage(damage);
     }
     
 }
@@ -192,7 +196,7 @@ void Enemy::DashToPlayer(float dt, sf::Vector2f& currentPosition)
 {
     // 대쉬 이동
     currentPosition += dashDirection * dashSpeed * dt;
-    currentEnemy = EnemyState::DASH;
+    currentEnemy = EnemyState::MOVE;
     // 대쉬 종료 조건 (예: 일정 거리 이동)
     if (Utils::MyMath::Distance(dashStartPosition, currentPosition) >= dashMaxDistance) {
         isDash = false;
@@ -205,14 +209,18 @@ void Enemy::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& cu
     dashDirection = Normalize(playerPosition - currentPosition);
     dashStartPosition = currentPosition;
     isDash = true;
-    
+    currentEnemy = EnemyState::DASH;
     dashCooldownTimer = dashCooldown; // 대쉬 후 쿨다운 재설정
 }
 
 
-void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance,
+void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
+    const sf::Vector2f& playerPosition,
+    float xDistance,
     float yDistance)
 {
+    const float minDistance=175.f;
+    
     // Y축 조정
     if(player&&!player->IsJumping())
     {
@@ -221,9 +229,15 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Ve
         }
     }
     
-    // X축으로 접근하지만 플레이어와 200 이상의 거리 유지
-    if (xDistance > 175) {
+    
+    if (xDistance > minDistance) {
+        currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
+    }
+    
+    else if (xDistance < minDistance - 200) { 
         currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
     }
     currentEnemy = EnemyState::MOVE;
+
+    
 }
