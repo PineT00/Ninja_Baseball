@@ -17,7 +17,7 @@ void WindyPlane::Init()
 
 	// Hit, Attack Box
 	attackBox.setFillColor(sf::Color::Red);
-	attackBox.setSize({ 400,80 });
+	attackBox.setSize({ 400,80 }); 
 	attackBox.setOrigin({ 0.f, 150.f });
 
 	rangedAttackBox.setFillColor(sf::Color::Blue);
@@ -149,7 +149,6 @@ void WindyPlane::Init()
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], 6, deathEvent);
 
 
-
 	// FindGo
 	sceneDevBoss = dynamic_cast<SceneDevBoss*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss));
 	player = dynamic_cast<Player*>(sceneDevBoss->FindGameObject("player"));
@@ -158,8 +157,6 @@ void WindyPlane::Init()
 void WindyPlane::Reset()
 {
 	SetOrigin(Origins::BC);
-
-
 }
 
 void WindyPlane::Update(float dt)
@@ -171,9 +168,6 @@ void WindyPlane::Update(float dt)
 	rangedAttackBox.setPosition(position);
 	hitBox.setPosition(position);
 
-	ChasePlayer(dt);
-
-
 	// HP 마다 상태가 바뀐다.
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
 	{
@@ -181,6 +175,22 @@ void WindyPlane::Update(float dt)
 		std::cout << hp << std::endl;
 	}
 
+	if (InputManager::GetKeyDown(sf::Keyboard::Numpad1))
+	{
+		currentStatus = WindyPlaneStatus::DAMAGED;
+	}
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Numpad2))
+	{
+		currentStatus = WindyPlaneStatus::GUN;
+	}
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Numpad3))
+	{
+		currentStatus = WindyPlaneStatus::WIND;
+
+		//UpdateWindAttack(dt);
+	}
 
 	switch (currentPartsStatus)
 	{
@@ -203,11 +213,14 @@ void WindyPlane::Update(float dt)
 				if (dist <= 200)
 				{
 					// OneTwo
+					currentStatus = WindyPlaneStatus::UPPERCUT;
+				}
+				else if (dist <= 400)
+				{
 					currentStatus = WindyPlaneStatus::ONETWO;
 				}
 				else if (dist <= 600)
 				{
-					// Straight
 					currentStatus = WindyPlaneStatus::STRAIGHT;
 				}
 			}
@@ -224,7 +237,7 @@ void WindyPlane::Update(float dt)
 		break;
 	}
 
-
+	ChasePlayer(dt);
 	PlayAnimation(currentPartsStatus, currentStatus);
 }
 
@@ -269,58 +282,90 @@ void WindyPlane::ChasePlayer(float dt)
 	{
 		direction = Utils::MyMath::GetNormal(player->GetPosition() - position);
 	}
+	std::cout << Utils::MyMath::GetNormal(direction + up).x << ":" << Utils::MyMath::GetNormal(direction + up).y << std::endl;
 
-	direction.x < 0 ? SetFlipX(false) : SetFlipX(true);
+	if (currentStatus == WindyPlaneStatus::WIND || currentStatus == WindyPlaneStatus::GUN)
+	{
+		if (!isAscending)
+		{
+			isAscending = true;
+			windDirection = Utils::MyMath::GetNormal(direction + up);
+		}
 
-	Translate(direction * speed * dt);
+		windDirection.x < 0 ? SetFlipX(false) : SetFlipX(true);
+
+		Translate(windDirection * currentSpeed * dt);
+	}
+	else
+	{
+		isAscending = false;
+
+		direction.x < 0 ? SetFlipX(false) : SetFlipX(true);
+
+		Translate(direction * currentSpeed * dt);
+	}
 }
 
-void WindyPlane::AttackOneTwo()
+void WindyPlane::AttackOneTwo() 
 {
+	currentStatus = WindyPlaneStatus::ONETWO;
 }
 
 void WindyPlane::AttackStraight()
 {
+	currentStatus = WindyPlaneStatus::STRAIGHT;
 }
 
 void WindyPlane::AttackUpperCut()
 {
+	currentStatus = WindyPlaneStatus::UPPERCUT;
 }
 
 void WindyPlane::AttackWind()
 {
-	//currentStatus = Status::WINDATTACK;
+	currentStatus = WindyPlaneStatus::WIND;
 
-	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
+	originalY = position.y;
+	isAscending = true;
+	isWindAttacking = true;
+
 	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
+//void WindyPlane::UpdateWindAttack(float dt)
+//{
+//	if (isAscending) 
+//	{
+//		
+//	}
+//	else
+//	{
+//		
+//	}
+//}
+
 void WindyPlane::AttackGun()
 {
-	//currentStatus = Status::GUNATTACK;
+	currentStatus = WindyPlaneStatus::GUN;
 
-	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
 	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
 void WindyPlane::AttackGunReady()
 {
+	currentStatus = WindyPlaneStatus::GUNREADY;
 }
 
 void WindyPlane::AttackOneTwoEvent()
 {
+	currentSpeed = speed;
+
 	if (hitCount <= 2)
 	{
 		currentStatus = WindyPlaneStatus::IDLE;
 	}
 	// 이 부분 모두 다르게 구성 필요
-	if (attackBox.getGlobalBounds().intersects(player->GetHitBox())) // 플레이어가 무적이 아닐 경우도 추가 필요
+	if (attackBox.getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) // 플레이어가 무적이 아닐 경우도 추가 필요
 	{
 		++hitCount;
 		player->getHit = true;
@@ -331,58 +376,55 @@ void WindyPlane::AttackOneTwoEvent()
 
 void WindyPlane::AttackStraightEvent()
 {
-	if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
+	currentSpeed = currentStatus == WindyPlaneStatus::STRAIGHT ? speed * 3.f : speed;
 
-	CheckEndFrame();
+	ApplyAttackEvent(true);
+
 }
 
 void WindyPlane::AttackUpperCutEvent()
 {
-	if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
+	currentSpeed = speed;
 
-	CheckEndFrame();
+	ApplyAttackEvent(true);
 }
 
 
 void WindyPlane::AttackWindEvent()
 {
 	// 윈드 이펙트 표시 필요
+	currentSpeed = speed;
 
-	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
-	
-	CheckEndFrame();
+	ApplyAttackEvent(true);
 }
 
 void WindyPlane::AttackGunEvent()
 {
 	// 총 이펙트 표시 필요
+	currentSpeed = speed;
 
-	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
-
-	CheckEndFrame();
+	ApplyAttackEvent(true);
 }
 
 void WindyPlane::AttackGunReadyEvent()
 {
-	int totalFrame = animator.GetCurrentClip()->GetTotalFrame();
+	int totalFrame = animator.GetCurrentClip()->GetTotalFrame() - 1;
 	int currentFrame = animator.GetCurrentClipFrame();
 
 	if (currentFrame == totalFrame)
 	{
 		currentStatus = WindyPlaneStatus::GUN;
 	}
+}
+
+void WindyPlane::ApplyAttackEvent(bool isRanged = false)
+{
+	if ((isRanged ? rangedAttackBox : attackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) 
+	{
+		player->getHit = true;
+	}
+
+	CheckEndFrame();
 }
 
 void WindyPlane::FindPlayer()
@@ -448,5 +490,10 @@ void WindyPlane::CheckEndFrame()
 	if (currentFrame == totalFrame)
 	{
 		currentStatus = WindyPlaneStatus::IDLE;
+	}
+
+	if (currentStatus == WindyPlaneStatus::IDLE)
+	{
+		currentSpeed = speed;
 	}
 }

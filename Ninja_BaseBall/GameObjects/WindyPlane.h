@@ -66,6 +66,8 @@ protected:
 	
 	sf::Vector2f windowSize;
 	sf::Vector2f direction = { 1.f, 0.f };
+	sf::Vector2f windDirection;
+	sf::Vector2f up = { 0, -1.f };
 	
 	sf::Sprite spriteEffect;
 
@@ -74,6 +76,7 @@ protected:
 	sf::RectangleShape rangedAttackBox;
 
 	float speed = 100.f;
+	float currentSpeed = speed;
 	float findTimer = 0.f;
 	float findInterval = 3.f;
 	float statusTimer = 0.f;
@@ -85,6 +88,9 @@ protected:
 	int hitCount = 0;
 
 	bool isAlive = true;
+	bool isAscending = false; // 현재 상승 중인지 여부
+
+
 
 public:
 	WindyPlane(const std::string& name = "windyplane");
@@ -96,6 +102,9 @@ public:
 	void Draw(sf::RenderWindow& window);
 
 	void SetFlipX(bool flipX) override;
+
+	// Test
+	void UpdateWindAttack(float dt);
 
 	// 보스 움직임 패턴들
 	void ChasePlayer(float dt);
@@ -115,6 +124,9 @@ public:
 	void AttackWindEvent();
 	void AttackGunEvent();
 	void AttackGunReadyEvent();
+
+	void ApplyAttackEvent(bool isRanged);
+
 
 	// 플레이어 찾기
 	void FindPlayer();
