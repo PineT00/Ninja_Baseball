@@ -29,8 +29,7 @@ void WindyPlane::Init()
 	hitBox.setOrigin({ 35.f, 150.f });
 
 
-	// Phase1
-
+	// 데이터 테이블로 가져온 클립 추가
 	clipInfos.resize(PARTS_STATUS_COUNT + 1);
 
 	for (int parts = 0; parts < PARTS_STATUS_COUNT; ++parts)
@@ -49,16 +48,111 @@ void WindyPlane::Init()
 	// clipInfos[parts].clips : 상태별 클립 모음
 	// clipInfos[parts].clipStatus : 상태별 클립 사용 여부
 
-	//Wing
-	std::function<void()> punchOneShotEvent = std::bind(&WindyPlane::PunchOneTimeEvent, this);
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[0], 2, punchOneShotEvent);
+	//Wing Event
+	std::function<void()> onDamagedEvent = std::bind(&WindyPlane::OnDamagedEvent, this);
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::DAMAGED], 3, onDamagedEvent);
+
+	std::function<void()> attackOneTwo = std::bind(&WindyPlane::AttackOneTwoEvent, this);
+	for (int i = 12; i <= 15; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	std::function<void()> attackStraight = std::bind(&WindyPlane::AttackStraightEvent, this);
+	for (int i = 19; i <= 30; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+	std::function<void()> attackUpperCut = std::bind(&WindyPlane::AttackUpperCutEvent, this);
+	for (int i = 5; i <= 8; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
+	}
+
+	std::function<void()> attackWind = std::bind(&WindyPlane::AttackWindEvent, this);
+	for (int i = 0; i <= 5; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::WIND], i, attackWind);
+	}
+
+	std::function<void()> attackGun = std::bind(&WindyPlane::AttackGunEvent, this);
+	for (int i = 0; i <= 5; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::GUN], i, attackGun);
+	}
+
+
+
+	//NoWing Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	for (int i = 6; i <= 14; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 8; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+	for (int i = 5; i <= 8; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
+	}
+
+	std::function<void()> attackGunReady = std::bind(&WindyPlane::AttackGunReadyEvent, this);
+	for (int i = 0; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::GUNREADY], i, attackGunReady);
+	}
+	
+	for (int i = 0; i <= 5; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::GUN], i, attackGun);
+	}
+
+
+
+	//NoProp Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	for (int i = 6; i <= 15; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 8; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+	for (int i = 5; i <= 8; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
+	}
+
+	//OneArm Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	for (int i = 8; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+
+	//NoArm Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	std::function<void()> deathEvent = std::bind(&WindyPlane::OnDieEvent, this);
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], 6, deathEvent);
+
 
 
 	// FindGo
 	sceneDevBoss = dynamic_cast<SceneDevBoss*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss));
 	player = dynamic_cast<Player*>(sceneDevBoss->FindGameObject("player"));
-
-
 }
 
 void WindyPlane::Reset()
@@ -79,13 +173,46 @@ void WindyPlane::Update(float dt)
 
 	ChasePlayer(dt);
 
+
+	// HP 마다 상태가 바뀐다.
+	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
+	{
+		hp = hp - maxHp * 0.2f;
+		std::cout << hp << std::endl;
+	}
+
+
 	switch (currentPartsStatus)
 	{
 	case BossPartsStatus::Wing:
-		break;
 	case BossPartsStatus::NoWing:
-		break;
 	case BossPartsStatus::NoProp:
+	{
+		if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+		{
+			statusTimer += dt;
+
+			if (statusTimer >= statusInterval)
+			{
+				float dist = Utils::MyMath::Distance(player->GetPosition(), position);
+				std::cout << dist << std::endl;
+
+				statusTimer = 0.f;
+				hitCount = 0;
+
+				if (dist <= 200)
+				{
+					// OneTwo
+					currentStatus = WindyPlaneStatus::ONETWO;
+				}
+				else if (dist <= 600)
+				{
+					// Straight
+					currentStatus = WindyPlaneStatus::STRAIGHT;
+				}
+			}
+		}
+	}
 		break;
 	case BossPartsStatus::OneArm:
 		break;
@@ -97,7 +224,8 @@ void WindyPlane::Update(float dt)
 		break;
 	}
 
-	PlayAnimation(currentPartsStatus);
+
+	PlayAnimation(currentPartsStatus, currentStatus);
 }
 
 void WindyPlane::Draw(sf::RenderWindow& window)
@@ -147,29 +275,19 @@ void WindyPlane::ChasePlayer(float dt)
 	Translate(direction * speed * dt);
 }
 
-void WindyPlane::PunchOneTime()
+void WindyPlane::AttackOneTwo()
 {
-	//currentStatus = Status::PUNCHONESHOT;
-	// 2번 프레임에 맞는 포인트에 있으면 맞음
 }
 
-void WindyPlane::PunchTwoTime()
+void WindyPlane::AttackStraight()
 {
-	//currentStatus = Status::PUNCHTWOSHOT;
 }
 
-void WindyPlane::GunAttack()
+void WindyPlane::AttackUpperCut()
 {
-	//currentStatus = Status::GUNATTACK;
-
-	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
-	{
-		player->getHit = true;
-	}
-	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
-void WindyPlane::WindAttack()
+void WindyPlane::AttackWind()
 {
 	//currentStatus = Status::WINDATTACK;
 
@@ -180,55 +298,91 @@ void WindyPlane::WindAttack()
 	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
-void WindyPlane::Crying()
+void WindyPlane::AttackGun()
 {
+	//currentStatus = Status::GUNATTACK;
 
+	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
+	{
+		player->getHit = true;
+	}
+	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
-void WindyPlane::PunchOneTimeEvent()
+void WindyPlane::AttackGunReady()
+{
+}
+
+void WindyPlane::AttackOneTwoEvent()
+{
+	if (hitCount <= 2)
+	{
+		currentStatus = WindyPlaneStatus::IDLE;
+	}
+	// 이 부분 모두 다르게 구성 필요
+	if (attackBox.getGlobalBounds().intersects(player->GetHitBox())) // 플레이어가 무적이 아닐 경우도 추가 필요
+	{
+		++hitCount;
+		player->getHit = true;
+	}
+
+	CheckEndFrame();
+}
+
+void WindyPlane::AttackStraightEvent()
 {
 	if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
 	{
 		player->getHit = true;
 	}
-	//currentStatus = Status::CHASE;
 
-	std::cout << "WING IDLE TEST" << std::endl;
+	CheckEndFrame();
 }
 
-void WindyPlane::PunchTwoTimeEvent()
+void WindyPlane::AttackUpperCutEvent()
 {
 	if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+	{
+		player->getHit = true;
+	}
+
+	CheckEndFrame();
+}
+
+
+void WindyPlane::AttackWindEvent()
+{
+	// 윈드 이펙트 표시 필요
+
+	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
 	{
 		player->getHit = true;
 	}
 	
-	if (!isTwice)
+	CheckEndFrame();
+}
+
+void WindyPlane::AttackGunEvent()
+{
+	// 총 이펙트 표시 필요
+
+	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
 	{
-		isTwice = true;
+		player->getHit = true;
 	}
-	else
+
+	CheckEndFrame();
+}
+
+void WindyPlane::AttackGunReadyEvent()
+{
+	int totalFrame = animator.GetCurrentClip()->GetTotalFrame();
+	int currentFrame = animator.GetCurrentClipFrame();
+
+	if (currentFrame == totalFrame)
 	{
-		isTwice = false;
-		//currentStatus = Status::CHASE;
+		currentStatus = WindyPlaneStatus::GUN;
 	}
-}
-
-void WindyPlane::GunAttackEvent()
-{
-	// 프레임이 끝날 때 실행
-	//currentStatus = Status::CHASE;
-}
-
-void WindyPlane::WindAttackEvent()
-{
-	// 프레임이 끝날 때 실행 
-	//currentStatus = Status::CHASE;
-}
-
-void WindyPlane::CryingEvent()
-{
-	//currentStatus = Status::DEAD;
 }
 
 void WindyPlane::FindPlayer()
@@ -240,24 +394,59 @@ void WindyPlane::OnDamaged(float damage)
 {
 }
 
-void WindyPlane::OnDie()
+void WindyPlane::OnDamagedEvent()
 {
+	currentStatus = WindyPlaneStatus::IDLE;
 }
 
-void WindyPlane::PlayAnimation(BossPartsStatus status)
+void WindyPlane::OnDie()
 {
-	currentClipInfo = clipInfos[(int)status];
+	isAlive = false;
+	currentStatus = WindyPlaneStatus::DEATH;
+}
 
-	for (int i = 0; i < currentClipInfo.clips.size(); ++i)
+void WindyPlane::OnDieEvent()
+{
+	SetActive(false);
+}
+
+void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus planeStatus)
+{
+	 //상태마다 재생 애니메이션이 바뀐다.
+
+	if (hp <= maxHp * 0.2f)
 	{
-		if (currentClipInfo.clipStatus[i])
-		{
-			currentClipId = currentClipInfo.clips[i];
-		}
+		currentPartsStatus = BossPartsStatus::NoArm;
+		currentStatus = WindyPlaneStatus::FINAL;
+	}
+	else if (hp <= maxHp * 0.4f)
+	{
+		currentPartsStatus = BossPartsStatus::OneArm;
+	}
+	else if (hp <= maxHp * 0.6f)
+	{
+		currentPartsStatus = BossPartsStatus::NoProp;
+	}
+	else if (hp <= maxHp * 0.8f)
+	{
+		currentPartsStatus = BossPartsStatus::NoWing;
 	}
 
-	if (animator.GetCurrentClipId() != currentClipId)
+	if (animator.GetCurrentClipId() != clipInfos[(int)currentPartsStatus].clips[(int)currentStatus])
 	{
+		currentClipId = clipInfos[(int)currentPartsStatus].clips[(int)currentStatus];
+
 		animator.Play(currentClipId);
+	}
+}
+
+void WindyPlane::CheckEndFrame()
+{
+	int totalFrame = animator.GetCurrentClip()->GetTotalFrame() - 1;
+	int currentFrame = animator.GetCurrentClipFrame();
+
+	if (currentFrame == totalFrame)
+	{
+		currentStatus = WindyPlaneStatus::IDLE;
 	}
 }

@@ -10,7 +10,20 @@ struct BossData;
 class WindyPlane : public SpriteGo
 {
 public :
-	
+	enum class WindyPlaneStatus
+	{
+		IDLE,
+		DAMAGED,
+		ONETWO,
+		STRAIGHT,
+		UPPERCUT,
+		WIND,
+		GUN,
+		GUNREADY,
+		FINAL,
+		DEATH
+	};
+
 	struct ClipInfo
 	{
 		BossPartsStatus partsStatus;
@@ -41,6 +54,7 @@ protected:
 	Animator effectAnimator;
 	ClipInfo currentClipInfo;
 	BossPartsStatus currentPartsStatus = BossPartsStatus::Wing;
+	WindyPlaneStatus currentStatus = WindyPlaneStatus::IDLE;
 
 	std::string currentClipId;
 
@@ -59,14 +73,18 @@ protected:
 	sf::RectangleShape attackBox;
 	sf::RectangleShape rangedAttackBox;
 
-	float speed = 150.f;
+	float speed = 100.f;
 	float findTimer = 0.f;
 	float findInterval = 3.f;
 	float statusTimer = 0.f;
 	float statusInterval = 1.f;
 
+	float maxHp = 2000.f;
+	float hp = maxHp;
+
+	int hitCount = 0;
+
 	bool isAlive = true;
-	bool isTwice = false;
 
 public:
 	WindyPlane(const std::string& name = "windyplane");
@@ -83,26 +101,32 @@ public:
 	void ChasePlayer(float dt);
 
 	// 보스 공격 패턴들
-	void PunchOneTime();
-	void PunchTwoTime();
-	void GunAttack();
-	void WindAttack();
-	void Crying();
+	void AttackOneTwo();
+	void AttackStraight();
+	void AttackUpperCut();
+	void AttackWind();
+	void AttackGun(); // NoWing은 AttackGunReady -> AttackGun
+	void AttackGunReady();
 	
 	// 보스 공격 패턴 이벤트들
-	void PunchOneTimeEvent();
-	void PunchTwoTimeEvent();
-	void GunAttackEvent();
-	void WindAttackEvent();
-	void CryingEvent();
+	void AttackOneTwoEvent();
+	void AttackStraightEvent();
+	void AttackUpperCutEvent();
+	void AttackWindEvent();
+	void AttackGunEvent();
+	void AttackGunReadyEvent();
 
 	// 플레이어 찾기
 	void FindPlayer();
 
 	// 피격
 	void OnDamaged(float damage);
+	void OnDamagedEvent();
 	void OnDie();
+	void OnDieEvent();
 
 	// 상태
-	void PlayAnimation(BossPartsStatus status);
+	//void LoadAllEvents();
+	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
+	void CheckEndFrame();
 };
