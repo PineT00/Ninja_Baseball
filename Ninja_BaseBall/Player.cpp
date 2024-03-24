@@ -69,6 +69,12 @@ void Player::DashAttack()
 	inputOn = false;
 }
 
+void Player::DynamiteKick()
+{
+	animator.Play("Animations/player/player_DynamiteKick.csv");
+	//inputOn = false;
+}
+
 void Player::Init()
 {
 	SpriteGo::Init();
@@ -319,10 +325,10 @@ void Player::Update(float dt)
 		{
 			hitTime += dt;
 			isGrounded = false;
-			jumpY = GetPosition().y;
-			Death();
+			jumpY = GetPosition().y + 100.f;
 			velocity.y = -800.f;
 			jumpDirection = -(sprite.getScale().x);
+			Death();
 		}
 		else
 		{
@@ -337,6 +343,7 @@ void Player::Update(float dt)
 	if (!isAlive && isGrounded && animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
 	{
 		animator.Play("Animations/player/player_Death2.csv");
+		//inputOn = false;
 	}
 
 	if (hitTime > hitTimer)
@@ -494,6 +501,19 @@ void Player::Update(float dt)
 				attackTime = 2.f;
 			}
 		}
+
+		//다이너마이트 킥
+		if (InputManager::GetKey(sf::Keyboard::Q))
+		{
+			if (InputManager::GetKeyDown(sf::Keyboard::W))
+			{
+				DynamiteKick();
+				attackTime = 2.f;
+			}
+
+		}
+
+
 
 		//콤보 기록용
 		if (InputManager::GetKeyDown(sf::Keyboard::L))
