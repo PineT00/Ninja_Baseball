@@ -642,6 +642,21 @@ void Player::Update(float dt)
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
 
 
+	if (InputManager::GetKeyDown(sf::Keyboard::Num0))
+	{
+		isImpacted = true;
+	}
+
+
+	//if (isImpacted) {
+	//	sf::Time impactTime = impactClock.getElapsedTime();
+	//	if (impactTime.asSeconds() >= impactTimer) {
+	//		// 타격 시간이 종료되면 게임이 다시 진행됨
+	//		isImpacted = false;
+	//	}
+	//}
+
+
 	//잔상효과
 	trailDuration -= dt;
 

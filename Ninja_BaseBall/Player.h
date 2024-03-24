@@ -31,6 +31,10 @@ public:
 	int hp = maxHp;
 	int dmg = 20;
 
+	//impactTime
+	bool isImpacted = false;
+	float impactTimer = 0.5f;
+
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
@@ -98,6 +102,10 @@ protected:
 
 	//Turn Input on / off
 	bool inputOn = true;
+
+
+
+
 
 	SpriteGo playerShadow;
 	sf::Sprite OnHitEffect;

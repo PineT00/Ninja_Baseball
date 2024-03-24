@@ -321,6 +321,7 @@ void Player2::Update(float dt)
 
 	if (getHit && !hitTimeOn && !invincible)
 	{
+		player->isImpacted = true;
 		inputOn = false;
 		hitTimeOn = true;
 
