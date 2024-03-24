@@ -1,0 +1,20 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_onetwo.bmp,0,0,688.453,591.121,9,374.299,587.412
+graphics/4_Boss/boss_onetwo.bmp,910.554,0,532.798,595.062,9,202.596,585.386
+graphics/4_Boss/boss_onetwo.bmp,1645.34,0,526.146,596.271,9,207.96,586.985
+graphics/4_Boss/boss_onetwo.bmp,2401.33,0,505.472,592.743,9,192.348,587.631
+graphics/4_Boss/boss_onetwo.bmp,3136.21,0,514.418,592.104,9,197.039,587.624
+graphics/4_Boss/boss_onetwo.bmp,3868.55,0,519.316,589.941,9,205.135,587.263
+graphics/4_Boss/boss_onetwo.bmp,4617.41,0,510.742,590.108,9,197.2,587.024
+graphics/4_Boss/boss_onetwo.bmp,5251.56,0,638.228,589.565,9,302.62,587.951
+graphics/4_Boss/boss_onetwo.bmp,5919.94,0,706.867,589.084,9,373.775,587.47
+graphics/4_Boss/boss_onetwo.bmp,6731.61,0,638.048,589.233,9,301.907,587.175
+graphics/4_Boss/boss_onetwo.bmp,7583.01,0,526.915,591.705,9,191.087,587.427
+graphics/4_Boss/boss_onetwo.bmp,8201.18,0,647.413,593.844,9,312.35,588.151
+graphics/4_Boss/boss_onetwo.bmp,8882.53,0,708.986,590.958,9,370.841,587.533
+graphics/4_Boss/boss_onetwo.bmp,9682.71,0,649.587,590.025,9,310.857,586.714
+graphics/4_Boss/boss_onetwo.bmp,10537.1,0,533.062,590.646,9,196.37,587.035
+graphics/4_Boss/boss_onetwo.bmp,11272.5,0,516.6,589.779,9,200.927,586.577

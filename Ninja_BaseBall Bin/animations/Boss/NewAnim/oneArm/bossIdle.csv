@@ -1,0 +1,8 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,5,1,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_idle(no_one_arm).bmp,0,0,577.29,427.422,9,313.723,425.205
+graphics/4_Boss/boss_idle(no_one_arm).bmp,578.136,0,577.68,427.222,9,314.506,425.895
+graphics/4_Boss/boss_idle(no_one_arm).bmp,1173.13,0,563.48,426.314,9,297.322,425.316
+graphics/4_Boss/boss_idle(no_one_arm).bmp,1737.77,0,576.222,427.087,9,312.527,424.762

@@ -5,6 +5,7 @@
 
 class Player;
 class SceneDevBoss;
+struct BossData;
 
 class WindyPlane : public SpriteGo
 {
@@ -12,52 +13,21 @@ public :
 	
 	struct ClipInfo
 	{
-		std::string chase;
-		std::string punchOne;
-		std::string punchTwo;
-		std::string windAttack;
-		std::string gunAttack;
-		std::string crying;
-		std::string dead;
-		bool isChase = false;
-		bool isPunchOne = false;
-		bool isPunchTwo = false;
-		bool isWindAttack = false;
-		bool isGunAttack = false;
-		bool isCrying = false;
-		bool isDead = false;
+		BossPartsStatus partsStatus;
+		std::vector <std::string> clips;
+		std::vector<bool> clipStatus;
 
 		ClipInfo()
 		{
 		}
-		ClipInfo(
-			const std::string& chase, 
-			const std::string& punchOne, 
-			const std::string& punchTwo, 
-			const std::string& windAttack, 
-			const std::string& gunAttack, 
-			const std::string& crying, 
-			const std::string& dead, 
-			bool isChase, bool isPunchOne, bool isPunchTwo, bool isWindAttack,
-			bool isGunAttack, bool isCrying, bool isDead)
-			: chase(chase), punchOne(punchOne), punchTwo(punchTwo), windAttack(windAttack), gunAttack(gunAttack), crying(crying), dead(dead),
-			isChase(isChase), isPunchOne(isPunchOne), isPunchTwo(isPunchTwo), isWindAttack(isWindAttack), isGunAttack(isGunAttack), isCrying(isCrying), isDead(isDead)
+
+		ClipInfo(BossPartsStatus partsStatus, const std::vector<std::string>& clips, const std::vector<bool>& clipStatus)
+			: partsStatus(partsStatus), clips(std::move(clips)), clipStatus(std::move(clipStatus))
 		{
 		}
 	};
 
-	enum class Status
-	{
-		CHASE,
-		PUNCHONESHOT,
-		PUNCHTWOSHOT,
-		WINDATTACK,
-		GUNATTACK,
-		CRYING,
-		DEAD,
-	};
-
-	const int statusCount = 9;
+	const int PARTS_STATUS_COUNT = 5;
 
 protected:
 	WindyPlane(const WindyPlane&) = delete;
@@ -65,14 +35,16 @@ protected:
 	WindyPlane& operator=(const WindyPlane&) = delete;
 	WindyPlane& operator=(WindyPlane&&) = delete;
 
-	BossData data;
 	SceneDevBoss* sceneDevBoss = nullptr;
 	Player* player = nullptr;
 	Animator animator;
+	Animator effectAnimator;
 	ClipInfo currentClipInfo;
-	Status currentStatus = Status::CHASE;
+	BossPartsStatus currentPartsStatus = BossPartsStatus::Wing;
 
 	std::string currentClipId;
+
+	std::unordered_map<BossPartsStatus, BossData>& data;
 	std::vector<ClipInfo> clipInfos;
 	std::vector<std::function<void()>> bossAttackPatterns;
 	std::vector<std::function<void()>> bossMovePatterns;
@@ -81,6 +53,8 @@ protected:
 	sf::Vector2f windowSize;
 	sf::Vector2f direction = { 1.f, 0.f };
 	
+	sf::Sprite spriteEffect;
+
 	sf::RectangleShape hitBox;
 	sf::RectangleShape attackBox;
 	sf::RectangleShape rangedAttackBox;
@@ -130,5 +104,5 @@ public:
 	void OnDie();
 
 	// ป๓ลย
-	void PlayAnimation(Status status);
+	void PlayAnimation(BossPartsStatus status);
 };

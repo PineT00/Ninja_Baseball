@@ -5,15 +5,15 @@
 #include "rapidcsv.h"
 
 WindyPlane::WindyPlane(const std::string& name)
-	: SpriteGo(name)
+	: SpriteGo(name), data(BOSS_TABLE->Get(BossType::WINDYPLANE))
 {
-	data = BOSS_TABLE->Get(BossType::WINDYPLANE);
 }
 
 void WindyPlane::Init()
 {
 	SpriteGo::Init();
 	animator.SetTarget(&sprite);
+	effectAnimator.SetTarget(&spriteEffect);
 
 	// Hit, Attack Box
 	attackBox.setFillColor(sf::Color::Red);
@@ -29,25 +29,29 @@ void WindyPlane::Init()
 	hitBox.setOrigin({ 35.f, 150.f });
 
 
-
 	// Phase1
-	clipInfos.push_back({ data.animationChaseClipId, data.animationPunchOneClipId, data.animationPunchTwoClipId, data.animationWindAttackClipId, data.animationGunAttackClipId,	data.animationCryingClipId,	data.animationDeadClipId,
-		true,false,false,false,false,false,false });
-	clipInfos.push_back({ data.animationChaseClipId, data.animationPunchOneClipId, data.animationPunchTwoClipId, data.animationWindAttackClipId, data.animationGunAttackClipId,	data.animationCryingClipId,	data.animationDeadClipId,
-		false,true,false,false,false,false,false });
-	clipInfos.push_back({ data.animationChaseClipId, data.animationPunchOneClipId, data.animationPunchTwoClipId, data.animationWindAttackClipId, data.animationGunAttackClipId,	data.animationCryingClipId,	data.animationDeadClipId,
-		false,false,true,false,false,false,false });
-	clipInfos.push_back({ data.animationChaseClipId, data.animationPunchOneClipId, data.animationPunchTwoClipId, data.animationWindAttackClipId, data.animationGunAttackClipId,	data.animationCryingClipId,	data.animationDeadClipId,
-		false,false,false,true,false,false,false });
-	clipInfos.push_back({ data.animationChaseClipId, data.animationPunchOneClipId, data.animationPunchTwoClipId, data.animationWindAttackClipId, data.animationGunAttackClipId,	data.animationCryingClipId,	data.animationDeadClipId,
-		false,false,false,false,true,false,false });
-	clipInfos.push_back({ data.animationChaseClipId, data.animationPunchOneClipId, data.animationPunchTwoClipId, data.animationWindAttackClipId, data.animationGunAttackClipId,	data.animationCryingClipId,	data.animationDeadClipId,
-		false,false,false,false,false,true,false });
 
+	clipInfos.resize(PARTS_STATUS_COUNT + 1);
+
+	for (int parts = 0; parts < PARTS_STATUS_COUNT; ++parts)
+	{
+		clipInfos[parts].partsStatus = static_cast<BossPartsStatus>(parts);
+
+		for (int clipCount = 0; clipCount < data[clipInfos[parts].partsStatus].files.size(); ++clipCount)
+		{
+			clipInfos[parts].clips.push_back(data[clipInfos[parts].partsStatus].files[clipCount]); // 클립 추가
+			bool status = parts == clipCount ? true : false;
+			clipInfos[parts].clipStatus.push_back(status);
+		}
+	}
+
+	// clipInfos[parts] : 상태별 모음
+	// clipInfos[parts].clips : 상태별 클립 모음
+	// clipInfos[parts].clipStatus : 상태별 클립 사용 여부
+
+	//Wing
 	std::function<void()> punchOneShotEvent = std::bind(&WindyPlane::PunchOneTimeEvent, this);
-	animator.AddEvent(data.animationPunchOneClipId, 2, punchOneShotEvent);
-
-	// Phase2
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[0], 2, punchOneShotEvent);
 
 
 	// FindGo
@@ -75,80 +79,25 @@ void WindyPlane::Update(float dt)
 
 	ChasePlayer(dt);
 
-	switch (currentStatus)
+	switch (currentPartsStatus)
 	{
-	case WindyPlane::Status::CHASE:
-	{
-		if (attackBox.getGlobalBounds().intersects(player->GetHitBox()))
-		{
-			statusTimer += dt;
-			if (statusTimer >= statusInterval)
-			{
-				statusTimer = 0.f;
-				currentStatus = Status::PUNCHONESHOT;
-			}
-		}
-	}
+	case BossPartsStatus::Wing:
 		break;
-	case WindyPlane::Status::PUNCHONESHOT:
-	{
-		PunchOneTime();
-	}
+	case BossPartsStatus::NoWing:
 		break;
-	case WindyPlane::Status::PUNCHTWOSHOT:
-	{
-		PunchTwoTime();
-	}
+	case BossPartsStatus::NoProp:
 		break;
-	case WindyPlane::Status::WINDATTACK:
-	{
-		WindAttack();
-	}
+	case BossPartsStatus::OneArm:
 		break;
-	case WindyPlane::Status::GUNATTACK:
-	{
-		GunAttack();
-	}
+	case BossPartsStatus::NoArm:
 		break;
-	case WindyPlane::Status::CRYING:
-	{
-		Crying();
-	}
+	case BossPartsStatus::UNDEFINED:
 		break;
-	case WindyPlane::Status::DEAD:
-	{
-
-	}
+	default:
 		break;
 	}
 
-	// Test Code
-	if (InputManager::GetKeyUp(sf::Keyboard::Num1))
-	{
-		currentStatus = Status::CHASE;
-	}
-	else if (InputManager::GetKeyUp(sf::Keyboard::Num2))
-	{
-		currentStatus = Status::PUNCHONESHOT;
-	}
-	else if (InputManager::GetKeyUp(sf::Keyboard::Num3))
-	{
-		currentStatus = Status::PUNCHTWOSHOT;
-	}
-	else if (InputManager::GetKeyUp(sf::Keyboard::Num4))
-	{
-		currentStatus = Status::WINDATTACK;
-	}
-	else if (InputManager::GetKeyUp(sf::Keyboard::Num5))
-	{
-		currentStatus = Status::GUNATTACK;
-	}
-	else if (InputManager::GetKeyUp(sf::Keyboard::Num6))
-	{
-		currentStatus = Status::CRYING;
-	}
-
-	PlayAnimation(currentStatus);
+	PlayAnimation(currentPartsStatus);
 }
 
 void WindyPlane::Draw(sf::RenderWindow& window)
@@ -166,16 +115,15 @@ void WindyPlane::SetFlipX(bool flipX)
 
 	if (flipX)
 	{
-		attackBox.setScale({ -scale.x, scale.y });
-		rangedAttackBox.setScale({ -scale.x, scale.y });
-		hitBox.setScale({ -scale.x, scale.y });
-	}
-	else
-	{
 		attackBox.setScale({ scale.x, scale.y });
 		rangedAttackBox.setScale({ scale.x, scale.y });
 		hitBox.setScale({ scale.x, scale.y });
-
+	}
+	else
+	{
+		attackBox.setScale({ -scale.x, scale.y });
+		rangedAttackBox.setScale({ -scale.x, scale.y });
+		hitBox.setScale({ -scale.x, scale.y });
 	}
 }
 
@@ -189,45 +137,47 @@ void WindyPlane::ChasePlayer(float dt)
 		FindPlayer();
 	}
 
-	if (abs(player->GetPosition().y - position.y) < 20)
+	if (abs(player->GetPosition().y - position.y) < 10)
 	{
 		direction = Utils::MyMath::GetNormal(player->GetPosition() - position);
 	}
 
-	direction.x < 0 ? SetFlipX(true) : SetFlipX(false);
+	direction.x < 0 ? SetFlipX(false) : SetFlipX(true);
 
 	Translate(direction * speed * dt);
 }
 
 void WindyPlane::PunchOneTime()
 {
-	currentStatus = Status::PUNCHONESHOT;
+	//currentStatus = Status::PUNCHONESHOT;
 	// 2번 프레임에 맞는 포인트에 있으면 맞음
 }
 
 void WindyPlane::PunchTwoTime()
 {
-	currentStatus = Status::PUNCHTWOSHOT;
+	//currentStatus = Status::PUNCHTWOSHOT;
 }
 
 void WindyPlane::GunAttack()
 {
-	currentStatus = Status::GUNATTACK;
+	//currentStatus = Status::GUNATTACK;
 
 	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
 	{
 		player->getHit = true;
 	}
+	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
 void WindyPlane::WindAttack()
 {
-	currentStatus = Status::WINDATTACK;
+	//currentStatus = Status::WINDATTACK;
 
 	if (rangedAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
 	{
 		player->getHit = true;
 	}
+	// rangedAttackBox 내에 이펙트를 재생시켜야 함
 }
 
 void WindyPlane::Crying()
@@ -241,7 +191,9 @@ void WindyPlane::PunchOneTimeEvent()
 	{
 		player->getHit = true;
 	}
-	currentStatus = Status::CHASE;
+	//currentStatus = Status::CHASE;
+
+	std::cout << "WING IDLE TEST" << std::endl;
 }
 
 void WindyPlane::PunchTwoTimeEvent()
@@ -258,25 +210,25 @@ void WindyPlane::PunchTwoTimeEvent()
 	else
 	{
 		isTwice = false;
-		currentStatus = Status::CHASE;
+		//currentStatus = Status::CHASE;
 	}
 }
 
 void WindyPlane::GunAttackEvent()
 {
 	// 프레임이 끝날 때 실행
-	currentStatus = Status::CHASE;
+	//currentStatus = Status::CHASE;
 }
 
 void WindyPlane::WindAttackEvent()
 {
 	// 프레임이 끝날 때 실행 
-	currentStatus = Status::CHASE;
+	//currentStatus = Status::CHASE;
 }
 
 void WindyPlane::CryingEvent()
 {
-	currentStatus = Status::DEAD;
+	//currentStatus = Status::DEAD;
 }
 
 void WindyPlane::FindPlayer()
@@ -292,17 +244,17 @@ void WindyPlane::OnDie()
 {
 }
 
-void WindyPlane::PlayAnimation(Status status)
+void WindyPlane::PlayAnimation(BossPartsStatus status)
 {
 	currentClipInfo = clipInfos[(int)status];
 
-	if (currentClipInfo.isChase) currentClipId = currentClipInfo.chase;
-	else if (currentClipInfo.isPunchOne) currentClipId = currentClipInfo.punchOne;
-	else if (currentClipInfo.isPunchTwo) currentClipId = currentClipInfo.punchTwo;
-	else if (currentClipInfo.isWindAttack) currentClipId = currentClipInfo.windAttack;
-	else if (currentClipInfo.isGunAttack) currentClipId = currentClipInfo.gunAttack;
-	else if (currentClipInfo.isCrying) currentClipId = currentClipInfo.crying;
-	else if (currentClipInfo.isDead) currentClipId = currentClipInfo.dead;
+	for (int i = 0; i < currentClipInfo.clips.size(); ++i)
+	{
+		if (currentClipInfo.clipStatus[i])
+		{
+			currentClipId = currentClipInfo.clips[i];
+		}
+	}
 
 	if (animator.GetCurrentClipId() != currentClipId)
 	{

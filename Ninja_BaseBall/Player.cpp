@@ -35,6 +35,12 @@ void Player::SetAttackOff()
 	isRightDashing = false;
 }
 
+void Player::SetKickTimeOn()
+{
+	kickTimeOn = true;
+	velocity.y = -600.f;
+}
+
 void Player::SetBox(bool flip)
 {
 	if (flip)
@@ -65,15 +71,26 @@ void Player::Death()
 
 void Player::DashAttack()
 {
+	dashAttackTimeOn = true;
 	animator.Play("Animations/player/player_DashAttack.csv");
 	inputOn = false;
 }
+
 
 void Player::OnDamage(int damage)
 {
 	getHit = true;
 	hp -= damage;
-	
+}
+
+void Player::DynamiteKick()
+{
+	jumpY = GetPosition().y;
+	kickTime = 1.f;
+	animator.Play("Animations/player/player_DynamiteKick.csv");
+	isGrounded = false;
+	//inputOn = false;
+
 }
 
 void Player::Init()
@@ -108,6 +125,7 @@ void Player::Reset()
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
+	std::function<void()>KickOn = std::bind(&Player::SetKickTimeOn, this);
 
 	animator.AddEvent("Animations/player/player_Attack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_Attack1.csv", 3, AttackOff);
@@ -124,13 +142,15 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 3, AttackOff);
 
+	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 3, KickOn);
+
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
 
 	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
 	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
 
-	//???????????
+	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
@@ -155,12 +175,12 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	//enemyHitBox = player2->GetHitBox();
+	enemyHitBox = player2->GetHitBox();
 
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 	animatorEffect.Update(dt);
-	std::cout<<position.x<<","<<position.y<<std::endl;
+
 	float v = 0;
 	float h = 0;
 
@@ -204,14 +224,14 @@ void Player::Update(float dt)
 			h = 1;
 		}
 
-		//?????
+		//대시기능
 		{
-			//???? ????????
+			//왼쪽 대시 모음
 			if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Left))
 				{
-					isLeftDashing = true; // ?뽬 ???? ????
+					isLeftDashing = true; // 대쉬 상태 활성화
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -229,13 +249,13 @@ void Player::Update(float dt)
 				isLeftDashing = false;
 			}
 
-			//?????? ????????
+			//오른쪽 대시 모음
 
 			if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Right))
 				{
-					isRightDashing = true; // ?뽬 ???? ????
+					isRightDashing = true; // 대쉬 상태 활성화
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -257,7 +277,7 @@ void Player::Update(float dt)
 	}
 
 
-	//?뽬 ?????
+	//대쉬 스피드
 	if (isRightDashing || isLeftDashing)
 	{
 		velocity.x = h * dashSpeed;
@@ -267,22 +287,20 @@ void Player::Update(float dt)
 		velocity.x = h * speed;
 	}
 
-	//????
+	//점프
 
 	if (!isGrounded)
 	{
 		if (position.y >= jumpY)
 		{
 			isGrounded = true;
-			isJumping = false;
 			SetPosition({ position.x, jumpY });
 		}
 	}
 
-	if (!isJumping&&isGrounded && !isLeftDashing && !isRightDashing && InputManager::GetKeyDown(sf::Keyboard::W))
+	if (isGrounded && !isLeftDashing && !isRightDashing && !(InputManager::GetKey(sf::Keyboard::Q)) && InputManager::GetKeyDown(sf::Keyboard::W))
 	{
 		isGrounded = false;
-		isJumping = true;
 		jumpY = GetPosition().y;
 		animator.Play("Animations/player/player_Jump.csv");
 		velocity.y = -800.f;
@@ -307,9 +325,11 @@ void Player::Update(float dt)
 		velocity.y = v * speed;
 	}
 
+
+
+	//if (getHit && !hitTimeOn && !invincible)
 	if (getHit)
 	{
-		getHit = false;
 		inputOn = false;
 		hitTimeOn = true;
 
@@ -320,12 +340,15 @@ void Player::Update(float dt)
 			isAlive = false;
 		}
 
+		invincible = true;
 	}
 
-	if (hitTimeOn)
+	if (invincible)
 	{
-		if (!isAlive)
+		invincibleTime -= dt;
+		if (invincibleTime <= 0.f)
 		{
+
 			hitTime += dt;
 			isGrounded = false;
 			isJumping = true;
@@ -340,54 +363,54 @@ void Player::Update(float dt)
 			velocity.x = -(sprite.getScale().x) * 800.f;
 			Bitted();
 
+			invincible = false;
+			invincibleTime = 1.5f;
+
 		}
 	}
 
-
-	if (!isAlive && isGrounded && animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
+	//피격시
 	{
-		animator.Play("Animations/player/player_Death2.csv");
+		if (hitTimeOn)
+		{
+			if (!isAlive)
+			{
+				hitTime += dt;
+				isGrounded = false;
+				jumpY = GetPosition().y + 100.f;
+				velocity.y = -800.f;
+				jumpDirection = -(sprite.getScale().x);
+				Death();
+			}
+			else
+			{
+				hitTime += dt;
+				velocity.x = -(sprite.getScale().x) * 800.f;
+				Bitted();
+
+			}
+		}
+
+
+		if (!isAlive && isGrounded && animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
+		{
+			animator.Play("Animations/player/player_Death2.csv");
+			//inputOn = false;
+		}
+
+		if (hitTime > hitTimer)
+		{
+			hitTimeOn = false;
+			hitTime = 0.f;
+			inputOn = true;
+			getHit = false;
+		}
+
 	}
-
-	if (hitTime > hitTimer)
-	{
-		hitTimeOn = false;
-		hitTime = 0.f;
-		inputOn = true;
-	}
+	
 
 
-	if (dashAttackTimeOn)
-	{
-		velocity.x = dashDirection * 800.f;
-		DashAttack();
-		dashAttackTime -= dt;
-	}
-	if (dashAttackTime < dashAttackTimer)
-	{
-		dashAttackTimeOn = false;
-		animator.Play("Animations/player/player_Idle.csv");
-		isLeftDashing = false;
-		isRightDashing = false;
-		dashAttackTime = 0.3f;
-		inputOn = true;
-	}
-
-
-	position += velocity * dt;
-
-	SetPosition(position);
-	playerShadow.SetPosition(GetPosition());
-
-	if (isAttack)
-	{
-		velocity = { 0.f, 0.f };
-		std::cout << isAttack << std::endl;
-	}
-
-
-
-	//??????? ????
+	//이동영역 제한
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
 		position = sceneDev1->ClampByTileMap(position);
@@ -405,8 +428,7 @@ void Player::Update(float dt)
 		attackTime -= dt;
 	}
 
-
-	//??????? ???????
+	//잡기박스와 닿았을때
 	if (!isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
@@ -426,7 +448,17 @@ void Player::Update(float dt)
 		}
 	}
 
-	//???????? ???????
+
+	
+
+
+	if (isAttack)
+	{
+
+	}
+
+
+	//공격박스와 닿았을때
 	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 
@@ -457,7 +489,7 @@ void Player::Update(float dt)
 				default:
 					break;
 			}
-			//player2->getHit;
+			player2->getHit = true;
 
 		}
 	}
@@ -470,35 +502,29 @@ void Player::Update(float dt)
 		}
 	}
 
-	if (grapBox.getGlobalBounds().intersects(player2->GetHitBox()))
+	//기술 모음
 	{
-		isGrip = true;
-		animator.Play("Animations/player/player_Grip.csv");
-	}
-
-	{
-
+		//점프중일때 기술
 		if (!isGrounded)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
-				animator.Play("Animations/player/player_JumpAttackSK.csv"); //??????????
+				animator.Play("Animations/player/player_JumpAttackSK.csv"); //점프옆차기
 				animator.PlayQueue("Animations/player/player_Jump.csv");
 			}
 		}
 
-		//???????? ???
+		//대시중일때 기술
 		if (isGrounded && (isLeftDashing || isRightDashing))
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
+				DashAttack();
 				dashDirection = h;
-				dashAttackTimeOn = true;
 			}
 		}
 
-
-		//???????? ???
+		//잡기중일때 기술
 		if (isGrip && isGrounded)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
@@ -508,20 +534,70 @@ void Player::Update(float dt)
 			}
 		}
 
-		//??? ?????
-		if (InputManager::GetKeyDown(sf::Keyboard::L))
+		//다이너마이트 킥
+		if (InputManager::GetKey(sf::Keyboard::Q))
 		{
-			InputManager::StopComboRecord();
-			InputManager::ClearCombo();
-			InputManager::ComboRecord(10.f);
+			if (InputManager::GetKeyDown(sf::Keyboard::W))
+			{
+				inputOn = false;
+				DynamiteKick();
+			}
 		}
 
-		if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
-		{
-			animator.Play("Animations/player/player_DashAttack.csv");
-			InputManager::StopComboRecord();
-		}
+
+
+		////콤보 기록용
+		//if (InputManager::GetKeyDown(sf::Keyboard::L))
+		//{
+		//	InputManager::StopComboRecord();
+		//	InputManager::ClearCombo();
+		//	InputManager::ComboRecord(10.f);
+		//}
+
+		//if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
+		//{
+		//	animator.Play("Animations/player/player_DashAttack.csv");
+		//	InputManager::StopComboRecord();
+		//}
 	}
+
+
+	//기술 움직임 처리
+	if (dashAttackTimeOn)
+	{
+		velocity.x = dashDirection * 800.f;
+		dashAttackTime -= dt;
+	}
+
+	if (dashAttackTime <= dashAttackTimer)
+	{
+		dashAttackTimeOn = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		isLeftDashing = false;
+		isRightDashing = false;
+		dashAttackTime = 0.3f;
+		inputOn = true;
+	}
+
+	if (kickTimeOn)
+	{
+		velocity.x = sprite.getScale().x * 500.f;
+		kickTime -= dt;
+	}
+
+	if (kickTime <= kickTimer)
+	{
+		kickTimeOn = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		kickTime = 1.f;
+		inputOn = true;
+	}
+
+
+	position += velocity * dt;
+
+	SetPosition(position);
+	playerShadow.SetPosition(GetPosition());
 
 
 	if (animator.GetCurrentClipId() == "Animations/player/player_Idle.csv")
@@ -569,7 +645,7 @@ void Player::Update(float dt)
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
 
 
-	//??????
+	//잔상효과
 	trailDuration -= dt;
 
 	if (trailDuration <= 0)
@@ -597,9 +673,9 @@ void Player::Update(float dt)
 		}
 		else
 		{
-			trails.erase(trails.begin()); // ???? ?????? ??? ????
+			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
 		}
-		trailDuration = 0.05f; // ??? ???? ?ð? ????
+		trailDuration = 0.05f; // 잔상 유지 시간 초기화
 	}
 }
 

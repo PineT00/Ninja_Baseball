@@ -1,0 +1,14 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,0,203.503,443.096,444.134,9,261.974,442.893
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,528.75,203.188,441.789,447.465,9,262.519,443.681
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,1069.4,210.756,394.015,441.316,9,248.802,436.113
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,1724.04,204.607,371.784,446.519,9,125.347,441.316
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,2193.48,84.4349,444.708,568.333,9,185.438,561.465
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,2716.02,42.0818,366.869,612.403,9,181.431,604.963
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,3240.86,49.98,358.227,601.872,9,182.204,596.873
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,3755.25,0,373.991,649.518,9,194.807,646.713
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,4216.33,38.638,439.45,611.58,9,261.033,608.177
+graphics/4_Boss/boss_upper_cut(no_wing_prop).bmp,4734.84,223.891,446.746,425.602,9,269.517,422.852
