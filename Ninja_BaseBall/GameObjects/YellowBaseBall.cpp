@@ -53,8 +53,9 @@ void YellowBaseBall::Reset()
     // attackBox.setPosition({GetPosition()});
     // damageBox.setPosition({GetPosition()});
 
-    std::function<void()> attackFunc = std::bind(&Enemy::Attack, this);
-    yellowBaseBallAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", 1, attackFunc);
+    std::function<void()> attackOn = std::bind(&Enemy::Attack, this);
+    yellowBaseBallAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", 1, attackOn);
+   
 }
 
 void YellowBaseBall::FixedUpdate(float dt)
@@ -107,7 +108,7 @@ void YellowBaseBall::Update(float dt)
         yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
         break;
     case EnemyState::HURT:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Hurt.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Hurt.csv");
         break;
     case EnemyState::DEAD:
         yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");

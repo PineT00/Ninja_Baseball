@@ -33,6 +33,7 @@ protected:
     bool isDead = false;
     bool isReadyToDash=false;
     bool isDash =false;
+    bool isAttack = false;
     
     float dashSpeed = 300.f;
     float dashCooldown = 3.f;
@@ -89,4 +90,5 @@ public:
     virtual void DashToPlayer(float dt, sf::Vector2f& currentPosition);
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
+
 };

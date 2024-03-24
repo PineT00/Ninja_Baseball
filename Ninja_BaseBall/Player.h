@@ -123,7 +123,7 @@ public:
 	void SetBox(bool flip);
 
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
-
+	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
 	void Bitted();
 	void Death();
 

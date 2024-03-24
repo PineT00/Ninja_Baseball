@@ -26,7 +26,7 @@ void Enemy::Reset()
     {
         position = Scene->ClampByTileMap(position);
     }
-
+    SetOrigin(Origins::BC);
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     sf::Vector2f targetPosition = player->GetPosition();
     playerPos= targetPosition;
@@ -115,10 +115,11 @@ void Enemy::DashTowards(const sf::Vector2f& target, float dt)
 
 void Enemy::Attack()
 {
-    attackTimer = attackCooldown;
+    //attackTimer = attackCooldown;
     currentEnemy = EnemyState::ATTACK;
-    if(player != nullptr)
+    if(!isAttack&&player != nullptr)
     {
+        std::cout<<"attack"<<std::endl;
         player->OnDamage(damage);
     }
     
@@ -245,3 +246,5 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
 
     
 }
+
+
