@@ -21,6 +21,8 @@ public :
     float attackDistance = 5.f;
     float acceptableYDistance = 15.f;
 
+    bool attackCoolOn = false;
+
     int hitCount=0;
     int maxHitCount=3;
     sf::Clock hitClock;
