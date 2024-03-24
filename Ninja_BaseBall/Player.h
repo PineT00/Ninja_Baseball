@@ -141,5 +141,6 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
 	bool IsJumping () const { return isJumping; }
+	bool IsInvincible() const { return invincible; }
 };
 
