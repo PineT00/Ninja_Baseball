@@ -25,12 +25,12 @@ void UiHUD::Init()
 	textFps.SetActive(false);
 	textFps.SetPosition({ referenceResolution.x, 0.f });
 
-	player1_Frame.SetTexture("");
-	player1_Name.SetTexture("");
-	player1_Portrait;
+	player1_Frame.SetTexture("graphics/6_UI/inGame/player.bmp");
+	player1_Name.SetTexture("graphics/6_UI/inGame/red_nameJOSE.bmp");
+	//player1_Portrait;
 
-	player1_Score;
-	player1_Life;
+	//player1_Score;
+	//player1_Life;
 
 
 

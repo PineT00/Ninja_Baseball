@@ -56,6 +56,8 @@ protected:
     sf::Vector2f playerPosition;
 public:
     Player* player;
+
+    void SetState();
     YellowBaseBall(const std::string& name);
     void Init() override;
     void Release() override;

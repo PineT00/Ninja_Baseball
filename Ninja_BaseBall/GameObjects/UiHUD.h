@@ -28,9 +28,9 @@ protected:
 
 	SpriteGo player1_Frame;
 	SpriteGo player1_Name;
-	sf::Sprite player1_Portrait;
-	TextGo player1_Score;
-	TextGo player1_Life;
+	//sf::Sprite player1_Portrait;
+	//TextGo player1_Score;
+	//TextGo player1_Life;
 
 
 
