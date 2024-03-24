@@ -36,7 +36,6 @@ void Enemy::Reset()
 
 void Enemy::Update(float dt)
 {
-
     if (isDead || player == nullptr) return;
     
     sf::Vector2f playerPosition = player->GetPosition();
@@ -44,7 +43,7 @@ void Enemy::Update(float dt)
     TargetDirection(playerPosition);
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
-
+    
     // dash cooldown logic
     if (dashCooldownTimer > 0) dashCooldownTimer -= dt;
 
@@ -247,4 +246,26 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
     
 }
 
+void Enemy::CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies) {
+    for (size_t i = 0; i < allEnemies.size(); ++i) {
+        for (size_t j = i + 1; j < allEnemies.size(); ++j) {
+            Enemy* enemyA = allEnemies[i];
+            Enemy* enemyB = allEnemies[j];
+
+            sf::FloatRect boundsA = enemyA->GetGlobalBounds();
+            sf::FloatRect boundsB = enemyB->GetGlobalBounds();
+
+            if (boundsA.intersects(boundsB)) {
+                sf::FloatRect overlap;
+                boundsA.intersects(boundsB, overlap);
+
+                float resolveX = overlap.width * (boundsA.left < boundsB.left ? -0.5f : 0.5f);
+                float resolveY = overlap.height * (boundsA.top < boundsB.top ? -0.5f : 0.5f);
+
+                enemyA->Move({resolveX, resolveY});
+                enemyB->Move({-resolveX, -resolveY});
+            }
+        }
+    }
+}
 
