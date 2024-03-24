@@ -67,5 +67,7 @@ public:
     void OnDamage(int damage) override;
     void TargetDirection(const sf::Vector2f& playerPosition) override;
     void Attack() override;
-    void DashToPlayer(float dt) override;
+    void DashToPlayer(float dt,sf::Vector2f& currentPosition) override;
+    void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance) override;
+    void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition) override;
 };

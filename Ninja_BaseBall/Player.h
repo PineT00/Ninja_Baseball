@@ -42,7 +42,7 @@ protected:
 	int dashDirection = 0;
 
 	sf::Vector2f velocity;
-
+	bool isJumping = false;
 	bool isGrounded = true;
 
 	//Dash
@@ -114,5 +114,6 @@ public:
 
 	void Draw(sf::RenderWindow& window) override;
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
+	bool IsJumping () const { return isJumping; }
 };
 

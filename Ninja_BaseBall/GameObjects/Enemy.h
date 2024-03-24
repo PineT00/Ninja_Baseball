@@ -31,37 +31,20 @@ protected:
     int damage = 10;
     
     bool isDead = false;
-    bool isAttack = false;
     bool isReadyToDash=false;
     bool isDash =false;
-    bool isDashing = false;
-    bool isWaiting = false;
-    bool isPosYLocked = false;
-
-    float waitTimer=0.f;
-    float waitDuration=0.5f;
-
-    float dashDuration = 0.5f;
-    float dashTimer = 0.0f;
+    
     float dashSpeed = 300.f;
     float dashCooldown = 3.f;
     float dashCooldownTimer = 0.f;
     float acceptableYDistance = 15.f;
-    float minDashDistance = 30.f;
-    float dashDistance = 50.f;
-    float maxDistance = 500.f;
-    float minDistance=200.f;
-
     float attackTimer = 0.f;
     float attackCooldown = 2.f;
-    float ySpeedIncreaseFactor = 1.5f;
     float dashYPos;
-    float dashStartY;
-    float dashStartX;
-
-    float dashDirection;
-    float dashTargetDistance;
-    float dashCurrentDistance;
+    
+    sf::Vector2f dashDirection;
+    sf::Vector2f dashStartPosition;
+    float dashMaxDistance=300;
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
@@ -78,6 +61,7 @@ public:
     void Init() override;
     void Release() override;
     void Reset() override;
+    
     void Update(float dt) override;
     void LateUpdate(float dt) override;
     void FixedUpdate(float dt) override;
@@ -98,13 +82,10 @@ public:
     static sf::Vector2f Normalize(const sf::Vector2f& source);
     virtual void TargetDirection(const sf::Vector2f& playerPosition);
     virtual void SetBox(bool flip);
-
+    
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
-    virtual void UpdateDashState(float dt);
-    virtual void DashToPlayer(float dt);
-    virtual void MoveToPlayer(float dt);
-    virtual void MoveToPlayerDiagon(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
-    virtual void MoveToPlayerX(float dt, const sf::Vector2f& targetPosition, const sf::Vector2f& currentPosition);
-    //virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
+    virtual void DashToPlayer(float dt, sf::Vector2f& currentPosition);
+    virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
+    virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
 };
