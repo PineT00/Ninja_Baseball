@@ -1,49 +1,49 @@
 {
-  "boss": {
-    "WindyPlane": {
-      "Wing": {
-        "files": [
-		  "bossIdle.csv",
-          "bossDamaged.csv",
-          "bossOneTwo.csv",
-          "bossStraight.csv",
-          "bossUpperCut.csv",
-          "bossWind.csv",
-		  "bossGun.csv"
-        ]
-      },
-	  "NoWing": {
-		"files": [
-		  "bossIdle.csv",
-		  "bossDamaged.csv",
-		  "bossOneTwo.csv",
-		  "bossStraight.csv",
-		  "bossUpperCut.csv",
-		  "bossGunReady.csv",
-		  "bossGun.csv"
-		]
-	  },
-	  "NoProp": {
-		"files":  [
-		  "bossIdle.csv",
-		  "bossDamaged.csv",
-		  "bossOneTwo.csv",
-		  "bossStraight.csv",
-		  "bossUpperCut.csv"
-		]
-	  },
-	  "OneArm": {
-		"files":  [
-		  "bossIdle.csv",
-		  "bossDamaged.csv",
-		  "bossStraight.csv"
-		]
-	  },
-	  "NoArm": {
-		"files":  [
-		  "bossDamaged.csv"
-		]
-	  },
+    "boss": {
+        "WindyPlane": {
+            "Wing": {
+                "files": [
+                    "animations/Boss/NewAnim/wing/bossIdle.csv",
+                    "animations/Boss/NewAnim/wing/bossDamaged.csv",
+                    "animations/Boss/NewAnim/wing/bossOneTwo.csv",
+                    "animations/Boss/NewAnim/wing/bossStraight.csv",
+                    "animations/Boss/NewAnim/wing/bossUpperCut.csv",
+                    "animations/Boss/NewAnim/wing/bossWind.csv",
+                    "animations/Boss/NewAnim/wing/bossGun.csv"
+                ]
+            },
+            "NoWing": {
+                "files": [
+                    "animations/Boss/NewAnim/noWing/bossIdle.csv",
+                    "animations/Boss/NewAnim/noWing/bossDamaged.csv",
+                    "animations/Boss/NewAnim/noWing/bossOneTwo.csv",
+                    "animations/Boss/NewAnim/noWing/bossStraight.csv",
+                    "animations/Boss/NewAnim/noWing/bossUpperCut.csv",
+                    "animations/Boss/NewAnim/noWing/bossGunReady.csv",
+                    "animations/Boss/NewAnim/noWing/bossGun.csv"
+                ]
+            },
+            "NoProp": {
+                "files": [
+                    "animations/Boss/NewAnim/noProp/bossIdle.csv",
+                    "animations/Boss/NewAnim/noProp/bossDamaged.csv",
+                    "animations/Boss/NewAnim/noProp/bossOneTwo.csv",
+                    "animations/Boss/NewAnim/noProp/bossStraight.csv",
+                    "animations/Boss/NewAnim/noProp/bossUpperCut.csv"
+                ]
+            },
+            "OneArm": {
+                "files": [
+                    "animations/Boss/NewAnim/oneArm/bossIdle.csv",
+                    "animations/Boss/NewAnim/oneArm/bossDamaged.csv",
+                    "animations/Boss/NewAnim/oneArm/bossStraight.csv"
+                ]
+            },
+            "NoArm": {
+                "files": [
+                    "animations/Boss/NewAnim/noArm/bossDamaged.csv"
+                ]
+            }
+        }
     }
-  }
 }
