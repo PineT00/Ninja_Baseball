@@ -35,6 +35,12 @@ void Player::SetAttackOff()
 	isRightDashing = false;
 }
 
+void Player::SetKickTimeOn()
+{
+	kickTimeOn = true;
+	velocity.y = -600.f;
+}
+
 void Player::SetBox(bool flip)
 {
 	if (flip)
@@ -72,7 +78,10 @@ void Player::DashAttack()
 
 void Player::DynamiteKick()
 {
+	jumpY = GetPosition().y;
+	kickTime = 1.f;
 	animator.Play("Animations/player/player_DynamiteKick.csv");
+	isGrounded = false;
 	//inputOn = false;
 }
 
@@ -108,6 +117,7 @@ void Player::Reset()
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
+	std::function<void()>KickOn = std::bind(&Player::SetKickTimeOn, this);
 
 	animator.AddEvent("Animations/player/player_Attack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_Attack1.csv", 3, AttackOff);
@@ -123,6 +133,8 @@ void Player::Reset()
 
 	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 3, AttackOff);
+
+	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 3, KickOn);
 
 	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
 	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
@@ -278,7 +290,7 @@ void Player::Update(float dt)
 		}
 	}
 
-	if (isGrounded && !isLeftDashing && !isRightDashing && InputManager::GetKeyDown(sf::Keyboard::W))
+	if (isGrounded && !isLeftDashing && !isRightDashing && !(InputManager::GetKey(sf::Keyboard::Q)) && InputManager::GetKeyDown(sf::Keyboard::W))
 	{
 		isGrounded = false;
 		jumpY = GetPosition().y;
@@ -307,9 +319,8 @@ void Player::Update(float dt)
 
 
 
-	if (getHit)
+	if (getHit && !hitTimeOn && !invincible)
 	{
-		getHit = false;
 		inputOn = false;
 		hitTimeOn = true;
 
@@ -317,9 +328,20 @@ void Player::Update(float dt)
 
 		if (hp <= 0.f)
 		{
-			isAlive = false;
+			//isAlive = false;
 		}
 
+		invincible = true;
+	}
+
+	if (invincible)
+	{
+		invincibleTime -= dt;
+		if (invincibleTime <= 0.f)
+		{
+			invincible = false;
+			invincibleTime = 1.5f;
+		}
 	}
 
 	//피격시
@@ -356,6 +378,7 @@ void Player::Update(float dt)
 			hitTimeOn = false;
 			hitTime = 0.f;
 			inputOn = true;
+			getHit = false;
 		}
 
 	}
@@ -401,27 +424,7 @@ void Player::Update(float dt)
 	}
 
 
-	//기술 움직임 처리
-	if (dashAttackTimeOn)
-	{
-		velocity.x = dashDirection * 800.f;
-		dashAttackTime -= dt;
-	}
-
-	if (dashAttackTime <= dashAttackTimer)
-	{
-		dashAttackTimeOn = false;
-		animator.Play("Animations/player/player_Idle.csv");
-		isLeftDashing = false;
-		isRightDashing = false;
-		dashAttackTime = 0.3f;
-		inputOn = true;
-	}
-
-	position += velocity * dt;
-
-	SetPosition(position);
-	playerShadow.SetPosition(GetPosition());
+	
 
 
 	if (isAttack)
@@ -511,11 +514,9 @@ void Player::Update(float dt)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::W))
 			{
-
+				inputOn = false;
 				DynamiteKick();
-				attackTime = 2.f;
 			}
-
 		}
 
 
@@ -534,6 +535,44 @@ void Player::Update(float dt)
 			InputManager::StopComboRecord();
 		}
 	}
+
+
+	//기술 움직임 처리
+	if (dashAttackTimeOn)
+	{
+		velocity.x = dashDirection * 800.f;
+		dashAttackTime -= dt;
+	}
+
+	if (dashAttackTime <= dashAttackTimer)
+	{
+		dashAttackTimeOn = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		isLeftDashing = false;
+		isRightDashing = false;
+		dashAttackTime = 0.3f;
+		inputOn = true;
+	}
+
+	if (kickTimeOn)
+	{
+		velocity.x = sprite.getScale().x * 500.f;
+		kickTime -= dt;
+	}
+
+	if (kickTime <= kickTimer)
+	{
+		kickTimeOn = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		kickTime = 1.f;
+		inputOn = true;
+	}
+
+
+	position += velocity * dt;
+
+	SetPosition(position);
+	playerShadow.SetPosition(GetPosition());
 
 
 	if (animator.GetCurrentClipId() == "Animations/player/player_Idle.csv")

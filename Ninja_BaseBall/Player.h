@@ -75,7 +75,7 @@ protected:
 	//Kick Attack
 	float kickTime = 1.f;
 	float kickTimer = 0.f;
-	bool kickTimeOn = true;
+	bool kickTimeOn = false;
 
 	//Attack Time
 	float attackTimer = 0.f;
@@ -92,6 +92,9 @@ protected:
 	float hitTimer = 0.15f;
 	float hitTime = 0.f;
 	bool hitTimeOn = false;
+
+	float invincibleTime = 1.5f;
+	bool invincible = false;
 
 	//Turn Input on / off
 	bool inputOn = true;
@@ -115,6 +118,7 @@ public:
 
 	void SetAttackOn();
 	void SetAttackOff();
+	void SetKickTimeOn();
 
 	void SetBox(bool flip);
 
