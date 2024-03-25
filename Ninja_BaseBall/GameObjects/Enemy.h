@@ -19,7 +19,7 @@ public :
         CATCH,
     };
     EnemyState currentEnemy=EnemyState::IDLE;
-    sf::Vector2f lastPosition;
+
 protected:
     SceneDev1* Scene;
     Player* player;
@@ -29,19 +29,24 @@ protected:
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
+    int damageCount;
     
     bool isDead = false;
     bool isReadyToDash=false;
     bool isDash =false;
     bool isAttack = false;
     bool isAttackCoolOn = false;
+    bool isAttacking=false;
+    bool isYPositionLocked = false;
+    bool isCatch = false;
+    
     
     float dashSpeed = 150.f;
     float dashCooldown = 3.f;
     float dashCooldownTimer = 0.f;
     float acceptableYDistance = 15.f;
     float attackTimer = 0.f;
-    float attackCooldown = 2.f;
+    const float attackCooldown = 1.5f;
     float dashYPos;
     
     sf::Vector2f dashDirection;
@@ -50,7 +55,7 @@ protected:
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
-    sf::FloatRect attackBounds;
+
     sf::FloatRect playerHitBox;
 
     sf::RectangleShape damageBox;
@@ -77,14 +82,13 @@ public:
         //sprite.setPosition(position);
     }
 
-    void DashTowards(const sf::Vector2f& target, float dt);
+    void DashTowards(float dt);
     virtual void Attack();
-    virtual void OnDamage(int damage);
+    virtual void OnDamage(int damage,int count);
     
     void MoveTowards(const sf::Vector2f& target, float dt);
     static sf::Vector2f Normalize(const sf::Vector2f& source);
     virtual void TargetDirection(const sf::Vector2f& playerPosition);
-    virtual void SetBox(bool flip);
     
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
@@ -92,9 +96,6 @@ public:
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
     virtual void CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies);
-   
-    // 적을 특정 방향으로 이동시킵니다.
-    void Move(const sf::Vector2f& offset) {
-        sprite.move(offset);
-    }
+    virtual sf::FloatRect GetHitBox() const;
+    virtual sf::FloatRect GetDamageBox() const;
 };

@@ -25,6 +25,9 @@ public :
 
     int hitCount=0;
     int maxHitCount=3;
+    
+    int maxHealth =200;
+    int health = maxHealth;
     sf::Clock hitClock;
 
     float updateInterval=0.1f;
@@ -68,10 +71,11 @@ public:
     void LateUpdate(float dt) override;
     void Draw(sf::RenderWindow& window) override;
     void Update(float dt) override;
-    void OnDamage(int damage) override;
+    void OnDamage(int damage,int count) override;
     void TargetDirection(const sf::Vector2f& playerPosition) override;
     void Attack() override;
     void DashToPlayer(float dt,sf::Vector2f& currentPosition) override;
     void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance) override;
     void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition) override;
+    sf::FloatRect GetHitBox() const override;
 };
