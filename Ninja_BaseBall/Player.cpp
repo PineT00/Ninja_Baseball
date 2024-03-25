@@ -205,8 +205,8 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
-	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
+	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -223,8 +223,8 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	//enemyHitBox = player2->GetHitBox();
-	enemyHitBox = windyPlane->GetHitBox();
+	enemyHitBox = player2->GetHitBox();
+	//enemyHitBox = windyPlane->GetHitBox();
 
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
