@@ -65,7 +65,7 @@ void Enemy::Update(float dt)
     // position update
     sprite.setPosition(currentPosition);
     // animation update
-    enemyAnimator.Update(dt);
+    //enemyAnimator.Update(dt);
 }
 
 void Enemy::LateUpdate(float dt)
@@ -116,11 +116,12 @@ void Enemy::Attack()
 {
     //attackTimer = attackCooldown;
     currentEnemy = EnemyState::ATTACK;
-    if(!isAttack&&player != nullptr)
+    if(!isAttackCoolOn && !isAttack&&player != nullptr)
     {
         std::cout<<"attack"<<std::endl;
         player->OnDamage(damage);
     }
+    isAttackCoolOn = true;
     
 }
 

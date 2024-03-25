@@ -26,10 +26,6 @@ sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
 
 void SceneDev1::Init()
 {
-    //cameraRect.setSize({ 320.f, 240 });
-    //cameraRect.setOutlineColor(sf::Color::Cyan);
-    //cameraRect.setOutlineThickness(2);
-    //cameraRect.setFillColor(sf::Color::Transparent);
 
     worldView.setSize(windowSize);
     worldView.setCenter(0, 360);
@@ -47,16 +43,7 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-
-    // yellowEnemy = new YellowBaseBall("YellowEnemy");
-    // yellowEnemy->SetPosition({ 1400.f, 700.f });
-    // AddGameObject(yellowEnemy, World);
-    //
-    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
-    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
-    // AddGameObject(yellowEnemy2, World);
-
-    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -88,8 +75,6 @@ void SceneDev1::Enter()
 
     player2->SetActive(false);
     player->SetActive(false);
-    //yellowEnemy->SetActive(false);
-    //yellowEnemy2->SetActive(false);
 }
 
 void SceneDev1::Exit()
@@ -188,6 +173,31 @@ void SceneDev1::UpdateGame(float dt)
 
     worldViewCenter.x = xMax;
 
+    if (cameraShakeOn)
+    {
+        cameraShakeTime -= dt;
+
+        int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
+        if (shakeTimeScaled % 2 == 0) // shakeTimeScaled가 짝수인 경우
+        {
+            // 카메라를 위로 흔들기
+            worldViewCenter.y -= 0.3;
+        }
+        else
+        {
+            // 카메라를 아래로 흔들기
+            worldViewCenter.y += 0.3;
+        }
+
+        if (cameraShakeTime <= 0.f)
+        {
+            cameraShakeOn = false;
+            cameraShakeTime = 1.f;
+        }
+
+    }
+
+
     worldView.setCenter(worldViewCenter);
 
     stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
@@ -197,6 +207,7 @@ void SceneDev1::UpdateGame(float dt)
     if (InputManager::GetKeyDown(sf::Keyboard::Num1))
     {
         stage->clearStage1_1 = true;
+        cameraShakeOn = true;
     }
     else if (InputManager::GetKeyDown(sf::Keyboard::Num2))
     {
@@ -216,7 +227,6 @@ void SceneDev1::UpdateGame(float dt)
         player2->SetActive(true);
         player->SetActive(true);
     }
-
 
 }
 

@@ -25,7 +25,7 @@ protected:
     Player* player;
     Animator enemyAnimator;
 
-    float speed = 150.f;
+    float speed = 70.f;
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
@@ -34,8 +34,9 @@ protected:
     bool isReadyToDash=false;
     bool isDash =false;
     bool isAttack = false;
+    bool isAttackCoolOn = false;
     
-    float dashSpeed = 300.f;
+    float dashSpeed = 150.f;
     float dashCooldown = 3.f;
     float dashCooldownTimer = 0.f;
     float acceptableYDistance = 15.f;
