@@ -116,6 +116,7 @@ protected:
 
 	SpriteGo playerShadow;
 	sf::Sprite OnHitEffect;
+	sf::Sprite attackEffect;
 
 	//충돌박스
 	sf::RectangleShape attackBox;

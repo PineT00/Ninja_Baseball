@@ -41,7 +41,6 @@ void Player::SetKickTimeOn()
 	jumpY = GetPosition().y;
 	isGrounded = false;
 	kickTimeOn = true;
-
 }
 
 void Player::SetBox()
@@ -594,6 +593,8 @@ void Player::Update(float dt)
 		animator.Play("Animations/player/player_Idle.csv");
 		kickTime = 0.7f;
 		inputOn = true;
+		//animatorEffect.ClearFrames();
+		//animatorEffect.SetTarget(&OnHitEffect);
 	}
 
 
@@ -653,7 +654,7 @@ void Player::Update(float dt)
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
-
+	attackEffect.setPosition(attackBox.getPosition());
 
 	if (InputManager::GetKeyDown(sf::Keyboard::Num0))
 	{
@@ -708,13 +709,13 @@ void Player::Draw(sf::RenderWindow& window)
 {	
 	playerShadow.Draw(window);
 
-	//if (isLeftDashing || isRightDashing)
-	//{
-	//	for (const auto& trail : trails)
-	//	{
-	//		window.draw(trail, shader);
-	//	}
-	//}
+	if (kickTimeOn)
+	{
+		for (const auto& trail : trails)
+		{
+			window.draw(trail, shader);
+		}
+	}
 
 	SpriteGo::Draw(window);
 
