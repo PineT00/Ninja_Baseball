@@ -1,11 +1,12 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,3,1,,,,,
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,3,1
+
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/3_Enemy/baseball/yBaseball_move.bmp,2824.68,112.543,-294.454,181.203,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,2469.82,108.768,-309.555,196.303,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,2039.46,112.543,-177.427,173.653,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,1692.16,101.217,-188.753,192.528,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,1401.48,101.217,-309.555,203.853,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,1035.3,104.992,-305.78,184.978,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,608.716,93.6674,-177.428,196.303,7,0,0
-graphics/3_Enemy/baseball/yBaseball_move.bmp,253.861,101.217,-173.653,188.753,7,0,0
+graphics/3_Enemy/baseball/yBaseball_move.bmp,58.8634,110.027,177.605,200.884,9,90.7159,185.719
+graphics/3_Enemy/baseball/yBaseball_move.bmp,422.795,95.5002,178.75,214.953,9,95.0315,196.286
+graphics/3_Enemy/baseball/yBaseball_move.bmp,741.264,98.8942,283.964,210.993,9,77.316,195.895
+graphics/3_Enemy/baseball/yBaseball_move.bmp,1083.61,108.257,338.028,197.288,9,95.5023,187.235
+graphics/3_Enemy/baseball/yBaseball_move.bmp,1506.46,103.859,179.695,199.173,9,88.5911,188.492
+graphics/3_Enemy/baseball/yBaseball_move.bmp,1845.11,113.284,202.943,192.261,9,103.042,179.067
+graphics/3_Enemy/baseball/yBaseball_move.bmp,2135.39,97.5763,339.285,218.65,9,99.9006,197.288
+graphics/3_Enemy/baseball/yBaseball_move.bmp,2521.8,114.541,309.754,193.518,9,74.7683,179.695
