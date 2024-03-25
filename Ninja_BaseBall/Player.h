@@ -5,6 +5,7 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
+class WindyPlane;
 
 class Player :
     public SpriteGo
@@ -43,10 +44,12 @@ public:
 	float gripCoolTime = 1.f;
 	int gripAttackCount = 0;
 
+	int testVar = 0;
+
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
-	Player2* player2 = nullptr;
+	WindyPlane* player2 = nullptr;
 
 	Animator animator;
 	Animator animatorEffect;

@@ -3,6 +3,7 @@
 #include "ComboCommands.h"
 #include "SceneDev1.h"
 #include "Player2.h"
+#include "WindyPlane.h"
 
 Player::Player(const std::string& name)
 	: SpriteGo(name), combo(nullptr)
@@ -178,7 +179,7 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	player2 = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
 
 
 	attackBox.setPosition({ GetPosition() });
@@ -347,10 +348,7 @@ void Player::Update(float dt)
 		velocity.y = v * speed;
 	}
 
-
-
-	//if (getHit && !hitTimeOn && !invincible)
-	if (getHit)
+	if (getHit && !invincible)
 	{
 		inputOn = false;
 		hitTimeOn = true;
@@ -370,24 +368,8 @@ void Player::Update(float dt)
 		invincibleTime -= dt;
 		if (invincibleTime <= 0.f)
 		{
-
-			hitTime += dt;
-			isGrounded = false;
-			
-			jumpY = GetPosition().y;
-			Death();
-			velocity.y = -800.f;
-			jumpDirection = -(sprite.getScale().x);
-		}
-		else
-		{
-			hitTime += dt;
-			velocity.x = -(sprite.getScale().x) * 800.f;
-			Bitted();
-			
 			invincible = false;
 			invincibleTime = 1.5f;
-
 		}
 	}
 
@@ -508,8 +490,8 @@ void Player::Update(float dt)
 				default:
 					break;
 			}
-			player2->getHit = true;
-
+			//player2->getHit = true;
+			player2->OnDamaged(10);
 		}
 	}
 	else
