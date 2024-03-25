@@ -119,7 +119,7 @@ void Enemy::Attack()
     if(!isAttackCoolOn && !isAttack&&player != nullptr)
     {
         std::cout<<"attack"<<std::endl;
-        player->OnDamage(damage);
+        player->OnDamage(damage,1,GetPosition().x);
     }
     isAttackCoolOn = true;
     

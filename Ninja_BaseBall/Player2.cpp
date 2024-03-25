@@ -492,7 +492,7 @@ void Player2::Update(float dt)
 			default:
 				break;
 			}
-			player->getHit = true;
+			player->OnDamage(20, 1, GetPosition().x);
 
 		}
 	}

@@ -91,10 +91,33 @@ void Player::DashAttack()
 }
 
 
-void Player::OnDamage(int damage)
+void Player::OnDamage(int damage, int type, float positionX)
 {
 	getHit = true;
 	hp -= damage;
+
+	if (positionX > GetPosition().x)
+	{
+		hitWay = -1;
+	}
+	else
+	{
+		hitWay = 1;
+	}
+
+	//switch(type)
+	//{
+	//	case 1:
+
+	//		break;
+
+	//	case 2:
+
+	//		break;
+	//	case 3:
+
+	//		break;
+	//}
 }
 
 void Player::DynamiteKick()
@@ -356,8 +379,6 @@ void Player::Update(float dt)
 		inputOn = false;
 		hitTimeOn = true;
 
-		//hp -= 25.f;
-
 		if (hp <= 0.f)
 		{
 			isAlive = false;
@@ -387,14 +408,14 @@ void Player::Update(float dt)
 				isJumping = true;
 				jumpY = GetPosition().y + 50.f;
 				velocity.y = -800.f;
-				jumpDirection = -(sprite.getScale().x);
+				jumpDirection = hitWay;
 				Death();
 			}
 			else
 			{
 				hitTime += dt;
 				isJumping = false;
-				velocity.x = -(sprite.getScale().x) * 800.f;
+				velocity.x = hitWay * 800.f;
 				Bitted();
 
 			}
@@ -413,6 +434,7 @@ void Player::Update(float dt)
 			hitTime = 0.f;
 			inputOn = true;
 			getHit = false;
+			hitWay = 0;
 		}
 
 	}

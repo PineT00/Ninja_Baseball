@@ -46,6 +46,8 @@ public:
 
 	int testVar = 0;
 
+	int hitWay = 0;
+
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
@@ -148,7 +150,7 @@ public:
 	//기술모음
 	void DashAttack();
 
-	void OnDamage(int damage);
+	void OnDamage(int damage, int type, float positionX);
 
 	void DynamiteKick();
 
