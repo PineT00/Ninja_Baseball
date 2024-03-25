@@ -68,6 +68,12 @@ void Animator::Update(float dt)
 		}
 	}
 
+	if (completeEvent != nullptr && currentClip->id == completeEvent->clipId && currentFrame == completeEvent->frame)
+	{
+		completeEvent->action();
+		ClearCompleteEvent();
+	}
+
 	if (currentClip->GetTotalFrame() >= 1)
 	{
 		SetFrame(currentClip->frames[currentFrame]);
@@ -195,6 +201,16 @@ void Animator::ClearFrames()
 	if (currentClip->frames.empty()) return;
 	currentClip->frames.clear();
 	currentFrame = -1;
+}
+
+void Animator::AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action)
+{
+	completeEvent = new AnimationEvent({clipId, frames, action});
+}
+
+void Animator::ClearCompleteEvent()
+{
+	completeEvent = nullptr;
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)
