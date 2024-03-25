@@ -145,7 +145,7 @@ public:
 	void OnDamage(int damage);
 
 	void DynamiteKick();
-	int GetHealth() {return hp; };
+	int GetHealth() {return hp;}
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;

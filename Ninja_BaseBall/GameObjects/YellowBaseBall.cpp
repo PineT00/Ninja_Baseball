@@ -165,12 +165,12 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < sprite.getPosition().x) {
         sprite.setScale(1.0f, 1.0f);
-        attackBox.setOrigin({175.f,125.f});
+        attackBox.setOrigin({250.f,125.f});
         damageBox.setOrigin({50.f,150.f});
     }
     else {
         sprite.setScale(-1.0f, 1.0f);
-        attackBox.setOrigin({-175.f,125.f});
+        attackBox.setOrigin({-250.f,125.f});
         damageBox.setOrigin({50.f,150.f});
     }
 }

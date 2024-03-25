@@ -43,10 +43,7 @@ void Enemy::Update(float dt)
     TargetDirection(playerPosition);
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
-    if(isAttacking)
-    {
-        sprite.setPosition(lastPosition);
-    } 
+   
     // dash cooldown logic
     if (dashCooldownTimer > 0) dashCooldownTimer -= dt;
 
@@ -132,10 +129,9 @@ void Enemy::Attack()
     if(attackTimer<=0 && player != nullptr)
     {
         currentEnemy = EnemyState::ATTACK;
-        std::cout<<"attack"<<std::endl;
-        lastPosition = sprite.getPosition();
-        isAttacking = true;
         player->OnDamage(damage);
+        std::cout<<"attack"<<std::endl;
+        isAttacking = true;
         
         attackTimer = attackCooldown;
     }
@@ -195,27 +191,9 @@ void Enemy::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < sprite.getPosition().x) {
         sprite.setScale(1.0f, 1.0f);
-        attackBox.setOrigin({175.f,125.f});
-        damageBox.setOrigin({50.f,150.f});
     }
     else {
         sprite.setScale(-1.0f, 1.0f);
-        attackBox.setOrigin({-175.f,125.f});
-        damageBox.setOrigin({50.f,150.f});
-    }
-}
-
-void Enemy::SetBox(bool flip)
-{
-    if (flip)
-    {
-        attackBox.setPosition({ sprite.getPosition().x - attackBox.getSize().x, sprite.getPosition().y - attackBox.getSize().y });
-        damageBox.setPosition({ sprite.getPosition().x - damageBox.getSize().x, sprite.getPosition().y - damageBox.getSize().y });
-    }
-    else
-    {
-        attackBox.setPosition({ sprite.getPosition().x, sprite.getPosition().y - attackBox.getSize().y });
-        damageBox.setPosition({ sprite.getPosition().x, sprite.getPosition().y - damageBox.getSize().y });
     }
 }
 
@@ -253,6 +231,10 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
     // Y축 조정
     if(player&&!player->IsJumping())
     {
+        if(currentEnemy==EnemyState::ATTACK)
+        {
+            return;
+        }
         if (yDistance > acceptableYDistance) {
             currentPosition.y += (playerPosition.y > currentPosition.y ? 1 : -1) * speed * dt;
         }
@@ -285,10 +267,11 @@ void Enemy::CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies) {
                 float resolveX = overlap.width * (boundsA.left < boundsB.left ? -0.5f : 0.5f);
                 float resolveY = overlap.height * (boundsA.top < boundsB.top ? -0.5f : 0.5f);
 
-                enemyA->Move({resolveX, resolveY});
-                enemyB->Move({-resolveX, -resolveY});
+                enemyA->sprite.move({resolveX, resolveY});
+                enemyB->sprite.move({-resolveX, -resolveY});
             }
         }
     }
 }
+
 

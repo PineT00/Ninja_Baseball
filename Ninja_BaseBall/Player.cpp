@@ -92,6 +92,9 @@ void Player::OnDamage(int damage)
 {
 	getHit = true;
 	hp -= damage;
+
+	
+	
 }
 
 void Player::DynamiteKick()

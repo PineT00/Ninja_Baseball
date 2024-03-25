@@ -19,7 +19,7 @@ public :
         CATCH,
     };
     EnemyState currentEnemy=EnemyState::IDLE;
-    sf::Vector2f lastPosition;
+
 protected:
     SceneDev1* Scene;
     Player* player;
@@ -36,6 +36,7 @@ protected:
     bool isAttack = false;
     bool isAttackCoolOn = false;
     bool isAttacking=false;
+    bool isYPositionLocked = false;
     
     float dashSpeed = 150.f;
     float dashCooldown = 3.f;
@@ -85,7 +86,6 @@ public:
     void MoveTowards(const sf::Vector2f& target, float dt);
     static sf::Vector2f Normalize(const sf::Vector2f& source);
     virtual void TargetDirection(const sf::Vector2f& playerPosition);
-    virtual void SetBox(bool flip);
     
     void SetPlayerHitBox(const sf::FloatRect& hitBox) { playerHitBox = hitBox; }
     bool CheckHitBox() const { return attackBox.getGlobalBounds().intersects(playerHitBox); }
@@ -93,8 +93,5 @@ public:
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
     virtual void CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies);
-    
-    void Move(const sf::Vector2f& offset) {
-        sprite.move(offset);
-    }
+
 };
