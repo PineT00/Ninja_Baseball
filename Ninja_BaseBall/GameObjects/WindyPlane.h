@@ -3,6 +3,7 @@
 #include "Animator.h"
 #include "BossTable.h"
 
+class WindEffect;
 class Player;
 class SceneDevBoss;
 struct BossData;
@@ -22,7 +23,7 @@ public :
 		GUNREADY,
 		FINAL,
 		DEATH,
-		HOLD, // TODO : 잡힌 상태 추가
+		HOLD,
 	};
 
 	struct ClipInfo
@@ -62,11 +63,7 @@ protected:
 
 	std::unordered_map<BossPartsStatus, BossData>& data;
 	std::vector<ClipInfo> clipInfos;
-	std::vector<Animator> windEffects;
-	std::vector<sf::Sprite> windTargets;
-	std::vector<Animator> gunEffects;
-	std::vector<sf::Sprite> gunTargets;
-	std::vector<float> windEffectsSpeed;
+	std::vector<WindEffect*> windEffects;
 	std::vector<std::string> clipIds;
 	
 	sf::Vector2f windowSize;

@@ -2,6 +2,7 @@
 #include "WindyPlane.h"
 #include "Player.h"
 #include "SceneDevBoss.h"
+#include "WindEffect.h"
 #include "rapidcsv.h"
 
 WindyPlane::WindyPlane(const std::string& name)
@@ -12,7 +13,26 @@ WindyPlane::WindyPlane(const std::string& name)
 void WindyPlane::Init()
 {
 	SpriteGo::Init();
+
+	// FindGo
+	sceneDevBoss = dynamic_cast<SceneDevBoss*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss));
+	player = dynamic_cast<Player*>(sceneDevBoss->FindGameObject("player"));
+
 	animator.SetTarget(&sprite);
+
+	windEffects.resize(EFFECTS_COUNT);
+
+	for (int i = 0; i < EFFECTS_COUNT; ++i)
+	{
+		windEffects[i] = new WindEffect();
+		windEffects[i]->Init();
+		windEffects[i]->Reset();
+
+		windEffects[i]->SetSortLayer(1);
+		sceneDevBoss->ResortGameObject(windEffects[i]);
+		sceneDevBoss->AddGameObject(windEffects[i]);
+	}
+
 	// Hit, Attack Box
 
 	hitBox.setFillColor(sf::Color::Yellow);
@@ -51,10 +71,6 @@ void WindyPlane::Init()
 	// clipInfos[parts].clipStatus : 상태별 클립 사용 여부
 
 	LoadAllEvents();
-
-	// FindGo
-	sceneDevBoss = dynamic_cast<SceneDevBoss*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss));
-	player = dynamic_cast<Player*>(sceneDevBoss->FindGameObject("player"));
 }
 
 void WindyPlane::Reset()
@@ -94,12 +110,6 @@ void WindyPlane::Update(float dt)
 	{
 		currentStatus = WindyPlaneStatus::WIND;
 	}
-
-	// HOLD TEST
-
-
-
-
 
 	switch (currentPartsStatus)
 	{
@@ -163,7 +173,7 @@ void WindyPlane::Update(float dt)
 		currentStatus = WindyPlaneStatus::HOLD;
 		currentSpeed = 0.f;
 	}
-	else
+	else if(!player->isGrip && currentStatus == WindyPlaneStatus::HOLD)
 	{
 		currentSpeed = speed;
 	}
@@ -175,6 +185,21 @@ void WindyPlane::Update(float dt)
 
 void WindyPlane::Draw(sf::RenderWindow& window)
 {
+	if (player->GetPosition().y < position.y)
+	{
+		SetSortLayer(1);
+		player->SetSortLayer(0);
+
+	}
+	else
+	{
+		SetSortLayer(0);
+		player->SetSortLayer(1);
+	}
+	
+	sceneDevBoss->ResortGameObject(player);
+	sceneDevBoss->ResortGameObject(this);
+
 	SpriteGo::Draw(window);
 
 	window.draw(closeAttackBox);
@@ -196,7 +221,6 @@ void WindyPlane::Draw(sf::RenderWindow& window)
 		hitBox.setFillColor(sf::Color::Transparent);
 		uppercutAttackBox.setFillColor(sf::Color::Transparent);
 	}
-
 }
 
 void WindyPlane::SetFlipX(bool flipX)
@@ -276,7 +300,13 @@ void WindyPlane::AttackWind(float dt)
 	direction.x = Utils::MyMath::GetNormal(player->GetPosition() - position).x;
 
 	currentStatus = WindyPlaneStatus::WIND;
+
 	// rangedAttackBox 내에 이펙트를 재생시켜야 함
+
+	for (int i = 0; i < EFFECTS_COUNT; ++i)
+	{
+		windEffects[i]->Call();
+	}
 }
 
 void WindyPlane::AttackGun()
@@ -303,7 +333,7 @@ void WindyPlane::AttackOneTwoEvent()
 	if (closeAttackBox.getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) // 플레이어가 무적이 아닐 경우도 추가 필요
 	{
 		++hitCount;
-		player->getHit = true;
+		player->OnDamage(0);
 	}
 
 	CheckEndFrame();
@@ -314,7 +344,6 @@ void WindyPlane::AttackStraightEvent()
 	currentSpeed = currentStatus == WindyPlaneStatus::STRAIGHT ? speed * 3.f : speed;
 
 	ApplyAttackEvent(true, false);
-
 }
 
 void WindyPlane::AttackUpperCutEvent()
@@ -356,7 +385,7 @@ void WindyPlane::ApplyAttackEvent(bool isClosed, bool isRanged)
 {
 	if ((isRanged ? rangedAttackBox : isClosed ? closeAttackBox : uppercutAttackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible())
 	{
-		player->getHit = true;
+		player->OnDamage(0);
 	}
 
 	CheckEndFrame();

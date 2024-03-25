@@ -180,6 +180,7 @@
     <ClCompile Include="Utils\Sort.cpp" />
     <ClCompile Include="Utils\Vector2.cpp" />
     <ClCompile Include="GameObjects\WindyPlane.cpp" />
+    <ClCompile Include="WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BossTable.h" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Utils\Sort.h" />
     <ClInclude Include="Utils\Vector2.h" />
     <ClInclude Include="GameObjects\WindyPlane.h" />
+    <ClInclude Include="WindEffect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
