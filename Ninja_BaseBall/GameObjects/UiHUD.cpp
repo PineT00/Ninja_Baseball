@@ -18,7 +18,7 @@ void UiHUD::Init()
 	GameObject::Init();
 	textFps.Init();
 
-	sf::Font& font = *FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf");
+	sf::Font& font = *FONT_MANAGER.GetResource("fonts/retroGaming.ttf");
 	float textSize = 60.f;
 
 	textFps.Set(font, "", textSize, sf::Color::White);
@@ -29,8 +29,8 @@ void UiHUD::Init()
 	player1_Name.SetTexture("graphics/6_UI/inGame/red_nameJOSE.bmp");
 	//player1_Portrait;
 
-	//player1_Score;
-	//player1_Life;
+	player1_Score.Set(font,"0",10, sf::Color::Yellow);
+	player1_Life;
 
 
 

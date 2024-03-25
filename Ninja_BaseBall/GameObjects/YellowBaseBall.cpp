@@ -125,7 +125,7 @@ void YellowBaseBall::Update(float dt)
         if (!isDead && damageBox.getGlobalBounds().intersects(player->GetGrapBox()))
         {
             isCatched = true;
-            EnemyState::CATCHED;
+            currentEnemy = EnemyState::CATCHED;
             SetState();
 
             SetPosition({ player->GetAttackBox().left, player->GetAttackBox().top + 70.f });
