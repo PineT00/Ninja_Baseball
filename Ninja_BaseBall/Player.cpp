@@ -204,8 +204,8 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
-	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	enemy = dynamic_cast<Enemy*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject(""));
 	yellowBaseBall = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
 
 	attackBox.setPosition({ GetPosition() });
@@ -223,8 +223,22 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	enemyHitBox = yellowBaseBall->GetHitBox();
+
+	//enemyHitBox = player2->GetHitBox();
+	//enemyHitBox = sceneDev1->GetAllHitBoxes();
+	// std::vector<sf::FloatRect>enemyHitBoxes = sceneDev1->GetAllHitBoxes();
+	// for(int i = 0; i < enemyHitBoxes.size(); i++)
+	// {
+	// 	if (attackBox.getGlobalBounds().intersects(enemyHitBoxes[i]))
+	// 	{
+	// 		enemyHitBox = enemyHitBoxes[i];
+	// 	}
+	// 	
+	// }
+
+	enemyHitBox = yellowBaseBall->GetDamageBox();
 	//enemyHitBox = windyPlane->GetHitBox();
+
 
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
@@ -279,7 +293,7 @@ void Player::Update(float dt)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Left))
 				{
-					isLeftDashing = true; // 대쉬 상태 활성화
+					isLeftDashing = true; 
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -495,18 +509,22 @@ void Player::Update(float dt)
 				case 1:
 					animator.Play("Animations/player/player_Attack1.csv");
 					attackTime = 0.5f;
+
 					break;
 				case 2:
 					animator.Play("Animations/player/player_Attack2.csv");
 					attackTime = 0.5f;
+
 					break;
 				case 3:
 					animator.Play("Animations/player/player_Attack3.csv");
 					attackTime = 0.5f;
+
 					break;
 				case 4:
 					animator.Play("Animations/player/player_Attack4.csv");
 					attackTime = 0.5f;
+
 					normalAttack = 0;
 					break;
 				default:
@@ -514,6 +532,8 @@ void Player::Update(float dt)
 			}
 			//player2->getHit = true;
 			//player2->OnDamaged(10);
+
+
 		}
 	}
 	else
@@ -569,9 +589,7 @@ void Player::Update(float dt)
 
 			}
 		}
-
-
-
+		
 		////콤보 기록용
 		//if (InputManager::GetKeyDown(sf::Keyboard::L))
 		//{
@@ -690,7 +708,7 @@ void Player::Update(float dt)
 	//if (isImpacted) {
 	//	sf::Time impactTime = impactClock.getElapsedTime();
 	//	if (impactTime.asSeconds() >= impactTimer) {
-	//		// 타격 시간이 종료되면 게임이 다시 진행됨
+	
 	//		isImpacted = false;
 	//	}
 	//}
@@ -763,13 +781,3 @@ void Player::Draw(sf::RenderWindow& window)
 	}
 
 }
-
-
-
-
-
-
-
-
-
-

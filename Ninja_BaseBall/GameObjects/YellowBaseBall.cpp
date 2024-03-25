@@ -22,20 +22,23 @@ void YellowBaseBall::SetState()
         switch (damageCount)
             {
             case 1:
-                yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Damage1.csv");
+                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage1.csv");
                 break;
             case 2:
-                yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Damage2.csv");
+                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage2.csv");
                 break;
             case 3:
-                yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Damage3.csv");
+                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage3.csv");
                 break;
             case 4:
-                yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Damage4.csv");
+                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage4.csv");
                 break;
             default:
+                std::cout<< "Error" << std::endl;
                 break;
+
             }
+        
         break;
     case EnemyState::DEAD:
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
@@ -59,6 +62,7 @@ void YellowBaseBall::Init()
     yellowBaseBallAnimator.SetTarget(&sprite);
     currentEnemy = EnemyState::MOVE;
     SetState();
+    health = maxHealth;
 }
 
 void YellowBaseBall::Release()
@@ -89,9 +93,8 @@ void YellowBaseBall::Reset()
     damageBounds = sprite.getGlobalBounds();
     attackBounds = sprite.getGlobalBounds();
     
-    std::function<void()> attackOn = std::bind(&Enemy::Attack, this);
+    std::function<void()> attackOn = std::bind(&Enemy::Damage, this);
     yellowBaseBallAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", 1, attackOn);
-   
 }
 
 void YellowBaseBall::FixedUpdate(float dt)
@@ -141,10 +144,7 @@ void YellowBaseBall::Update(float dt)
                     OnDamage(10, 0);
                     std::cout << health << std::endl;
                 }
-
             }
-
-
         }
 
         if (!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
@@ -184,12 +184,26 @@ void YellowBaseBall::Update(float dt)
 
 void YellowBaseBall::OnDamage(int damage,int count)
 {
+
+    // Enemy::OnDamage(damage,count);
+    // //currentEnemy = EnemyState::HURT;
+    // maxHealth -= damage;
+    // this->damageCount=count;
+    // currentEnemy = EnemyState::HURT;
+    // if(maxHealth <= 0)
+    // {
+    //     isDead = true;
+    //     currentEnemy = EnemyState::DEAD;
+    // }
+    // SetState();
+
     if (!isInvincible)
     {
         Enemy::OnDamage(damage, count);
         //currentEnemy = EnemyState::HURT;
         SetState();
     }
+
 
 }
 
@@ -201,6 +215,7 @@ void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
 void YellowBaseBall::Attack()
 {
     Enemy::Attack();
+    
     SetState();
 }
 
@@ -235,3 +250,4 @@ sf::FloatRect YellowBaseBall::GetHitBox() const
     return Enemy::GetHitBox();
 
 }
+
