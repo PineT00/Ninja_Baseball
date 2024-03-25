@@ -102,8 +102,6 @@ protected:
 	bool attackTimeOn = false;
 
 
-
-
 	//Hit
 	float hitTimer = 0.15f;
 	float hitTime = 0.f;

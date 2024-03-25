@@ -196,8 +196,6 @@ void Player2::Update(float dt)
 		}
 
 
-
-
 		if (InputManager::GetKeyDown(sf::Keyboard::L) && isGrounded)
 		{
 			rightDashReady = true;

@@ -205,7 +205,7 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
+	windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
 	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
 
 	attackBox.setPosition({ GetPosition() });
@@ -224,6 +224,7 @@ void Player::Reset()
 void Player::Update(float dt)
 {
 	//enemyHitBox = player2->GetHitBox();
+	enemyHitBox = windyPlane->GetHitBox();
 
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
@@ -460,7 +461,7 @@ void Player::Update(float dt)
 	}
 
 	//잡기박스와 닿았을때
-	if (!kickTimeOn && !isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
+	if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
 		isGrip = true;
@@ -664,6 +665,7 @@ void Player::Update(float dt)
 		isGrip = false;
 		gripCoolTime = 2.f;
 		gripAttackCount = 0;
+		isAttack = false;
 	}
 
 	if (!isGrip)
