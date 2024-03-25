@@ -1,0 +1,6 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,3,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/6_UI/inGame/red_attack_frame.bmp,0,0,62.5624,71.6908,4,0,0
+graphics/6_UI/inGame/red_attack_frame.bmp,63.563,0,62.2892,71.9409,4,0,0

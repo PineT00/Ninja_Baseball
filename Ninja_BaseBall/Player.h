@@ -20,6 +20,7 @@ public:
 		isHomeRun,
 	};
 
+	int score = 0;
 	int life = 1;
 
 	int normalAttack = 0;

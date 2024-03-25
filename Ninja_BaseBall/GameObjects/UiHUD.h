@@ -7,9 +7,30 @@ class TextGo;
 class SpriteGo;
 class SceneGame;
 class SceneDev1;
+class Player;
 
 class UiHUD : public GameObject
 {
+public:
+	Player* player = nullptr;
+
+	SpriteGo* player1_Frame = nullptr;
+	SpriteGo* player1_Name = nullptr;
+	sf::Sprite player1_Portrait;
+	TextGo player1_Score;
+	TextGo player1_Life;
+
+	SpriteGo player1_hpRedBack;
+	SpriteGo player1_hpBar;
+
+	Animator uiAnimator;
+
+	int score = 0;
+	int life = 0;
+
+	sf::Font font;
+
+
 protected:
 	UiHUD(const UiHUD&) = delete;
 	UiHUD(UiHUD&&) = delete;
@@ -23,14 +44,9 @@ protected:
 	std::string formatFps = "FPS: ";
 	TextGo textFps;
 
-	SceneGame* sceneGame = nullptr;
-	SceneDev1* sceneDev1 = nullptr;
+	//SceneGame* sceneGame = nullptr;
+	//SceneDev1* sceneDev1 = nullptr;
 
-	SpriteGo player1_Frame;
-	SpriteGo player1_Name;
-	sf::Sprite player1_Portrait;
-	TextGo player1_Score;
-	TextGo player1_Life;
 
 
 
