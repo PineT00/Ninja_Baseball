@@ -196,8 +196,6 @@ void Player2::Update(float dt)
 		}
 
 
-
-
 		if (InputManager::GetKeyDown(sf::Keyboard::L) && isGrounded)
 		{
 			rightDashReady = true;
@@ -383,7 +381,7 @@ void Player2::Update(float dt)
 
 
 		//몬스터용 잡히기 테스트
-		if (player->isGrip)
+		if (hitBox.getGlobalBounds().intersects(player->GetGrapBox()) && player->isGrip)
 		{
 			inputOn = false;
 			SetPosition( { player->GetAttackBox().left, player->GetAttackBox().top + 70.f } );
@@ -492,7 +490,7 @@ void Player2::Update(float dt)
 			default:
 				break;
 			}
-			player->getHit = true;
+			player->OnDamage(20, 1, GetPosition().x);
 
 		}
 	}

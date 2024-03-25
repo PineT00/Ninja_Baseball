@@ -333,7 +333,7 @@ void WindyPlane::AttackOneTwoEvent()
 	if (closeAttackBox.getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible()) // 플레이어가 무적이 아닐 경우도 추가 필요
 	{
 		++hitCount;
-		player->OnDamage(0);
+		player->OnDamage(0,1,GetPosition().x);
 	}
 
 	CheckEndFrame();
@@ -385,7 +385,7 @@ void WindyPlane::ApplyAttackEvent(bool isClosed, bool isRanged)
 {
 	if ((isRanged ? rangedAttackBox : isClosed ? closeAttackBox : uppercutAttackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible())
 	{
-		player->OnDamage(0);
+		player->OnDamage(0,1,GetPosition().x);
 	}
 
 	CheckEndFrame();

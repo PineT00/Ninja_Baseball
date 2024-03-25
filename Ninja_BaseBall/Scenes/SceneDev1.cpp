@@ -43,13 +43,15 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
     //monster = new YellowBaseBall("Monster");
     //AddGameObject(monster);
+
+
 
     Scene::Init();
 }
@@ -60,11 +62,12 @@ void SceneDev1::Release()
     // for (Enemy* enemy : enemies) {
     //     delete enemy;
     // }
-    enemies.clear();
+    //enemies.clear();
 }
 
 void SceneDev1::Reset()
 {
+    //stage->stageBroken1->SetActive(false);
 }
 
 void SceneDev1::Enter()
@@ -75,6 +78,8 @@ void SceneDev1::Enter()
 
     player2->SetActive(false);
     player->SetActive(false);
+
+
 }
 
 void SceneDev1::Exit()
@@ -200,7 +205,7 @@ void SceneDev1::UpdateGame(float dt)
 
     worldView.setCenter(worldViewCenter);
 
-    stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
+    stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f - 200.f, 0.f });
     stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 1588.f, 0.f });
 
 
@@ -281,7 +286,7 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
         enemy->SetPosition(position);
         AddGameObject(enemy, World);
-        enemies.push_back(enemy);
+        //enemies.push_back(enemy);
     }
 }
 
