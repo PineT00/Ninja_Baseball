@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,5,1,,,,,
+,5,0,,,,,
 ,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
 graphics/4_Boss/boss_windEffect.bmp,15.169,35.2069,74.0959,67.6405,9,37.8899,36.4866
