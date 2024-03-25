@@ -91,13 +91,33 @@ void Player::DashAttack()
 }
 
 
-void Player::OnDamage(int damage)
+void Player::OnDamage(int damage, int type, float positionX)
 {
 	getHit = true;
 	hp -= damage;
 
-	
-	
+	if (positionX > GetPosition().x)
+	{
+		hitWay = -1;
+	}
+	else
+	{
+		hitWay = 1;
+	}
+
+	//switch(type)
+	//{
+	//	case 1:
+
+	//		break;
+
+	//	case 2:
+
+	//		break;
+	//	case 3:
+
+	//		break;
+	//}
 }
 
 void Player::DynamiteKick()
@@ -165,7 +185,6 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 2, AttackOn);
 	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 20, AttackOff);
 
-	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, GripAttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
@@ -187,10 +206,7 @@ void Player::Reset()
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
 	enemy = dynamic_cast<Enemy*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject(""));
-	yellowEnemy = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
-	
-	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
-	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	yellowBaseBall = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -202,14 +218,14 @@ void Player::Reset()
 	combo = new ComboCommands();
 
 	combo->SetCombo();
-	
+
 }
 
 void Player::Update(float dt)
 {
+
 	//enemyHitBox = player2->GetHitBox();
 	//enemyHitBox = sceneDev1->GetAllHitBoxes();
-	enemyHitBox=yellowEnemy->GetDamageBox();
 	// std::vector<sf::FloatRect>enemyHitBoxes = sceneDev1->GetAllHitBoxes();
 	// for(int i = 0; i < enemyHitBoxes.size(); i++)
 	// {
@@ -219,6 +235,10 @@ void Player::Update(float dt)
 	// 	}
 	// 	
 	// }
+
+	enemyHitBox = yellowBaseBall->GetDamageBox();
+	//enemyHitBox = windyPlane->GetHitBox();
+
 
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
@@ -273,7 +293,7 @@ void Player::Update(float dt)
 			{
 				if (InputManager::GetKeyDown(sf::Keyboard::Left))
 				{
-					isLeftDashing = true; // 대쉬 상태 활성화
+					isLeftDashing = true; 
 					animator.Play("Animations/player/player_Dash.csv");
 				}
 			}
@@ -374,8 +394,6 @@ void Player::Update(float dt)
 		inputOn = false;
 		hitTimeOn = true;
 
-		//hp -= 25.f;
-
 		if (hp <= 0.f)
 		{
 			isAlive = false;
@@ -405,14 +423,14 @@ void Player::Update(float dt)
 				isJumping = true;
 				jumpY = GetPosition().y + 50.f;
 				velocity.y = -800.f;
-				jumpDirection = -(sprite.getScale().x);
+				jumpDirection = hitWay;
 				Death();
 			}
 			else
 			{
 				hitTime += dt;
-				//isJumping = false;
-				velocity.x = -(sprite.getScale().x) * 800.f;
+				isJumping = false;
+				velocity.x = hitWay * 800.f;
 				Bitted();
 
 			}
@@ -431,6 +449,7 @@ void Player::Update(float dt)
 			hitTime = 0.f;
 			inputOn = true;
 			getHit = false;
+			hitWay = 0;
 		}
 
 	}
@@ -456,7 +475,7 @@ void Player::Update(float dt)
 	}
 
 	//잡기박스와 닿았을때
-	if (!kickTimeOn && !isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
+	if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
 		isGrip = true;
@@ -479,6 +498,7 @@ void Player::Update(float dt)
 	//공격박스와 닿았을때
 	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
 	{
+
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
 			attackTimeOn = true;
@@ -489,22 +509,22 @@ void Player::Update(float dt)
 				case 1:
 					animator.Play("Animations/player/player_Attack1.csv");
 					attackTime = 0.5f;
-					
+
 					break;
 				case 2:
 					animator.Play("Animations/player/player_Attack2.csv");
 					attackTime = 0.5f;
-					
+
 					break;
 				case 3:
 					animator.Play("Animations/player/player_Attack3.csv");
 					attackTime = 0.5f;
-					
+
 					break;
 				case 4:
 					animator.Play("Animations/player/player_Attack4.csv");
 					attackTime = 0.5f;
-					
+
 					normalAttack = 0;
 					break;
 				default:
@@ -512,7 +532,8 @@ void Player::Update(float dt)
 			}
 			//player2->getHit = true;
 			//player2->OnDamaged(10);
-			yellowEnemy->OnDamage(dmg,normalAttack);
+
+
 		}
 	}
 	else
@@ -551,6 +572,7 @@ void Player::Update(float dt)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
+				SetGripBox();
 				animator.Play("Animations/player/player_GripAttack1.csv");
 				attackTime = 2.f;
 				gripAttackCount += 1;
@@ -662,6 +684,7 @@ void Player::Update(float dt)
 		isGrip = false;
 		gripCoolTime = 2.f;
 		gripAttackCount = 0;
+		isAttack = false;
 	}
 
 	if (!isGrip)

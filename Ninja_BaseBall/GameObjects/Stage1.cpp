@@ -102,9 +102,6 @@ void Stage1::Draw(sf::RenderWindow& window)
 	transition.Draw(window);
 	stagePlane.Draw(window);
 
-	//stageBroken1->Draw(window);
-	//stageBroken2->Draw(window);
-
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{

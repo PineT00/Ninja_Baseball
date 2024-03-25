@@ -5,10 +5,9 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
-
 class Enemy;
-
 class WindyPlane;
+class YellowBaseBall;
 
 
 class Player :
@@ -49,13 +48,19 @@ public:
 
 	int testVar = 0;
 
+	int hitWay = 0;
+
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
 	Player2* player2 = nullptr;
+
 	Enemy* enemy;
-	YellowBaseBall* yellowEnemy;
+
 	WindyPlane* windyPlane = nullptr;
+	YellowBaseBall* yellowBaseBall = nullptr;
+
+
 	Animator animator;
 	Animator animatorEffect;
 
@@ -101,7 +106,8 @@ protected:
 	float attackTimer = 0.f;
 	float attackTime = 0.3f;
 	bool attackTimeOn = false;
-	
+
+
 	//Hit
 	float hitTimer = 0.15f;
 	float hitTime = 0.f;
@@ -139,8 +145,11 @@ public:
 	void SetBox();
 	void SetGripBox();
 
+
+
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
 	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
+	sf::FloatRect GetGrapBox() { return grapBox.getGlobalBounds(); }
 
 	void Bitted();
 	void Death();
@@ -148,10 +157,10 @@ public:
 	//기술모음
 	void DashAttack();
 
-	void OnDamage(int damage);
+	void OnDamage(int damage, int type, float positionX);
 
 	void DynamiteKick();
-	int GetHealth() {return hp;}
+
 	void Init() override;
 	void Reset() override;
 	void Update(float dt) override;
@@ -160,6 +169,5 @@ public:
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
 	bool IsJumping () const { return isJumping; }
 	bool IsInvincible() const { return invincible; }
-	int GetNormalAttack() const { return normalAttack; }
 };
 

@@ -40,6 +40,16 @@ void Enemy::Reset()
 
 void Enemy::Update(float dt)
 {
+    if (isInvincible)
+    {
+        invincibleTime -= dt;
+        if (invincibleTime <= 0.f)
+        {
+            isInvincible = false;
+            invincibleTime = 0.2f;
+        }
+    }
+
     if (isDead || player == nullptr) return;
 
     attackBox.setPosition(sprite.getPosition());
@@ -72,9 +82,9 @@ void Enemy::Update(float dt)
         currentEnemy = EnemyState::MOVE;
     }
 
-    if(isCatch)
+    if(isCatched)
     {
-        currentEnemy = EnemyState::CATCH;
+        currentEnemy = EnemyState::CATCHED;
     }
    
     if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox() ))
@@ -118,6 +128,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnDamage(int damage,int count)
 {
+
     maxHealth -= damage;
     this->damageCount=count;
     currentEnemy = EnemyState::HURT;
@@ -125,12 +136,32 @@ void Enemy::OnDamage(int damage,int count)
     {
         isDead = true;
         currentEnemy = EnemyState::DEAD;
+    }
+
+    health -= damage;
+
+    if(health <= 0)
+    {
+        isDead = true;
+        currentEnemy = EnemyState::DEAD;
+        return;
+    }
+    else if (count == 0)
+    {
+        currentEnemy = EnemyState::HURT;
+        isInvincible = true;
+        return;
+    }
+    else
+    {
+        this->damageCount=count;
+        isInvincible = true;
+        currentEnemy = EnemyState::HURT;
 
     }
 }
 
-void Enemy::DashTowards(float dt)
-{
+void Enemy::DashTowards(float dt){
     // if (!isReadyToDash) return;
     // sf::Vector2f direction = Normalize(player->GetPosition() - sprite.getPosition());
     // sprite.move(direction * dashSpeed * dt);
@@ -152,7 +183,7 @@ void Enemy::DashTowards(float dt)
 void Enemy::Attack()
 {
     //attackTimer = attackCooldown;
-    if(player->GetHealth()<=0)
+    if(player->hp <=0 )
     {
         currentEnemy = EnemyState::MOVE;
         return;
@@ -161,7 +192,7 @@ void Enemy::Attack()
     if(attackTimer<=0 && player != nullptr)
     {
         currentEnemy = EnemyState::ATTACK;
-        player->OnDamage(damage);
+        
         std::cout<<"attack"<<std::endl;
         isAttacking = true;
         
@@ -252,8 +283,7 @@ void Enemy::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& cu
     currentEnemy = EnemyState::DASH;
     dashCooldownTimer = dashCooldown; // 대쉬 후 쿨다운 재설정
 
-    float dashSpeedMultiPlier=2.f;
-    dashSpeed=speed *dashSpeedMultiPlier;
+  
 }
 
 
@@ -274,9 +304,9 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
         currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
     }
     
-    // else if (xDistance < minDistance - 200) { 
-    //     currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
-    // }
+    else if (xDistance < minDistance - 200) { 
+        currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
+    }
     currentEnemy = EnemyState::MOVE;
 
     
@@ -319,19 +349,20 @@ void Enemy::Catch()
 {
     if(player->isGrip)
     {
-        isCatch=true;
+        isCatched=true;
     }
     else
     {
-        isCatch=false;
+        isCatched=false;
     }
 
-    if(isCatch)
+    if(isCatched)
     {
-        currentEnemy = EnemyState::CATCH;  
+        currentEnemy = EnemyState::CATCHED;  
     }
 }
 
-
-
-
+void Enemy::Damage()
+{
+    player->OnDamage(damage,1,GetPosition().x);
+}

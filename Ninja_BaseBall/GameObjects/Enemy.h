@@ -16,7 +16,7 @@ public :
         DASH,
         HURT,
         DEAD,
-        CATCH,
+        CATCHED,
     };
     EnemyState currentEnemy=EnemyState::IDLE;
 
@@ -25,7 +25,9 @@ protected:
     Player* player;
     Animator enemyAnimator;
 
-    float speed = 100.f;
+
+    float speed = 60.f;
+
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
@@ -38,10 +40,12 @@ protected:
     bool isAttackCoolOn = false;
     bool isAttacking=false;
     bool isYPositionLocked = false;
-    bool isCatch = false;
+    bool isCatched = false;
     
+    bool isInvincible = false;
+    float invincibleTime = 0.2f;
     
-    float dashSpeed = 150.f;
+    float dashSpeed = 400.f;
     float dashCooldown = 3.f;
     float dashCooldownTimer = 0.f;
     float acceptableYDistance = 15.f;
@@ -99,5 +103,5 @@ public:
     virtual sf::FloatRect GetHitBox() const;
     virtual sf::FloatRect GetDamageBox() const;
     virtual void Catch();
-
+    virtual void Damage();
 };

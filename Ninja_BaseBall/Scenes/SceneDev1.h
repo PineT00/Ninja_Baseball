@@ -47,6 +47,7 @@ private:
 	};
 	std::vector<MonsterInfo> monsterInfos;
 	std::vector<Enemy*> enemies;
+	
 
 public:
 
@@ -69,9 +70,4 @@ public:
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
-	std::vector<sf::FloatRect> GetAllHitBoxes() const;
-
-	
-	void AddMonster(const std::shared_ptr<Enemy>& monster, const sf::FloatRect& damageBox);
-	std::vector<MonsterInfo> GetMonsterInfos() const {return monsterInfos;}
 };

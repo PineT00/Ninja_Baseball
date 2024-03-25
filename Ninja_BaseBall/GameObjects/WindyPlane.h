@@ -3,6 +3,7 @@
 #include "Animator.h"
 #include "BossTable.h"
 
+class WindEffect;
 class Player;
 class SceneDevBoss;
 struct BossData;
@@ -21,7 +22,8 @@ public :
 		GUN,
 		GUNREADY,
 		FINAL,
-		DEATH
+		DEATH,
+		HOLD,
 	};
 
 	struct ClipInfo
@@ -61,11 +63,7 @@ protected:
 
 	std::unordered_map<BossPartsStatus, BossData>& data;
 	std::vector<ClipInfo> clipInfos;
-	std::vector<Animator> windEffects;
-	std::vector<sf::Sprite> windTargets;
-	std::vector<Animator> gunEffects;
-	std::vector<sf::Sprite> gunTargets;
-	std::vector<float> windEffectsSpeed;
+	std::vector<WindEffect*> windEffects;
 	std::vector<std::string> clipIds;
 	
 	sf::Vector2f windowSize;
@@ -127,7 +125,6 @@ public:
 
 	void ApplyAttackEvent(bool isClosed, bool isRanged);
 
-
 	// 플레이어 찾기
 	void FindPlayer();
 
@@ -136,13 +133,13 @@ public:
 	void OnDamagedEvent();
 	void OnDie();
 	void OnDieEvent();
+	void HoldEvent();
 
 	// 상태
-	//void LoadAllEvents();
+	void LoadAllEvents();
 	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void CheckEndFrame();
 	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
 
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
-
 };

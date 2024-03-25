@@ -42,7 +42,7 @@ void SceneDev1::Init()
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
-    
+
     // yellowEnemy = new YellowBaseBall("YellowEnemy");
     // yellowEnemy->SetPosition({ 1400.f, 700.f });
     // AddGameObject(yellowEnemy, World);
@@ -51,19 +51,24 @@ void SceneDev1::Init()
     // yellowEnemy2->SetPosition({ 1400.f, 500.f });
     // AddGameObject(yellowEnemy2, World);
 
-    SpawnEnemy("YellowBaseBall", { 1400.f, 700.f });
     //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
 
     //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
 
-    auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
-    monster->SetPosition({ 1400.f, 700.f });
-    AddMonster(monster,monster->GetDamageBox());
+    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
+    //monster->SetPosition({ 1400.f, 700.f });
+    //AddMonster(monster,monster->GetDamageBox());
+
+
+    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
     //monster = new YellowBaseBall("Monster");
     //AddGameObject(monster);
+
+
 
     Scene::Init();
 }
@@ -71,12 +76,15 @@ void SceneDev1::Init()
 void SceneDev1::Release()
 {
     Scene::Release();
-
-    enemies.clear();
+    // for (Enemy* enemy : enemies) {
+    //     delete enemy;
+    // }
+    //enemies.clear();
 }
 
 void SceneDev1::Reset()
 {
+    //stage->stageBroken1->SetActive(false);
 }
 
 void SceneDev1::Enter()
@@ -87,6 +95,8 @@ void SceneDev1::Enter()
 
     player2->SetActive(false);
     player->SetActive(false);
+
+
 }
 
 void SceneDev1::Exit()
@@ -141,7 +151,11 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-   
+    // for (Enemy* enemy : enemies) {
+    //     enemy->Update(dt);
+    // }
+    //
+    
     if (player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
@@ -155,20 +169,11 @@ void SceneDev1::UpdateGame(float dt)
     {
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
+        //yellowEnemy->SetActive(true);
 
+        //yellowEnemy2->SetActive(true);
 
-        for(auto& enemy : enemies)
-        {
-            if(enemy->GetName() == "YellowBaseBall")
-            {
-                enemy->SetActive(true);
-            }
-            if(enemy->GetName() == "YellowBaseBall2")
-            {
-                enemy->SetActive(true);
-            }
-        }
-
+        //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
@@ -217,7 +222,7 @@ void SceneDev1::UpdateGame(float dt)
 
     worldView.setCenter(worldViewCenter);
 
-    stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
+    stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f - 200.f, 0.f });
     stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 1588.f, 0.f });
 
 
@@ -241,7 +246,7 @@ void SceneDev1::UpdateGame(float dt)
     
     if (InputManager::GetKeyDown(sf::Keyboard::Z))
     {
-        //player2->SetActive(true);
+        player2->SetActive(true);
         player->SetActive(true);
     }
 
@@ -262,7 +267,10 @@ void SceneDev1::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
     window.draw(cameraRect);
 
-  
+    // for(Enemy* enemy : enemies)
+    // {
+    //     enemy->Draw(window);
+    // }
 }
 
 void SceneDev1::SetStatus(GameStatus newStatus)
@@ -295,38 +303,8 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
         enemy->SetPosition(position);
         AddGameObject(enemy, World);
-        enemies.push_back(enemy);
-        enemy->SetActive(false);
-    }
-    if(type == "YellowBaseBall2")
-    {
-        YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall2");
-        enemy->SetPosition(position);
-        AddGameObject(enemy, World);
-        enemies.push_back(enemy);
-        enemy->SetActive(false);
+        //enemies.push_back(enemy);
     }
 }
-
-std::vector<sf::FloatRect> SceneDev1::GetAllHitBoxes() const
-{
-    std::vector<sf::FloatRect> hitBoxes;
-    hitBoxes.reserve(enemies.size());
-    for(const auto& enemy : enemies)
-    {
-        hitBoxes.push_back(enemy->GetHitBox());
-    }
-    return hitBoxes;
-}
-
-void SceneDev1::AddMonster(const std::shared_ptr<Enemy>& monster, const sf::FloatRect& damageBox)
-{
-    MonsterInfo info;
-    info.damageBox = damageBox;
-    info.monster = monster;
-    monsterInfos.push_back(info);
-}
-
-
 
 
