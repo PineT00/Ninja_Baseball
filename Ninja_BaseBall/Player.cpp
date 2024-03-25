@@ -209,7 +209,7 @@ void Player::Update(float dt)
 {
 	//enemyHitBox = player2->GetHitBox();
 	//enemyHitBox = sceneDev1->GetAllHitBoxes();
-	enemyHitBox=yellowEnemy->GetHitBox();
+	enemyHitBox=yellowEnemy->GetDamageBox();
 	// std::vector<sf::FloatRect>enemyHitBoxes = sceneDev1->GetAllHitBoxes();
 	// for(int i = 0; i < enemyHitBoxes.size(); i++)
 	// {
@@ -489,22 +489,22 @@ void Player::Update(float dt)
 				case 1:
 					animator.Play("Animations/player/player_Attack1.csv");
 					attackTime = 0.5f;
-					yellowEnemy->OnDamage(25,normalAttack);
+					
 					break;
 				case 2:
 					animator.Play("Animations/player/player_Attack2.csv");
 					attackTime = 0.5f;
-					yellowEnemy->OnDamage(25,normalAttack);
+					
 					break;
 				case 3:
 					animator.Play("Animations/player/player_Attack3.csv");
 					attackTime = 0.5f;
-					yellowEnemy->OnDamage(25,normalAttack);
+					
 					break;
 				case 4:
 					animator.Play("Animations/player/player_Attack4.csv");
 					attackTime = 0.5f;
-					yellowEnemy->OnDamage(25,normalAttack);
+					
 					normalAttack = 0;
 					break;
 				default:
@@ -512,7 +512,7 @@ void Player::Update(float dt)
 			}
 			//player2->getHit = true;
 			//player2->OnDamaged(10);
-
+			yellowEnemy->OnDamage(dmg,normalAttack);
 		}
 	}
 	else
@@ -567,9 +567,7 @@ void Player::Update(float dt)
 
 			}
 		}
-
-
-
+		
 		////콤보 기록용
 		//if (InputManager::GetKeyDown(sf::Keyboard::L))
 		//{
@@ -687,7 +685,7 @@ void Player::Update(float dt)
 	//if (isImpacted) {
 	//	sf::Time impactTime = impactClock.getElapsedTime();
 	//	if (impactTime.asSeconds() >= impactTimer) {
-	//		// 타격 시간이 종료되면 게임이 다시 진행됨
+	
 	//		isImpacted = false;
 	//	}
 	//}
@@ -760,13 +758,3 @@ void Player::Draw(sf::RenderWindow& window)
 	}
 
 }
-
-
-
-
-
-
-
-
-
-

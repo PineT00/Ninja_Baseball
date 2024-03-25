@@ -52,7 +52,6 @@ public:
 
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
-	std::vector<Enemy*> enemies;
 	sf::Vector2f ClampByTileMap(const sf::Vector2f point);
 
 	void Init() override;

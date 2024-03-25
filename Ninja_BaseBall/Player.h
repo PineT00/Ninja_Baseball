@@ -5,11 +5,11 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
-<<<<<<< HEAD
+
 class Enemy;
-=======
+
 class WindyPlane;
->>>>>>> origin/feature/player_Movement
+
 
 class Player :
     public SpriteGo
@@ -22,8 +22,6 @@ public:
 		isKick,
 		isHomeRun,
 	};
-	
-
 	int life = 1;
 
 	int normalAttack = 0;
@@ -54,15 +52,10 @@ public:
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
-
 	Player2* player2 = nullptr;
-<<<<<<< HEAD
 	Enemy* enemy;
 	YellowBaseBall* yellowEnemy;
-=======
 	WindyPlane* windyPlane = nullptr;
->>>>>>> origin/feature/player_Movement
-
 	Animator animator;
 	Animator animatorEffect;
 
