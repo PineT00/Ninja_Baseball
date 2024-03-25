@@ -38,7 +38,7 @@ struct AnimationClip
 	AnimationLoopType loopType = AnimationLoopType::Single;
 
 	std::vector<AnimationFrame> frames;
-
+	std::function<void()> OnClipEnd;
 	int GetTotalFrame() const
 	{
 		return frames.size();
@@ -67,7 +67,7 @@ protected:
 
 	std::queue<std::string> queue;
 	std::list<AnimationEvent> eventList;
-
+	
 	sf::Sprite* target = nullptr;
 
 	float speed = 1.f;
@@ -114,4 +114,5 @@ public:
 	void AddEvent(const std::string& clipId, int frame, std::function<void()> action);
 	void ClearEvent();
 	void ClearFrames();
+	void SetClipEndEvent(const std::string& clipId, std::function<void()> event);
 };

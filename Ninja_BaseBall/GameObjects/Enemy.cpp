@@ -76,7 +76,7 @@ void Enemy::Update(float dt)
         // dash movement logic
         DashToPlayer(dt, currentPosition);
         currentEnemy = EnemyState::DASH;
-    } else if(currentEnemy != EnemyState::ATTACK) {
+    } else{
         // normal movement logic
         NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
         currentEnemy = EnemyState::MOVE;
@@ -86,12 +86,28 @@ void Enemy::Update(float dt)
     {
         currentEnemy = EnemyState::CATCHED;
     }
-   
-    if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox() ))
-    {
-        Attack();
-        currentEnemy = EnemyState::ATTACK;
+    
+    if (attackReadyTimer > 0) {
+        attackReadyTimer -= dt;
     }
+    if (!isAttackCoolOn && yDistance <= acceptableYDistance && attackReadyTimer <= 0) {
+        // 공격 애니메이션 재생 전에 정지
+        if (!isAttackReady) {
+            isAttackReady = true;
+            attackReadyTimer = 0.5f; // 공격 전 대기 시간 설정
+            currentEnemy = EnemyState::IDLE; // 공격 준비 상태에서는 IDLE 상태로
+        } else {
+            // 공격 조건 충족
+            Attack();
+            isAttackReady = false;
+            currentEnemy = EnemyState::ATTACK;
+        }
+    }
+    // if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox() ))
+    // {
+    //     Attack();
+    //     currentEnemy = EnemyState::ATTACK;
+    // }
 
     if(attackTimer>0)
     {
@@ -254,12 +270,12 @@ void Enemy::TargetDirection(const sf::Vector2f& playerPosition)
 {
     if (playerPosition.x < sprite.getPosition().x) {
         sprite.setScale(1.0f, 1.0f);
-        attackBox.setOrigin({200.f,125.f});
+        attackBox.setOrigin({150.f,125.f});
         damageBox.setOrigin({50.f,150.f});
     }
     else {
         sprite.setScale(-1.0f, 1.0f);
-        attackBox.setOrigin({-200.f,125.f});
+        attackBox.setOrigin({-150.f,125.f});
         damageBox.setOrigin({50.f,150.f});
     }
 }
@@ -365,4 +381,6 @@ void Enemy::Catch()
 void Enemy::Damage()
 {
     player->OnDamage(damage,1,GetPosition().x);
+    currentEnemy=EnemyState::MOVE;
+    std::cout<<"damage"<<std::endl;
 }

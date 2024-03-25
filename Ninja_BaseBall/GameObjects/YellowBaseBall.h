@@ -80,4 +80,5 @@ public:
     void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance) override;
     void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition) override;
     sf::FloatRect GetHitBox() const override;
+    void Damage() override;
 };

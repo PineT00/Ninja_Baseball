@@ -41,6 +41,7 @@ protected:
     bool isAttacking=false;
     bool isYPositionLocked = false;
     bool isCatched = false;
+    bool isAttackReady = false;
     
     bool isInvincible = false;
     float invincibleTime = 0.2f;
@@ -52,6 +53,7 @@ protected:
     float attackTimer = 0.f;
     const float attackCooldown = 2.5f;
     float dashYPos;
+    float attackReadyTimer = 0.0f;
     
     sf::Vector2f dashDirection;
     sf::Vector2f dashStartPosition;

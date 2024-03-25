@@ -93,8 +93,12 @@ void YellowBaseBall::Reset()
     damageBounds = sprite.getGlobalBounds();
     attackBounds = sprite.getGlobalBounds();
     
-    std::function<void()> attackOn = std::bind(&Enemy::Damage, this);
-    yellowBaseBallAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", 1, attackOn);
+    // std::function<void()> attackOn = std::bind(&Enemy::Damage,this);
+    // yellowBaseBallAnimator.SetClipEndEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", attackOn);
+    yellowBaseBallAnimator.SetClipEndEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", [this]() {
+        std::cout << "Attack animation ended, calling Damage." << std::endl;
+        this->Damage(); // Attack 애니메이션이 끝난 후 Damage 메서드 호출
+    });
 }
 
 void YellowBaseBall::FixedUpdate(float dt)
@@ -146,12 +150,7 @@ void YellowBaseBall::Update(float dt)
                 }
             }
         }
-
-        if (!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
-        {
-            Attack();
-            SetState();
-        }
+        
 
         else
         {
@@ -159,6 +158,7 @@ void YellowBaseBall::Update(float dt)
             {
                 currentEnemy = EnemyState::MOVE;
                 SetState();
+                
             }
             attackCooldown -= dt;
             if (attackCooldown <= 0.f)
@@ -224,7 +224,8 @@ void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
     Enemy::DashToPlayer(dt,currentPosition);
     if(isDash)
     {
-        currentEnemy = EnemyState::MOVE;
+        currentEnemy = EnemyState::DASH;
+        SetState();
     }
     
 }
@@ -234,6 +235,7 @@ void YellowBaseBall::NormalMovement(float dt, sf::Vector2f& currentPosition, con
 {
     Enemy::NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
     currentEnemy = EnemyState::MOVE;
+    SetState();
     
 }
 
@@ -241,7 +243,7 @@ void YellowBaseBall::StartDash(const sf::Vector2f& playerPosition, const sf::Vec
 {
     Enemy::StartDash(playerPosition, currentPosition);
     currentEnemy = EnemyState::MOVE;
-   
+    SetState();                    
     
 }
 
@@ -249,5 +251,12 @@ sf::FloatRect YellowBaseBall::GetHitBox() const
 {
     return Enemy::GetHitBox();
 
+}
+
+void YellowBaseBall::Damage()
+{
+    Enemy::Damage();
+    currentEnemy = EnemyState::MOVE;
+    SetState();
 }
 
