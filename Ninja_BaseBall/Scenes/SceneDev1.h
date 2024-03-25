@@ -14,6 +14,14 @@ class Enemy;
 
 class SceneDev1 : public Scene
 {
+public:
+	Player* player = nullptr;
+	Player2* player2 = nullptr;
+	Enemy* enemy = nullptr;
+
+	bool cameraShakeOn = false;
+	float cameraShakeTime = 1.f;
+
 protected :
 	SceneDev1(const SceneDev1&)				= delete;
 	SceneDev1(SceneDev1&&)					= delete;
@@ -30,6 +38,7 @@ protected :
 	// YellowBaseBall* yellowEnemy;
 	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
+
 private:
 	struct MonsterInfo
 	{
@@ -37,11 +46,10 @@ private:
 		std::shared_ptr<Enemy> monster;
 	};
 	std::vector<MonsterInfo> monsterInfos;
-	
+	std::vector<Enemy*> enemies;
+
 public:
-	Player* player = nullptr;
-	Player2* player2 = nullptr;
-	Enemy* enemy = nullptr;
+
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 	std::vector<Enemy*> enemies;

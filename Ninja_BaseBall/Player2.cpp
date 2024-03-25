@@ -98,13 +98,13 @@ void Player2::Init()
 	grapBox.setFillColor(sf::Color::Blue);
 	hitBox.setFillColor(sf::Color::Yellow);
 
-	attackBox.setSize({ 20, 20 });
+	attackBox.setSize({ 40, 30 });
 	grapBox.setSize({ 20,20 });
-	hitBox.setSize({ 70,90 });
+	hitBox.setSize({ 70,160 });
 
 	attackBox.setOrigin({ -120.f, 150.f });
 	grapBox.setOrigin({ -70.f, 150.f });
-	hitBox.setOrigin({ 35.f, 150.f });
+	hitBox.setOrigin({ 35.f, 190.f });
 
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
@@ -450,9 +450,13 @@ void Player2::Update(float dt)
 
 
 
-
-	if (isAttack)
+	//몬스터용 피격판정
+	if (hitBox.getGlobalBounds().intersects(player->GetAttackBox()))
 	{
+		if (player->isAttack)
+		{
+			getHit = true;
+		}
 
 	}
 
@@ -543,21 +547,6 @@ void Player2::Update(float dt)
 			}
 		}
 
-
-
-		////콤보 기록용
-		//if (InputManager::GetKeyDown(sf::Keyboard::O))
-		//{
-		//	InputManager::StopComboRecord();
-		//	InputManager::ClearCombo();
-		//	InputManager::ComboRecord(10.f);
-		//}
-
-		//if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
-		//{
-		//	animator.Play("Animations/player/player_DashAttack.csv");
-		//	InputManager::StopComboRecord();
-		//}
 	}
 
 
@@ -643,52 +632,11 @@ void Player2::Update(float dt)
 	hitBox.setPosition({ GetPosition() });
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
 
-
-	//잔상효과
-	trailDuration -= dt;
-
-	if (trailDuration <= 0)
-	{
-		if (trails.size() < 3)
-		{ // 잔상을 최대 3개까지 유지
-			sf::Sprite trail;
-			Animator trailAnimator;
-
-			trailAnimator.SetTarget(&trail);
-			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
-			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 250.f);
-			trail.setColor(sf::Color(0, 0, 0, 100));
-			trail.setPosition(GetPosition());
-			if (h < 0.f || jumpDirection < 0.f)
-			{
-				trail.setScale(-1, 1);
-			}
-			else
-			{
-				trail.setScale(1, 1);
-			}
-			//trail.setTexture(texture);
-			trails.push_back(trail);
-		}
-		else
-		{
-			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
-		}
-		trailDuration = 0.05f; // 잔상 유지 시간 초기화
-	}
 }
 
 void Player2::Draw(sf::RenderWindow& window)
 {
 	playerShadow.Draw(window);
-
-	//if (isLeftDashing || isRightDashing)
-	//{
-	//	for (const auto& trail : trails)
-	//	{
-	//		window.draw(trail, shader);
-	//	}
-	//}
 
 	SpriteGo::Draw(window);
 

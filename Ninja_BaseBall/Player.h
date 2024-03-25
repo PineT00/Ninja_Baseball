@@ -5,7 +5,11 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
+<<<<<<< HEAD
 class Enemy;
+=======
+class WindyPlane;
+>>>>>>> origin/feature/player_Movement
 
 class Player :
     public SpriteGo
@@ -45,12 +49,19 @@ public:
 	float gripCoolTime = 1.f;
 	int gripAttackCount = 0;
 
+	int testVar = 0;
+
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
+
 	Player2* player2 = nullptr;
+<<<<<<< HEAD
 	Enemy* enemy;
 	YellowBaseBall* yellowEnemy;
+=======
+	WindyPlane* windyPlane = nullptr;
+>>>>>>> origin/feature/player_Movement
 
 	Animator animator;
 	Animator animatorEffect;
@@ -89,7 +100,7 @@ protected:
 	bool dashAttackTimeOn = false;
 
 	//Kick Attack
-	float kickTime = 1.f;
+	float kickTime = 0.6f;
 	float kickTimer = 0.f;
 	bool kickTimeOn = false;
 
@@ -112,6 +123,7 @@ protected:
 
 	SpriteGo playerShadow;
 	sf::Sprite OnHitEffect;
+	sf::Sprite attackEffect;
 
 	//충돌박스
 	sf::RectangleShape attackBox;

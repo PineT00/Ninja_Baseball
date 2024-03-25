@@ -37,7 +37,7 @@ protected:
 	std::vector<std::string> FontResourceNames = {};
 	std::vector<std::string> SoundResourceNames = {};
 
-	bool isDeveloperMode = false; //ê°œë°œ? ëª¨ë“œ?š© ë³??ˆ˜
+	bool isDeveloperMode = false;
 
 public:
 
@@ -50,7 +50,7 @@ public:
 	Scene* GetCurrentScene() { return scenes[(int)currentScene]; }
 	Scene* GetScene(SceneIDs id) { return scenes[(int)id]; }
 	
-	bool GetDeveloperMode() { return isDeveloperMode; } //ê°œë°œ? ëª¨ë“œ?š© ë©”ì†Œ?“œ
+	bool GetDeveloperMode() { return isDeveloperMode; }
 
 	void LoadAllResources();
 	void ChangeScene(SceneIDs id);

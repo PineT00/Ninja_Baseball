@@ -1,0 +1,8 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,12,1,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/7_Effect/kick_Impact.png,0,0,96,96,4,0,0
+graphics/7_Effect/kick_Impact.png,96,0,96,96,4,0,0
+graphics/7_Effect/kick_Impact.png,192,0,96,96,4,0,0
+graphics/7_Effect/kick_Impact.png,288,0,96,96,4,0,0

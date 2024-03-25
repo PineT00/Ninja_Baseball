@@ -1,5 +1,19 @@
 ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,1,1,,,,,
+,3,1,,,,,
 ,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/2_Player/red/red_idle.bmp,0,0,241.677,232.828,9,152.08,225.754
+graphics/player_Red.png,450.763,0,262.768,297.871,9,154.512,290
+graphics/player_Red.png,450.763,0,262.768,297.871,9,154.512,290
+graphics/player_Red.png,450.763,0,262.768,297.871,9,154.512,290
+graphics/player_Red.png,450.763,0,262.768,297.871,9,154.512,290
+graphics/player_Red.png,450.763,0,262.768,297.871,9,154.512,290
+graphics/player_Red.png,450.763,0,262.768,297.871,9,154.512,290
+graphics/player_Red.png,1129.83,0,217.497,296.887,9,113.697,289.838
+graphics/player_Red.png,902.072,0,211.353,297.791,9,103.349,292.205
+graphics/player_Red.png,714.927,0,184.352,298.722,9,87.5204,293.136
+graphics/player_Red.png,902.072,0,211.353,297.791,9,103.349,292.205
+graphics/player_Red.png,714.927,0,184.352,298.722,9,87.5204,293.136
+graphics/player_Red.png,902.072,0,211.353,297.791,9,103.349,292.205
+graphics/player_Red.png,714.927,0,184.352,298.722,9,87.5204,293.136
+graphics/player_Red.png,902.072,0,211.353,297.791,9,103.349,292.205
+graphics/player_Red.png,1129.83,0,217.497,296.887,9,113.697,289.838
