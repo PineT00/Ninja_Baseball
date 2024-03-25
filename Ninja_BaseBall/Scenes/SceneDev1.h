@@ -30,7 +30,13 @@ protected :
 	// YellowBaseBall* yellowEnemy;
 	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
-
+private:
+	struct MonsterInfo
+	{
+		sf::FloatRect damageBox;
+		std::shared_ptr<Enemy> monster;
+	};
+	std::vector<MonsterInfo> monsterInfos;
 	
 public:
 	Player* player = nullptr;
@@ -56,5 +62,9 @@ public:
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
+	std::vector<sf::FloatRect> GetAllHitBoxes() const;
+
 	
+	void AddMonster(const std::shared_ptr<Enemy>& monster, const sf::FloatRect& damageBox);
+	std::vector<MonsterInfo> GetMonsterInfos() const {return monsterInfos;}
 };

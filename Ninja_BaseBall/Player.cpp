@@ -182,8 +182,9 @@ void Player::Reset()
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
-
-
+	enemy = dynamic_cast<Enemy*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject(""));
+	yellowEnemy = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
+	
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
@@ -194,13 +195,26 @@ void Player::Reset()
 	combo = new ComboCommands();
 
 	combo->SetCombo();
-
+	
 }
 
 void Player::Update(float dt)
 {
 	//enemyHitBox = player2->GetHitBox();
-	//enemyHitBox = sceneDev1->GetEnemyHitBox();
+	//enemyHitBox = sceneDev1->GetAllHitBoxes();
+	enemyHitBox=yellowEnemy->GetHitBox();
+	// std::vector<sf::FloatRect>enemyHitBoxes = sceneDev1->GetAllHitBoxes();
+	// for(int i = 0; i < enemyHitBoxes.size(); i++)
+	// {
+	// 	if (attackBox.getGlobalBounds().intersects(enemyHitBoxes[i]))
+	// 	{
+	// 		enemyHitBox = enemyHitBoxes[i];
+	// 	}
+	// 	
+	// }
+		
+	
+	
 	//SpriteGo::Update(dt);
 	animator.Update(dt);
 	animatorEffect.Update(dt);
@@ -411,7 +425,7 @@ void Player::Update(float dt)
 			else
 			{
 				hitTime += dt;
-				isJumping = false;
+				//isJumping = false;
 				velocity.x = -(sprite.getScale().x) * 800.f;
 				Bitted();
 
@@ -483,7 +497,6 @@ void Player::Update(float dt)
 	//공격박스와 닿았을때
 	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
 	{
-
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
 		{
 			attackTimeOn = true;
@@ -494,25 +507,29 @@ void Player::Update(float dt)
 				case 1:
 					animator.Play("Animations/player/player_Attack1.csv");
 					attackTime = 0.5f;
+					yellowEnemy->OnDamage(25,normalAttack);
 					break;
 				case 2:
 					animator.Play("Animations/player/player_Attack2.csv");
 					attackTime = 0.5f;
+					yellowEnemy->OnDamage(25,normalAttack);
 					break;
 				case 3:
 					animator.Play("Animations/player/player_Attack3.csv");
 					attackTime = 0.5f;
+					yellowEnemy->OnDamage(25,normalAttack);
 					break;
 				case 4:
 					animator.Play("Animations/player/player_Attack4.csv");
 					attackTime = 0.5f;
+					yellowEnemy->OnDamage(25,normalAttack);
 					normalAttack = 0;
 					break;
 				default:
 					break;
 			}
-			player2->getHit = true;
-
+			//player2->getHit = true;
+			
 		}
 	}
 	else

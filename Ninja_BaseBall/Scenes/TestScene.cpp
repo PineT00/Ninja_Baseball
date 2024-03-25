@@ -24,10 +24,10 @@ void TestScene::Init()
     testPlayer=new TestPlayer("TestPlayer");
     testPlayer->SetPosition({0.f,0.f});
     AddGameObject(testPlayer,World);
-
-    yellowEnemy=new YellowBaseBall("YellowEnemy");
-    yellowEnemy->SetPosition({100.f,100.f});
-    AddGameObject(yellowEnemy, World);
+    //
+    // yellowEnemy=new YellowBaseBall("YellowEnemy");
+    // yellowEnemy->SetPosition({100.f,100.f});
+    // AddGameObject(yellowEnemy, World);
 
     Scene::Init();
 }

@@ -29,6 +29,7 @@ protected:
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
+    int damageCount;
     
     bool isDead = false;
     bool isReadyToDash=false;
@@ -37,6 +38,8 @@ protected:
     bool isAttackCoolOn = false;
     bool isAttacking=false;
     bool isYPositionLocked = false;
+    bool isCatch = false;
+    
     
     float dashSpeed = 150.f;
     float dashCooldown = 3.f;
@@ -52,7 +55,7 @@ protected:
     
     sf::FloatRect playerBounds;
     sf::FloatRect damageBounds;
-    sf::FloatRect attackBounds;
+
     sf::FloatRect playerHitBox;
 
     sf::RectangleShape damageBox;
@@ -81,7 +84,7 @@ public:
 
     void DashTowards(float dt);
     virtual void Attack();
-    virtual void OnDamage(int damage);
+    virtual void OnDamage(int damage,int count);
     
     void MoveTowards(const sf::Vector2f& target, float dt);
     static sf::Vector2f Normalize(const sf::Vector2f& source);
@@ -93,5 +96,6 @@ public:
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
     virtual void CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies);
-
+    virtual sf::FloatRect GetHitBox() const;
+    virtual sf::FloatRect GetDamageBox() const;
 };

@@ -5,6 +5,7 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
+class Enemy;
 
 class Player :
     public SpriteGo
@@ -17,6 +18,7 @@ public:
 		isKick,
 		isHomeRun,
 	};
+	
 
 	int life = 1;
 
@@ -47,6 +49,8 @@ protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
 	Player2* player2 = nullptr;
+	Enemy* enemy;
+	YellowBaseBall* yellowEnemy;
 
 	Animator animator;
 	Animator animatorEffect;
@@ -93,10 +97,7 @@ protected:
 	float attackTimer = 0.f;
 	float attackTime = 0.3f;
 	bool attackTimeOn = false;
-
-
-
-
+	
 	//Hit
 	float hitTimer = 0.15f;
 	float hitTime = 0.f;
@@ -154,5 +155,6 @@ public:
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
 	bool IsJumping () const { return isJumping; }
 	bool IsInvincible() const { return invincible; }
+	int GetNormalAttack() const { return normalAttack; }
 };
 
