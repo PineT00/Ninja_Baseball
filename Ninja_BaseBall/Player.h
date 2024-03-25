@@ -49,7 +49,9 @@ public:
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
-	WindyPlane* player2 = nullptr;
+
+	Player2* player2 = nullptr;
+	WindyPlane* windyPlane = nullptr;
 
 	Animator animator;
 	Animator animatorEffect;
@@ -88,7 +90,7 @@ protected:
 	bool dashAttackTimeOn = false;
 
 	//Kick Attack
-	float kickTime = 1.f;
+	float kickTime = 0.6f;
 	float kickTimer = 0.f;
 	bool kickTimeOn = false;
 

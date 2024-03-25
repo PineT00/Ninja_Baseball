@@ -26,10 +26,6 @@ sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
 
 void SceneDev1::Init()
 {
-    //cameraRect.setSize({ 320.f, 240 });
-    //cameraRect.setOutlineColor(sf::Color::Cyan);
-    //cameraRect.setOutlineThickness(2);
-    //cameraRect.setFillColor(sf::Color::Transparent);
 
     worldView.setSize(windowSize);
     worldView.setCenter(0, 360);
@@ -47,16 +43,7 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-
-    // yellowEnemy = new YellowBaseBall("YellowEnemy");
-    // yellowEnemy->SetPosition({ 1400.f, 700.f });
-    // AddGameObject(yellowEnemy, World);
-    //
-    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
-    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
-    // AddGameObject(yellowEnemy2, World);
-
-    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -88,8 +75,6 @@ void SceneDev1::Enter()
 
     player2->SetActive(false);
     player->SetActive(false);
-    //yellowEnemy->SetActive(false);
-    //yellowEnemy2->SetActive(false);
 }
 
 void SceneDev1::Exit()

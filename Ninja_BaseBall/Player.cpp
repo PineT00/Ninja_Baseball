@@ -37,15 +37,18 @@ void Player::SetAttackOff()
 
 void Player::SetKickTimeOn()
 {
-	kickTimeOn = true;
 	velocity.y = -600.f;
+	jumpY = GetPosition().y;
+	isGrounded = false;
+	kickTimeOn = true;
+
 }
 
 void Player::SetBox()
 {
 	if (sprite.getScale().x < 0)
 	{
-		attackBox.setOrigin({ 150.f, 100.f });
+		attackBox.setOrigin({ 175.f, 100.f });
 		grapBox.setOrigin({ 100.f, 100.f });
 	}
 	else
@@ -97,10 +100,9 @@ void Player::OnDamage(int damage)
 
 void Player::DynamiteKick()
 {
-	jumpY = GetPosition().y;
-	kickTime = 1.f;
+	kickTime = 0.7f;
 	animator.Play("Animations/player/player_DynamiteKick.csv");
-	isGrounded = false;
+
 	//inputOn = false;
 
 }
@@ -118,13 +120,13 @@ void Player::Init()
 	grapBox.setFillColor(sf::Color::Blue);
 	hitBox.setFillColor(sf::Color::Yellow);
 	
-	attackBox.setSize({ 20, 20 });
+	attackBox.setSize({ 50, 80 });
 	grapBox.setSize({ 20,20 });
-	hitBox.setSize({ 70,90 });
+	hitBox.setSize({ 70,160 });
 
-	attackBox.setOrigin({ -120.f, 150.f });
-	grapBox.setOrigin({ -70.f, 150.f });
-	hitBox.setOrigin({ 35.f, 150.f });
+	attackBox.setOrigin({ -120.f, 100.f });
+	grapBox.setOrigin({ -70.f, 100.f });
+	hitBox.setOrigin({ 35.f, 190.f });
 
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({90.f, 35.f});
@@ -158,6 +160,8 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_JumpAttackSK.csv", 3, AttackOff);
 
 	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 3, KickOn);
+	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 2, AttackOn);
+	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 20, AttackOff);
 
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, GripAttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
@@ -179,8 +183,8 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	player2 = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
-
+	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
+	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -224,7 +228,6 @@ void Player::Update(float dt)
 				v = 1;
 			}
 		}
-
 
 
 
@@ -313,11 +316,12 @@ void Player::Update(float dt)
 
 	if (!isGrounded)
 	{
-		if (position.y >= jumpY)
+		if (position.y > jumpY)
 		{
 			isGrounded = true;
 			isJumping = false;
 			SetPosition({ position.x, jumpY });
+
 		}
 	}
 
@@ -435,7 +439,7 @@ void Player::Update(float dt)
 	}
 
 	//잡기박스와 닿았을때
-	if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
+	if (!kickTimeOn && !isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
 	{
 		animator.Play("Animations/player/player_Grip.csv");
 		isGrip = true;
@@ -452,10 +456,6 @@ void Player::Update(float dt)
 		{
 			gripCoolTime = 0.f;
 		}
-	}
-	if (isAttack)
-	{
-
 	}
 
 
@@ -491,7 +491,7 @@ void Player::Update(float dt)
 					break;
 			}
 			//player2->getHit = true;
-			player2->OnDamaged(10);
+			//player2->OnDamaged(10);
 		}
 	}
 	else
@@ -543,6 +543,7 @@ void Player::Update(float dt)
 			{
 				inputOn = false;
 				DynamiteKick();
+
 			}
 		}
 
@@ -583,7 +584,7 @@ void Player::Update(float dt)
 
 	if (kickTimeOn)
 	{
-		velocity.x = sprite.getScale().x * 500.f;
+		velocity.x = sprite.getScale().x * 700.f;
 		kickTime -= dt;
 	}
 
@@ -591,7 +592,7 @@ void Player::Update(float dt)
 	{
 		kickTimeOn = false;
 		animator.Play("Animations/player/player_Idle.csv");
-		kickTime = 1.f;
+		kickTime = 0.7f;
 		inputOn = true;
 	}
 
