@@ -185,7 +185,6 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 2, AttackOn);
 	animator.AddEvent("Animations/player/player_DynamiteKick.csv", 20, AttackOff);
 
-	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, GripAttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
@@ -206,7 +205,8 @@ void Player::Reset()
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
-	player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
+	yellowBaseBall = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -223,7 +223,7 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	enemyHitBox = player2->GetHitBox();
+	enemyHitBox = yellowBaseBall->GetHitBox();
 	//enemyHitBox = windyPlane->GetHitBox();
 
 	//SpriteGo::Update(dt);
@@ -552,6 +552,7 @@ void Player::Update(float dt)
 		{
 			if (InputManager::GetKeyDown(sf::Keyboard::Q))
 			{
+				SetGripBox();
 				animator.Play("Animations/player/player_GripAttack1.csv");
 				attackTime = 2.f;
 				gripAttackCount += 1;

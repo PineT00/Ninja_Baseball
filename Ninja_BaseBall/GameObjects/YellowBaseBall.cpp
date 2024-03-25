@@ -32,14 +32,15 @@ void YellowBaseBall::SetState()
                 break;
             case 4:
                 yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Damage4.csv");
-                
+                break;
+            default:
                 break;
             }
         break;
     case EnemyState::DEAD:
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
         break;
-    case EnemyState::CATCH:
+    case EnemyState::CATCHED:
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
         break;
     case EnemyState::DASH:
@@ -112,32 +113,70 @@ void YellowBaseBall::Draw(sf::RenderWindow& window)
 
 void YellowBaseBall::Update(float dt)
 {
-    Enemy::Update(dt);
-    
-    //sprite.setPosition(sprite.getPosition());
-    
-    attackBox.setPosition(sprite.getPosition());
-    damageBox.setPosition(sprite.getPosition());
-    //currentEnemy = EnemyState::MOVE;
-    
-    if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+    if (!isDead)
     {
-        Attack();
-        SetState();
+        Enemy::Update(dt);
+        //sprite.setPosition(sprite.getPosition());
+
+        attackBox.setPosition(sprite.getPosition());
+        damageBox.setPosition(sprite.getPosition());
+        //currentEnemy = EnemyState::MOVE;
+
+        if (!isDead && damageBox.getGlobalBounds().intersects(player->GetGrapBox()))
+        {
+            isCatched = true;
+            EnemyState::CATCHED;
+            SetState();
+
+            SetPosition({ player->GetAttackBox().left, player->GetAttackBox().top + 70.f });
+            if (player->isAttack)
+            {
+                if (player->gripAttackCount == 3)
+                {
+                    player->isGrip = false;
+                    OnDamage(50, 0);
+                }
+                else
+                {
+                    OnDamage(10, 0);
+                    std::cout << health << std::endl;
+                }
+
+            }
+
+
+        }
+
+        if (!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
+        {
+            Attack();
+            SetState();
+        }
+
+        else
+        {
+            if (attackCooldown >= 2.f)
+            {
+                currentEnemy = EnemyState::MOVE;
+                SetState();
+            }
+            attackCooldown -= dt;
+            if (attackCooldown <= 0.f)
+            {
+                isAttackCoolOn = false;
+                attackCooldown = 2.f;
+            }
+        }
+
     }
     else
     {
-        if (attackCooldown >= 2.f)
-        {
-            currentEnemy = EnemyState::MOVE;
-            SetState();
-        }
-        attackCooldown -= dt;
-        if (attackCooldown <= 0.f)
-        {
-            isAttackCoolOn = false;
-            attackCooldown = 2.f;
-        }
+        deadTimer -= dt;
+    }
+    if (deadTimer <= 0.f)
+    {
+        SetActive(false);
+        damageBox.setSize({ 0,0 });
     }
     
     yellowBaseBallAnimator.Update(dt);
@@ -145,9 +184,13 @@ void YellowBaseBall::Update(float dt)
 
 void YellowBaseBall::OnDamage(int damage,int count)
 {
-    Enemy::OnDamage(damage,count);
-    //currentEnemy = EnemyState::HURT;
-    SetState();
+    if (!isInvincible)
+    {
+        Enemy::OnDamage(damage, count);
+        //currentEnemy = EnemyState::HURT;
+        SetState();
+    }
+
 }
 
 void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)

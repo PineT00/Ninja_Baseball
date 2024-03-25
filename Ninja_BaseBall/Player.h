@@ -6,6 +6,7 @@ class ComboCommands;
 class SceneDev1;
 class Player2;
 class WindyPlane;
+class YellowBaseBall;
 
 class Player :
     public SpriteGo
@@ -54,6 +55,7 @@ protected:
 
 	Player2* player2 = nullptr;
 	WindyPlane* windyPlane = nullptr;
+	YellowBaseBall* yellowBaseBall = nullptr;
 
 	Animator animator;
 	Animator animatorEffect;
@@ -139,8 +141,11 @@ public:
 	void SetBox();
 	void SetGripBox();
 
+
+
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
 	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
+	sf::FloatRect GetGrapBox() { return grapBox.getGlobalBounds(); }
 
 	void Bitted();
 	void Death();

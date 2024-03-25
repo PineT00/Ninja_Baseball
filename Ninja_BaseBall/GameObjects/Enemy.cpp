@@ -40,6 +40,16 @@ void Enemy::Reset()
 
 void Enemy::Update(float dt)
 {
+    if (isInvincible)
+    {
+        invincibleTime -= dt;
+        if (invincibleTime <= 0.f)
+        {
+            isInvincible = false;
+            invincibleTime = 0.2f;
+        }
+    }
+
     if (isDead || player == nullptr) return;
 
     attackBox.setPosition(sprite.getPosition());
@@ -71,9 +81,9 @@ void Enemy::Update(float dt)
         currentEnemy = EnemyState::MOVE;
     }
 
-    if(isCatch)
+    if(isCatched)
     {
-        currentEnemy = EnemyState::CATCH;
+        currentEnemy = EnemyState::CATCHED;
     }
    
     if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
@@ -117,16 +127,24 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnDamage(int damage,int count)
 {
+    health -= damage;
+
     if(health <= 0)
     {
         isDead = true;
         currentEnemy = EnemyState::DEAD;
         return;
     }
+    else if (count == 0)
+    {
+        currentEnemy = EnemyState::HURT;
+        isInvincible = true;
+        return;
+    }
     else
     {
-        health -= damage;
         this->damageCount=count;
+        isInvincible = true;
         currentEnemy = EnemyState::HURT;
     }
 }
@@ -141,7 +159,7 @@ void Enemy::DashTowards(float dt)
 void Enemy::Attack()
 {
     //attackTimer = attackCooldown;
-    if(player->GetHealth()<=0)
+    if(player->hp <=0 )
     {
         currentEnemy = EnemyState::MOVE;
         return;
@@ -150,7 +168,7 @@ void Enemy::Attack()
     if(attackTimer<=0 && player != nullptr)
     {
         currentEnemy = EnemyState::ATTACK;
-        player->OnDamage(damage);
+        player->OnDamage(damage,1,GetPosition().x);
         std::cout<<"attack"<<std::endl;
         isAttacking = true;
         

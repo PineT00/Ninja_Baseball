@@ -43,7 +43,7 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -286,7 +286,7 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
         enemy->SetPosition(position);
         AddGameObject(enemy, World);
-        enemies.push_back(enemy);
+        //enemies.push_back(enemy);
     }
 }
 

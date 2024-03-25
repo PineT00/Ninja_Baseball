@@ -8,7 +8,7 @@ class YellowBaseBall:public Enemy
 {
 public :
     //잡힘 여부 판단 
-    bool isCatch = false;
+    //bool isCatched = false;
     //이동 여부 판단
     bool hasMovedInitial = false;
     //공격 관련
@@ -26,12 +26,14 @@ public :
     int hitCount=0;
     int maxHitCount=3;
     
-    int maxHealth =200;
-    int health = maxHealth;
+    //int maxHealth =200;
+    //int health = maxHealth;
     sf::Clock hitClock;
 
     float updateInterval=0.1f;
     float updateTimer=0.f;
+
+    float deadTimer = 2.f;
     
 protected:
     enum class YellowBaseBallState
@@ -40,7 +42,7 @@ protected:
         MOVE,
         DASH,
         ATTACK,
-        CATCH,
+        CATCHED,
         HURT,
         DEAD,
         WAIT
@@ -55,8 +57,8 @@ protected:
     sf::FloatRect attackBounds;
 
     //damageBox 플레이어에게 맞을 곳 ,attackBox 플레이어를 때릴 곳
-    sf::RectangleShape damageBox;
-    sf::RectangleShape attackBox;
+    //sf::RectangleShape damageBox;
+    //sf::RectangleShape attackBox;
 
     sf::Vector2f playerPosition;
 public:

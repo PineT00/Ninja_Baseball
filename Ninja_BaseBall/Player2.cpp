@@ -381,7 +381,7 @@ void Player2::Update(float dt)
 
 
 		//몬스터용 잡히기 테스트
-		if (player->isGrip)
+		if (hitBox.getGlobalBounds().intersects(player->GetGrapBox()) && player->isGrip)
 		{
 			inputOn = false;
 			SetPosition( { player->GetAttackBox().left, player->GetAttackBox().top + 70.f } );
