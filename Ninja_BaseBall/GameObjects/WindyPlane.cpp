@@ -50,106 +50,7 @@ void WindyPlane::Init()
 	// clipInfos[parts].clips : 상태별 클립 모음
 	// clipInfos[parts].clipStatus : 상태별 클립 사용 여부
 
-	//Wing Event
-	std::function<void()> onDamagedEvent = std::bind(&WindyPlane::OnDamagedEvent, this);
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::DAMAGED], 3, onDamagedEvent);
-
-	std::function<void()> attackOneTwo = std::bind(&WindyPlane::AttackOneTwoEvent, this);
-	for (int i = 12; i <= 15; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
-	}
-
-	std::function<void()> attackStraight = std::bind(&WindyPlane::AttackStraightEvent, this);
-	for (int i = 19; i <= 30; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
-	}
-
-	std::function<void()> attackUpperCut = std::bind(&WindyPlane::AttackUpperCutEvent, this);
-	for (int i = 5; i <= 9; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
-	}
-
-	std::function<void()> attackWind = std::bind(&WindyPlane::AttackWindEvent, this);
-	for (int i = 0; i <= 5; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::WIND], i, attackWind);
-	}
-
-	std::function<void()> attackGun = std::bind(&WindyPlane::AttackGunEvent, this);
-	for (int i = 0; i <= 5; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::GUN], i, attackGun);
-	}
-
-
-
-	//NoWing Event
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
-
-	for (int i = 6; i <= 14; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
-	}
-
-	for (int i = 8; i <= 12; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
-	}
-
-	for (int i = 5; i <= 9; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
-	}
-
-	std::function<void()> attackGunReady = std::bind(&WindyPlane::AttackGunReadyEvent, this);
-	for (int i = 0; i <= 12; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::GUNREADY], i, attackGunReady);
-	}
-	
-	for (int i = 0; i <= 5; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::GUN], i, attackGun);
-	}
-
-
-
-	//NoProp Event
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
-
-	for (int i = 6; i <= 15; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
-	}
-
-	for (int i = 8; i <= 12; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
-	}
-
-	for (int i = 5; i <= 9; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
-	}
-
-	//OneArm Event
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
-
-	for (int i = 8; i <= 12; ++i)
-	{
-		animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
-	}
-
-
-	//NoArm Event
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
-
-	std::function<void()> deathEvent = std::bind(&WindyPlane::OnDieEvent, this);
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], 6, deathEvent);
-
+	LoadAllEvents();
 
 	// FindGo
 	sceneDevBoss = dynamic_cast<SceneDevBoss*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss));
@@ -194,6 +95,12 @@ void WindyPlane::Update(float dt)
 		currentStatus = WindyPlaneStatus::WIND;
 	}
 
+	// HOLD TEST
+
+
+
+
+
 	switch (currentPartsStatus)
 	{
 	case BossPartsStatus::Wing:
@@ -201,7 +108,6 @@ void WindyPlane::Update(float dt)
 		{
 			isAwake = false;
 			AttackWind(dt);
-
 		}
 	case BossPartsStatus::NoWing:
 	case BossPartsStatus::NoProp:
@@ -251,6 +157,17 @@ void WindyPlane::Update(float dt)
 	default:
 		break;
 	}
+
+	if (player->isGrip)
+	{
+		currentStatus = WindyPlaneStatus::HOLD;
+		currentSpeed = 0.f;
+	}
+	else
+	{
+		currentSpeed = speed;
+	}
+
 
 	ChasePlayer(dt);
 	PlayAnimation(currentPartsStatus, currentStatus);
@@ -322,7 +239,6 @@ void WindyPlane::ChasePlayer(float dt)
 		if (!isAscending)
 		{
 			isAscending = true;
-			direction = 
 			windDirection = Utils::MyMath::GetNormal(direction + up);
 		}
 
@@ -473,6 +389,125 @@ void WindyPlane::OnDie()
 void WindyPlane::OnDieEvent()
 {
 	SetActive(false);
+}
+
+void WindyPlane::HoldEvent()
+{
+	currentStatus = WindyPlaneStatus::IDLE;
+}
+
+void WindyPlane::LoadAllEvents()
+{
+	// Entire Event
+	std::function<void()> holdEvent = std::bind(&WindyPlane::HoldEvent, this);
+	for (int partsStatus = 0; partsStatus < clipInfos.size(); ++partsStatus)
+	{
+		for (int windyStatus = 0; windyStatus < clipInfos[partsStatus].clips.size(); ++windyStatus)
+		{
+			animator.AddEvent(clipInfos[(int)partsStatus].clips[windyStatus], 0, holdEvent);
+		}
+	}
+
+	//Wing Event
+	std::function<void()> onDamagedEvent = std::bind(&WindyPlane::OnDamagedEvent, this);
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::DAMAGED], 3, onDamagedEvent);
+
+	std::function<void()> attackOneTwo = std::bind(&WindyPlane::AttackOneTwoEvent, this);
+	for (int i = 12; i <= 15; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	std::function<void()> attackStraight = std::bind(&WindyPlane::AttackStraightEvent, this);
+	for (int i = 19; i <= 30; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+	std::function<void()> attackUpperCut = std::bind(&WindyPlane::AttackUpperCutEvent, this);
+	for (int i = 5; i <= 9; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
+	}
+
+	std::function<void()> attackWind = std::bind(&WindyPlane::AttackWindEvent, this);
+	for (int i = 0; i <= 5; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::WIND], i, attackWind);
+	}
+
+	std::function<void()> attackGun = std::bind(&WindyPlane::AttackGunEvent, this);
+	for (int i = 0; i <= 5; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::GUN], i, attackGun);
+	}
+
+
+
+	//NoWing Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	for (int i = 6; i <= 14; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 8; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+	for (int i = 5; i <= 9; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
+	}
+
+	std::function<void()> attackGunReady = std::bind(&WindyPlane::AttackGunReadyEvent, this);
+	for (int i = 0; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::GUNREADY], i, attackGunReady);
+	}
+
+	for (int i = 0; i <= 5; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::GUN], i, attackGun);
+	}
+
+
+
+	//NoProp Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	for (int i = 6; i <= 15; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 8; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+	for (int i = 5; i <= 9; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::UPPERCUT], i, attackUpperCut);
+	}
+
+	//OneArm Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	for (int i = 8; i <= 12; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
+	}
+
+
+	//NoArm Event
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
+
+	std::function<void()> deathEvent = std::bind(&WindyPlane::OnDieEvent, this);
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], 6, deathEvent);
+
 }
 
 void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus planeStatus)

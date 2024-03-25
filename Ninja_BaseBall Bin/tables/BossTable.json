@@ -12,7 +12,8 @@
                     "animations/Boss/NewAnim/wing/bossGun.csv",
 					"",
 					"",
-					""
+					"",
+					"animations/Boss/NewAnim/wing/bossHold.csv"
                 ]
             },
             "NoWing": {
@@ -26,7 +27,8 @@
                     "animations/Boss/NewAnim/noWing/bossGun.csv",
                     "animations/Boss/NewAnim/noWing/bossGunReady.csv",
 					"",
-					""
+					"",
+					"animations/Boss/NewAnim/noWing/bossHold.csv"
                 ]
             },
             "NoProp": {
@@ -40,7 +42,8 @@
 					"",
 					"",
 					"",
-					""
+					"",
+					"animations/Boss/NewAnim/noProp/bossHold.csv"
                 ]
             },
             "OneArm": {
@@ -55,7 +58,8 @@
 					"",
 					"",
 					"",
-					""
+					"",
+					"animations/Boss/NewAnim/OneArm/bossHold.csv"
                 ]
             },
             "NoArm": {
@@ -69,7 +73,8 @@
 					"",
 					"",
 					"animations/Boss/NewAnim/noArm/bossFinal.csv",
-					"animations/Boss/NewAnim/noArm/bossDeath.csv"
+					"animations/Boss/NewAnim/noArm/bossDeath.csv",
+					"animations/Boss/NewAnim/NoArm/bossHold.csv"
                 ]
             }
         }

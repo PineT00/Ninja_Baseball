@@ -21,7 +21,8 @@ public :
 		GUN,
 		GUNREADY,
 		FINAL,
-		DEATH
+		DEATH,
+		HOLD, // TODO : 잡힌 상태 추가
 	};
 
 	struct ClipInfo
@@ -127,7 +128,6 @@ public:
 
 	void ApplyAttackEvent(bool isClosed, bool isRanged);
 
-
 	// 플레이어 찾기
 	void FindPlayer();
 
@@ -136,13 +136,13 @@ public:
 	void OnDamagedEvent();
 	void OnDie();
 	void OnDieEvent();
+	void HoldEvent();
 
 	// 상태
-	//void LoadAllEvents();
+	void LoadAllEvents();
 	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void CheckEndFrame();
 	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
 
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
-
 };
