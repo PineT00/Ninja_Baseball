@@ -29,6 +29,7 @@ protected:
 	bool isSetVelocity = false;
 
 public:
+
 	WindEffect(const std::string& name = "WindEffect");
 	~WindEffect() override = default;
 

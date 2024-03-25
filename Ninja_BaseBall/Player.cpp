@@ -182,7 +182,7 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
+	windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
 	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
 
 	attackBox.setPosition({ GetPosition() });
@@ -458,8 +458,11 @@ void Player::Update(float dt)
 	}
 
 
+	std::cout << attackBox.getGlobalBounds().left << " : " << attackBox.getGlobalBounds().top << " : " << attackBox.getGlobalBounds().width << " : " << attackBox.getGlobalBounds().height << std::endl;
+	std::cout << windyPlane->GetHitBox().left << " : " << windyPlane->GetHitBox().top << " : " << windyPlane->GetHitBox().width << " : " << windyPlane->GetHitBox().height << std::endl;
+
 	//공격박스와 닿았을때
-	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
+	if (!isGrip && attackBox.getGlobalBounds().intersects(windyPlane->GetHitBox()))
 	{
 
 		if (InputManager::GetKeyDown(sf::Keyboard::Q))
@@ -491,6 +494,7 @@ void Player::Update(float dt)
 			}
 			//player2->getHit = true;
 			//player2->OnDamaged(10);
+			windyPlane->OnDamaged(10);
 		}
 	}
 	else

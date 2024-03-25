@@ -167,16 +167,17 @@ void Animator::Stop()
 
 void Animator::SetFrame(const AnimationFrame& frame)
 {
+	target->setTexture(frame.GetTexture(), true);
+	target->setTextureRect(frame.textureCoord);
+
 	if (frame.pivot == Origins::CUSTOM)
 	{
-		target->setOrigin(frame.customPivot);
+		target->setOrigin(frame.customPivot); 
 	}
 	else
 	{
 		Utils::Origin::SetOrigin(*target, frame.pivot);
 	}
-	target->setTexture(frame.GetTexture());
-	target->setTextureRect(frame.textureCoord);
 }
 
 void Animator::AddEvent(const std::string& clipId, int frame, std::function<void()> action)

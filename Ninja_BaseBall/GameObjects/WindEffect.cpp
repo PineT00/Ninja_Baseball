@@ -20,7 +20,7 @@ void WindEffect::Init()
 void WindEffect::Reset()
 {
 	SetOrigin(Origins::BC);
-	SetPosition({ windyPlane->GetPosition().x, Utils::Random::RandomRange(windyPlane->GetPosition().y, 120.f) });
+	SetPosition({ windyPlane->GetPosition().x, Utils::Random::RandomRange(windyPlane->GetPosition().y - 120, windyPlane->GetPosition().y)});
 	isSetVelocity = false;
 }
 
