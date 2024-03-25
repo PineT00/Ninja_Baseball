@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "SceneDev1.h"
 
-Enemy::Enemy(const std::string& name): SpriteGo(name), Scene(nullptr), player(nullptr), dashYPos(0)
+Enemy::Enemy(const std::string& name): SpriteGo(name), Scene(nullptr), player(nullptr), dashYPos(0),attackTimer(0)
 {
 }
 
@@ -43,7 +43,10 @@ void Enemy::Update(float dt)
     TargetDirection(playerPosition);
     float yDistance = std::abs(playerPosition.y - currentPosition.y);
     float xDistance = std::abs(playerPosition.x - currentPosition.x);
-    
+    if(isAttacking)
+    {
+        sprite.setPosition(lastPosition);
+    } 
     // dash cooldown logic
     if (dashCooldownTimer > 0) dashCooldownTimer -= dt;
 
@@ -56,12 +59,17 @@ void Enemy::Update(float dt)
         // dash movement logic
         DashToPlayer(dt, currentPosition);
         currentEnemy = EnemyState::DASH;
-    } else {
+    } else if(currentEnemy != EnemyState::ATTACK) {
         // normal movement logic
         NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
         currentEnemy = EnemyState::MOVE;
     }
 
+    if(attackTimer>0)
+    {
+        attackTimer-=dt;
+    }
+    
     // position update
     sprite.setPosition(currentPosition);
     // animation update
@@ -105,7 +113,7 @@ void Enemy::OnDamage(int damage)
     }
 }
 
-void Enemy::DashTowards(const sf::Vector2f& target, float dt)
+void Enemy::DashTowards(float dt)
 {
     if (!isReadyToDash) return;
     sf::Vector2f direction = Normalize(player->GetPosition() - sprite.getPosition());
@@ -115,13 +123,24 @@ void Enemy::DashTowards(const sf::Vector2f& target, float dt)
 void Enemy::Attack()
 {
     //attackTimer = attackCooldown;
-    currentEnemy = EnemyState::ATTACK;
-    if(!isAttackCoolOn && !isAttack&&player != nullptr)
+    if(player->GetHealth()<=0)
     {
-        std::cout<<"attack"<<std::endl;
-        player->OnDamage(damage);
+        currentEnemy = EnemyState::MOVE;
+        return;
     }
-    isAttackCoolOn = true;
+    
+    if(attackTimer<=0 && player != nullptr)
+    {
+        currentEnemy = EnemyState::ATTACK;
+        std::cout<<"attack"<<std::endl;
+        lastPosition = sprite.getPosition();
+        isAttacking = true;
+        player->OnDamage(damage);
+        
+        attackTimer = attackCooldown;
+    }
+    
+    //isAttackCoolOn = true;
     
 }
 
@@ -130,8 +149,12 @@ void Enemy::MoveTowards(const sf::Vector2f& target, float dt)
     sf::Vector2f currentPosition = sprite.getPosition();
     float distanceToTarget = Utils::MyMath::Distance(target, currentPosition);
     currentEnemy = EnemyState::MOVE;
-    const float minDistance = 500.0f;  
+    constexpr float minDistance = 500.0f;
     
+    if(currentEnemy==EnemyState::ATTACK)
+    {
+        return;
+    }
     if (distanceToTarget > minDistance)
     {
         float yDistance = std::abs(target.y - currentPosition.y);
@@ -226,6 +249,7 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
 {
     const float minDistance=175.f;
     
+    
     // Y축 조정
     if(player&&!player->IsJumping())
     {
@@ -233,8 +257,6 @@ void Enemy::NormalMovement(float dt, sf::Vector2f& currentPosition,
             currentPosition.y += (playerPosition.y > currentPosition.y ? 1 : -1) * speed * dt;
         }
     }
-    
-    
     if (xDistance > minDistance) {
         currentPosition.x += (playerPosition.x > currentPosition.x ? 1 : -1) * speed * dt;
     }

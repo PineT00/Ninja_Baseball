@@ -173,10 +173,10 @@ void SceneDev1::UpdateGame(float dt)
             {
                 enemy->SetActive(true);
             }
-            if(enemy->GetName() == "YellowBaseBall2")
-            {
-                enemy->SetActive(true);
-            }
+            // if(enemy->GetName() == "YellowBaseBall2")
+            // {
+            //     enemy->SetActive(true);
+            // }
         }
 
     }

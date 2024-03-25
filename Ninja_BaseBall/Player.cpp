@@ -196,7 +196,7 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	enemyHitBox = player2->GetHitBox();
+	//enemyHitBox = player2->GetHitBox();
 	//enemyHitBox = sceneDev1->GetEnemyHitBox();
 	//SpriteGo::Update(dt);
 	animator.Update(dt);

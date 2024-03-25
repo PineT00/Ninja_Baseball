@@ -35,13 +35,14 @@ protected:
     bool isDash =false;
     bool isAttack = false;
     bool isAttackCoolOn = false;
+    bool isAttacking=false;
     
     float dashSpeed = 150.f;
     float dashCooldown = 3.f;
     float dashCooldownTimer = 0.f;
     float acceptableYDistance = 15.f;
     float attackTimer = 0.f;
-    float attackCooldown = 2.f;
+    const float attackCooldown = 1.5f;
     float dashYPos;
     
     sf::Vector2f dashDirection;
@@ -77,7 +78,7 @@ public:
         //sprite.setPosition(position);
     }
 
-    void DashTowards(const sf::Vector2f& target, float dt);
+    void DashTowards(float dt);
     virtual void Attack();
     virtual void OnDamage(int damage);
     
@@ -92,8 +93,7 @@ public:
     virtual void StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition);
     virtual void NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition, float xDistance, float yDistance);
     virtual void CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies);
-   
-    // 적을 특정 방향으로 이동시킵니다.
+    
     void Move(const sf::Vector2f& offset) {
         sprite.move(offset);
     }

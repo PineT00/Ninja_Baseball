@@ -13,22 +13,33 @@ void YellowBaseBall::SetState()
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
         break;
     case EnemyState::MOVE:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
         break;
     case EnemyState::ATTACK:
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
         break;
     case EnemyState::HURT:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Hurt.csv");
+        if(player->GetHitBox().intersects(damageBox.getGlobalBounds()))
+        {
+            switch (player->normalAttack)
+            {
+                
+            }
+        }
+        else
+        {
+            currentEnemy = EnemyState::MOVE;
+            SetState();
+        }
         break;
     case EnemyState::DEAD:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
         break;
     case EnemyState::CATCH:
         yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
         break;
     case EnemyState::DASH:
-        yellowBaseBallAnimator.PlayQueue("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
+        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
         break;
     }
 }
@@ -41,7 +52,7 @@ void YellowBaseBall::Init()
 {
     Enemy::Init();
     yellowBaseBallAnimator.SetTarget(&sprite);
-    currentEnemy = EnemyState::IDLE;
+    currentEnemy = EnemyState::MOVE;
     SetState();
 }
 
@@ -119,7 +130,7 @@ void YellowBaseBall::Update(float dt)
     damageBox.setPosition(sprite.getPosition());
 
     //currentEnemy = EnemyState::MOVE;
-
+    
     if(!isAttackCoolOn && attackBox.getGlobalBounds().intersects(player->GetHitBox()))
     {
         Attack();
@@ -129,7 +140,7 @@ void YellowBaseBall::Update(float dt)
     {
         if (attackCooldown >= 2.f)
         {
-            currentEnemy = EnemyState::IDLE;
+            currentEnemy = EnemyState::MOVE;
             SetState();
         }
         attackCooldown -= dt;
