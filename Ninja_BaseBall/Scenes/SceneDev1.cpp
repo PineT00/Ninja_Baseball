@@ -173,6 +173,31 @@ void SceneDev1::UpdateGame(float dt)
 
     worldViewCenter.x = xMax;
 
+    if (cameraShakeOn)
+    {
+        cameraShakeTime -= dt;
+
+        int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
+        if (shakeTimeScaled % 2 == 0) // shakeTimeScaled가 짝수인 경우
+        {
+            // 카메라를 위로 흔들기
+            worldViewCenter.y -= 0.3;
+        }
+        else
+        {
+            // 카메라를 아래로 흔들기
+            worldViewCenter.y += 0.3;
+        }
+
+        if (cameraShakeTime <= 0.f)
+        {
+            cameraShakeOn = false;
+            cameraShakeTime = 1.f;
+        }
+
+    }
+
+
     worldView.setCenter(worldViewCenter);
 
     stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f, 0.f });
@@ -182,6 +207,7 @@ void SceneDev1::UpdateGame(float dt)
     if (InputManager::GetKeyDown(sf::Keyboard::Num1))
     {
         stage->clearStage1_1 = true;
+        cameraShakeOn = true;
     }
     else if (InputManager::GetKeyDown(sf::Keyboard::Num2))
     {
@@ -201,7 +227,6 @@ void SceneDev1::UpdateGame(float dt)
         player2->SetActive(true);
         player->SetActive(true);
     }
-
 
 }
 
