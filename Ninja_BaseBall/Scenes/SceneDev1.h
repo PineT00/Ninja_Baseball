@@ -26,7 +26,23 @@ public:
 
 	sf::Vector2f worldViewCenter = {0.f,0.f};
 
+	sf::FloatRect stageRect;
+
 	int currStage = 0;
+
+	Stage1* stage = nullptr;
+
+	bool enterToBossFloor = false;
+
+	//내부 스테이지 카메라 중심
+	float camCenter1;
+	float camCenter2;
+	float camCenter3;
+	float camCenter4; //노말
+	float camCenter5; //부서진1
+	float camCenter6; //부서진2
+	float camCenter7; //비행기 스테이지
+	float camCenter8; //비행기 보스
 
 protected :
 	SceneDev1(const SceneDev1&)				= delete;
@@ -39,7 +55,7 @@ protected :
 	float xMax = 0.f;
 
 	WindyPlane* windyPlane = nullptr;
-	Stage1* stage = nullptr;
+
 	
 	UiHUD* hud = nullptr;
 	// YellowBaseBall* yellowEnemy;
@@ -79,5 +95,8 @@ public:
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
 	void CameraShake(float dt);
+
+	void FightOn();
 	void ClearStage();
+	void MoveToBoss();
 };

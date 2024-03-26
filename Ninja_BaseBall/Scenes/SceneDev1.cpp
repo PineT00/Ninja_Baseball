@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "SceneDev1.h"
 #include "UiHUD.h"
-#include "Tilemap.h"
-#include "SpriteGo.h"
-#include "TextGo.h"
-#include "InputField.h"
+//#include "Tilemap.h"
+//#include "SpriteGo.h"
+//#include "TextGo.h"
+//#include "InputField.h"
 #include "Enemy.h"
 #include "YellowBaseBall.h"
 #include "Stage1.h"
@@ -19,11 +19,10 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
-sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //현재 미사용!
 {
-    sf::FloatRect rect = stage->groundBound.getGlobalBounds();
-
-    return Utils::MyMath::Clamp(point, rect);
+    stageRect = stage->groundBound.getGlobalBounds();
+    return Utils::MyMath::Clamp(point, stageRect);
 }
 
 void SceneDev1::Init()
@@ -48,7 +47,7 @@ void SceneDev1::Init()
     windyPlane = new WindyPlane();
     enemies.push_back(windyPlane);
     AddGameObject(windyPlane);
-    
+    windyPlane->SetActive(false);
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -74,7 +73,16 @@ void SceneDev1::Enter()
 
     xMax = 500.f; //카메라 시작 지점
 
+    stageRect = stage->groundBound.getGlobalBounds(); //시작시 이동가능바닥
+
     player->SetActive(false);
+
+    camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
+    camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);
+    camCenter3 = stage->stageBound1_3.getGlobalBounds().left + (stage->stageBound1_3.getGlobalBounds().width / 2);
+    camCenter4 = stage->stageBound1_4.getGlobalBounds().left + (stage->stageBound1_4.getGlobalBounds().width / 2);
+    camCenter7 = stage->stageBound1_7.getGlobalBounds().left + (stage->stageBound1_7.getGlobalBounds().width / 2);
+    camCenter8 = stage->stageBound1_8.getGlobalBounds().left + (stage->stageBound1_8.getGlobalBounds().width / 2);
 }
 
 void SceneDev1::Exit()
@@ -129,62 +137,82 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+    if (!enterToBossFloor)
+    {
+        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stageRect));
+    }
+    else
+    {
+
+    }
+
+
     if (!isFighting && player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
     }
-    float camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
-    float camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);
-    float camCenter3 = stage->stageBound1_3.getGlobalBounds().left + (stage->stageBound1_3.getGlobalBounds().width / 2);
-    float camCenter4 = stage->stageBound1_4.getGlobalBounds().left + (stage->stageBound1_4.getGlobalBounds().width / 2);
 
-    if (!(stage->clearStage1_1) && xMax >= camCenter1)
+
+    if (!(stage->clearStage1_1) && xMax > camCenter1)
     {
         currStage = 1;
-        isFighting = true;
-        xMax = camCenter1;
-        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
+        FightOn();
+
         std::list <GameObject*> yellowBaseBallList;
         FindAll("YellowBaseBall", yellowBaseBallList);
         for (auto& yellowBaseBall : yellowBaseBallList)
         {
             yellowBaseBall->SetActive(true);
         }
-
     }
-    if (!(stage->clearStage1_2) && xMax >= camCenter2)
+    if (!(stage->clearStage1_2) && xMax > camCenter2)
     {
         currStage = 2;
-        isFighting = true;
-        xMax = camCenter2;
-        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
+        FightOn();
     }
-    if (!(stage->clearStage1_3) && xMax >= camCenter3)
+    if (!(stage->clearStage1_3) && xMax > camCenter3)
     {
         currStage = 3;
-        isFighting = true;
-        xMax = camCenter3;
-        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
+        FightOn();
     }
-    if (!(stage->clearStage1_6) && xMax >= camCenter4)
+    if (!(stage->clearStage1_4) && xMax > camCenter4)
     {
         currStage = 4;
-        isFighting = true;
-        xMax = camCenter4;
-        player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+        FightOn();
     }
-    if (stage->clearStage1_4)
+    if (stage->clearStage1_4 && !(stage->clearStage1_5) && xMax > camCenter4)
     {
         currStage = 5;
+        FightOn();
     }
-    if (stage->clearStage1_5)
+    if (stage->clearStage1_5 && !(stage->clearStage1_6) && xMax > camCenter4)
     {
         currStage = 6;
+        FightOn();
+    }
+    if (stage->clearStage1_6 && !(stage->clearStage1_7) && xMax > camCenter7)
+    {
+        currStage = 7;
+        FightOn();
+    }
+    if (stage->clearStage1_7 && !(stage->clearStage1_8) && xMax > camCenter8)
+    {
+        currStage = 8;
+        FightOn();
+
     }
 
     worldViewCenter = worldView.getCenter();
 
-    worldViewCenter.x = xMax;
+    if (currStage == 8)
+    {
+        worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, player->GetPosition().x, dt * 4.5f);
+    }
+    else
+    {
+        worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, xMax, dt * 4.5f);
+    }
+
 
     if (cameraShakeOn)
     {
@@ -281,6 +309,50 @@ void SceneDev1::CameraShake(float dt)
     }
 }
 
+void SceneDev1::FightOn()
+{
+    std::cout << currStage << std::endl;
+
+    isFighting = true;
+
+    switch (currStage)
+    {
+        case 1:
+            xMax = camCenter1;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
+            break;
+        case 2:
+            xMax = camCenter2;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
+            break;
+        case 3:
+            xMax = camCenter3;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
+            break;
+        case 4:
+            xMax = camCenter4;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+            break;
+        case 5:
+            xMax = camCenter4;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+            break;
+        case 6:
+            xMax = camCenter4;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+            break;
+        case 7:
+            xMax = camCenter7;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_7.getGlobalBounds()));
+            break;
+        case 8:
+            xMax = camCenter8;
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_8.getGlobalBounds()));
+            break;
+    }
+    
+}
+
 void SceneDev1::ClearStage()
 {
     switch (currStage)
@@ -310,9 +382,28 @@ void SceneDev1::ClearStage()
         case 6:
             isFighting = false;
             stage->clearStage1_6 = true;
+            MoveToBoss();
             break;
         case 7:
+            isFighting = false;
+            stage->clearStage1_7 = true;
+            break;
+        case 8:
+            isFighting = false;
+            stage->clearStage1_8 = true;
+            break;
+        default:
             break;
     }
 
+}
+
+void SceneDev1::MoveToBoss()
+{
+    enterToBossFloor = true;
+    player->SetPosition({ player->GetPosition().x, -1090.f });
+    stageRect = stage->groundBoundBoss.getGlobalBounds();
+    worldViewCenter.y -= 1400.f;
+    worldView.setCenter(worldViewCenter);
+    enterToBossFloor = false;
 }

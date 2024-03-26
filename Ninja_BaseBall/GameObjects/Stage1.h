@@ -23,8 +23,8 @@ public:
 	sf::RectangleShape stageBound1_2; //야구공(발차기)
 	sf::RectangleShape stageBound1_3; //야구공(덤블링)
 	sf::RectangleShape stageBound1_4; //글러브
-	sf::RectangleShape stageBound1_5; //부서진 스테이지1 //글러브
-	sf::RectangleShape stageBound1_6; //부서진 스테이지2 //글러브, 야구공 (원본중간보스)
+	//sf::RectangleShape stageBound1_5; //부서진 스테이지1 //글러브
+	//sf::RectangleShape stageBound1_6; //부서진 스테이지2 //글러브, 야구공 (원본중간보스)
 	sf::RectangleShape stageBound1_7; //비행기 스테이지 //배트
 	sf::RectangleShape stageBound1_8; //비행기 보스 스테이지
 

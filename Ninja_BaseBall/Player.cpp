@@ -2,7 +2,6 @@
 #include "Player.h"
 #include "ComboCommands.h"
 #include "SceneDev1.h"
-#include "Player2.h"
 #include "WindyPlane.h"
 
 Player::Player(const std::string& name)
@@ -418,7 +417,7 @@ void Player::Update(float dt)
 	//이동영역 제한
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
-		position = sceneDev1->ClampByTileMap(position);
+		//position = sceneDev1->ClampByTileMap(position);
 	}
 
 	if (h != 0.f)
