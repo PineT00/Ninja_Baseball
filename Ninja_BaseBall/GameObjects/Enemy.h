@@ -31,6 +31,7 @@ protected:
     Player* player;
     Animator enemyAnimator;
 
+
     sf::Vector2f playerPos;
 
     sf::RectangleShape damageBox;

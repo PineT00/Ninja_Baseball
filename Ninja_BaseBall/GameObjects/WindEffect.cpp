@@ -13,8 +13,8 @@ void WindEffect::Init()
 	SpriteGo::Init();
 	animator.SetTarget(&sprite);
 
-	windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss)->FindGameObject("windyplane"));
-	player = dynamic_cast<Player*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss)->FindGameObject("player"));
+	windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
+	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
 }
 
 void WindEffect::Reset()

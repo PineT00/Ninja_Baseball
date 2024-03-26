@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "WindyPlane.h"
 #include "Player.h"
-#include "SceneDevBoss.h"
+#include "SceneDev1.h"
 #include "WindEffect.h"
 #include "rapidcsv.h"
 
 WindyPlane::WindyPlane(const std::string& name)
-	: SpriteGo(name), data(BOSS_TABLE->Get(BossType::WINDYPLANE))
+	: Enemy(name), data(BOSS_TABLE->Get(BossType::WINDYPLANE))
 {
 }
 
@@ -15,8 +15,8 @@ void WindyPlane::Init()
 	SpriteGo::Init();
 
 	// FindGo
-	sceneDevBoss = dynamic_cast<SceneDevBoss*>(SCENE_MANAGER.GetScene(SceneIDs::SceneDevBoss));
-	player = dynamic_cast<Player*>(sceneDevBoss->FindGameObject("player"));
+	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
 
 	animator.SetTarget(&sprite);
 
@@ -29,12 +29,11 @@ void WindyPlane::Init()
 		windEffects[i]->Reset();
 
 		windEffects[i]->SetSortLayer(1);
-		sceneDevBoss->ResortGameObject(windEffects[i]);
-		sceneDevBoss->AddGameObject(windEffects[i]);
+		sceneDev1->ResortGameObject(windEffects[i]);
+		sceneDev1->AddGameObject(windEffects[i]);
 	}
 
 	// Hit, Attack Box
-
 	hitBox.setFillColor(sf::Color::Yellow);
 	hitBox.setSize({ 140,160 });
 	hitBox.setOrigin({ 35.f, 150.f });
@@ -76,7 +75,6 @@ void WindyPlane::Init()
 void WindyPlane::Reset()
 {
 	SetOrigin(Origins::BC);
-	SetPosition({ 500, 0 });
 }
 
 void WindyPlane::Update(float dt)
@@ -168,10 +166,10 @@ void WindyPlane::Update(float dt)
 		break;
 	}
 
+	// 변경 필요
 	if (player->isGrip)
 	{
-		currentStatus = WindyPlaneStatus::HOLD;
-		currentSpeed = 0.f;
+		HoldAction();
 	}
 	else if(!player->isGrip && currentStatus == WindyPlaneStatus::HOLD)
 	{
@@ -197,8 +195,8 @@ void WindyPlane::Draw(sf::RenderWindow& window)
 		player->SetSortLayer(1);
 	}
 	
-	sceneDevBoss->ResortGameObject(player);
-	sceneDevBoss->ResortGameObject(this);
+	sceneDev1->ResortGameObject(player);
+	sceneDev1->ResortGameObject(this);
 
 	SpriteGo::Draw(window);
 
@@ -396,8 +394,10 @@ void WindyPlane::FindPlayer()
 	direction = Utils::MyMath::GetNormal(player->GetPosition() - position);
 }
 
-void WindyPlane::OnDamaged(float damage)
+void WindyPlane::OnDamage(int damage, int count)
 {
+	Enemy::OnDamage(damage, count);
+
 	direction.x /= 10.f;
 	direction.y = 0.f;
 	currentStatus = WindyPlaneStatus::DAMAGED;
@@ -514,6 +514,7 @@ void WindyPlane::LoadAllEvents()
 
 	for (int i = 8; i <= 12; ++i)
 	{
+
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
 
@@ -567,6 +568,12 @@ void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus pla
 
 		animator.Play(currentClipId);
 	}
+}
+
+void WindyPlane::HoldAction()
+{
+	currentStatus = WindyPlaneStatus::HOLD;
+	currentSpeed = 0.f;
 }
 
 void WindyPlane::CheckEndFrame()

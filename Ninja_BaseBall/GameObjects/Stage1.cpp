@@ -10,16 +10,10 @@ void Stage1::Init()
 {
 	SpriteGo::Init();
 
-	stageBroken1 = new SpriteGo();
-	stageBroken1->Init();
-
-	stageBroken2 = new SpriteGo();
-	stageBroken2->Init();
-
 	SetTexture("graphics/stage_start.png");
 	stageNormal.SetTexture("graphics/stage_normal.png");
-	stageBroken1->SetTexture("graphics/stage_broken1.png");
-	stageBroken2->SetTexture("graphics/stage_broken2.png");
+	stageBroken1.SetTexture("graphics/stage_broken1.png");
+	stageBroken2.SetTexture("graphics/stage_broken2.png");
 	transition.SetTexture("graphics/stage_transition.png");
 	stagePlane.SetTexture("graphics/stage_airplain.png");
 	stageBack1.SetTexture("graphics/background1-1.png");
@@ -36,10 +30,10 @@ void Stage1::Reset()
 		SetOrigin(Origins::TL);
 		stageNormal.SetPosition({ 2400,0 });
 		stageNormal.SetOrigin(Origins::TL);
-		stageBroken1->SetPosition({ 2400,0 });
-		stageBroken1->SetOrigin(Origins::TL);
-		stageBroken2->SetPosition({ 2400,0 });
-		stageBroken2->SetOrigin(Origins::TL);
+		stageBroken1.SetPosition({ 2400,0 });
+		stageBroken1.SetOrigin(Origins::TL);
+		stageBroken2.SetPosition({ 2400,0 });
+		stageBroken2.SetOrigin(Origins::TL);
 		transition.SetPosition({ 2400,-760 });
 		transition.SetOrigin(Origins::TL);
 		stagePlane.SetPosition({ 2400,-1520 });
@@ -51,6 +45,10 @@ void Stage1::Reset()
 		groundBound.setFillColor(sf::Color::Green);
 		groundBound.setSize({ 3300.f,300.f });
 		groundBound.setPosition({ 0.f, 400.f });
+
+		groundBoundBoss.setFillColor(sf::Color::Green);
+		groundBoundBoss.setSize({ 1920.f,270.f });
+		groundBoundBoss.setPosition({ 2400.f,-1090.f });
 
 		stageBound1_1.setSize({ 960.f,720.f });
 		stageBound1_1.setPosition({ 300.f, 0.f });
@@ -78,6 +76,21 @@ void Stage1::Reset()
 		stageBound1_4.setOutlineColor(sf::Color::Red);
 		stageBound1_4.setOutlineThickness(1.f);
 		stageBound1_4.setFillColor(sf::Color::Transparent);
+
+		stageBound1_7.setFillColor(sf::Color::Red);
+		stageBound1_7.setSize({ 960.f,720.f });
+		stageBound1_7.setPosition({ 2400.f, 1440.f });
+		stageBound1_7.setOutlineColor(sf::Color::Red);
+		stageBound1_7.setOutlineThickness(1.f);
+		stageBound1_7.setFillColor(sf::Color::Transparent);
+
+		stageBound1_8.setFillColor(sf::Color::Red);
+		stageBound1_8.setSize({ 1920.f,720.f });
+		stageBound1_8.setPosition({ 2400.f, 1440.f });
+		stageBound1_8.setOutlineColor(sf::Color::Red);
+		stageBound1_8.setOutlineThickness(1.f);
+		stageBound1_8.setFillColor(sf::Color::Transparent);
+
 	}
 
 	stageBack1.SetPosition({ 0.f, 0.f });
@@ -98,14 +111,29 @@ void Stage1::Draw(sf::RenderWindow& window)
 	stageBack2.Draw(window);
 
 	SpriteGo::Draw(window);
-	stageNormal.Draw(window);
+
 	transition.Draw(window);
 	stagePlane.Draw(window);
+
+	if (!clearStage1_4)
+	{
+		stageNormal.Draw(window);
+	}
+	else if (clearStage1_4 && !clearStage1_5)
+	{
+		stageBroken1.Draw(window);
+	}
+	else
+	{
+		stageBroken2.Draw(window);
+	}
+
 
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
 		window.draw(groundBound);
+		window.draw(groundBoundBoss);
 		window.draw(stageBound1_1);
 		window.draw(stageBound1_2);
 		window.draw(stageBound1_3);

@@ -2,26 +2,11 @@
 #include "Player.h"
 #include "ComboCommands.h"
 #include "SceneDev1.h"
-#include "Player2.h"
 #include "WindyPlane.h"
-#include "Enemy2.h"
 
 Player::Player(const std::string& name)
 	: SpriteGo(name), combo(nullptr)
 {
-}
-
-Player::~Player()
-= default;
-
-void Player::TestInstance()
-{
-	std::cout << "TestInstance()" << std::endl;
-}
-
-void Player::TestStatic()
-{
-	std::cout << "TestStatic()" << std::endl;
 }
 
 void Player::SetAttackOn()
@@ -192,12 +177,6 @@ void Player::Reset()
 
 
 
-	std::function<void()> funcInstance = std::bind(&Player::TestInstance, this);
-	animator.AddEvent("Animations/player/Jump.csv", 5, funcInstance);
-
-	std::function<void()> funcStatic = std::bind(&Player::TestStatic);
-	animator.AddEvent("Animations/player/player_Idle.csv", 5, funcStatic);
-
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
@@ -205,9 +184,6 @@ void Player::Reset()
 
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
-	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
-	//yellowBaseBall = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -224,10 +200,7 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	//enemyHitBox = yellowBaseBall->GetHitBox();
-	//enemyHitBox = windyPlane->GetHitBox();
-
-	//SpriteGo::Update(dt);
+	SpriteGo::Update(dt);
 	animator.Update(dt);
 	animatorEffect.Update(dt);
 
@@ -252,8 +225,6 @@ void Player::Update(float dt)
 				v = 1;
 			}
 		}
-
-
 
 		if (InputManager::GetKeyDown(sf::Keyboard::Right) && isGrounded)
 		{
@@ -442,15 +413,12 @@ void Player::Update(float dt)
 		}
 
 	}
-	
-
 
 	//이동영역 제한
 	if ((sceneDev1 != nullptr) && isGrounded)
 	{
-		position = sceneDev1->ClampByTileMap(position);
+		//position = sceneDev1->ClampByTileMap(position);
 	}
-
 
 	if (h != 0.f)
 	{
@@ -463,15 +431,19 @@ void Player::Update(float dt)
 		attackTime -= dt;
 	}
 
+	// (중요)
+	// TODO : 잡기박스 전체 적용 필요
+	// 공격할 때랑 비슷한 경우로 처리
+
 	//잡기박스와 닿았을때
-	if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
-	{
-		animator.Play("Animations/player/player_Grip.csv");
-		isGrip = true;
-		inputOn = false;
-		attackTimeOn = true;
-		attackTime = 2.f;
-	}
+	//if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
+	//{
+	//	animator.Play("Animations/player/player_Grip.csv");
+	//	isGrip = true;
+	//	inputOn = false;
+	//	attackTimeOn = true;
+	//	attackTime = 2.f;
+	//}
 
 
 	if (gripCoolTime > 0.f)
@@ -490,10 +462,10 @@ void Player::Update(float dt)
 		attackTimeOn = true;
 
 		enemyList = sceneDev1->GetEnemyList();
-
+		  
 		for (auto& enemy : enemyList)
 		{
-			//if (enemy != nullptr) continue;
+			if (enemy == nullptr) continue;
 
 			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 			{
@@ -501,7 +473,6 @@ void Player::Update(float dt)
 				enemy->OnDamage(20, normalAttack);
 			}
 		}
-
 
 		switch (normalAttack)
 		{
@@ -526,9 +497,6 @@ void Player::Update(float dt)
 				animator.Play("Animations/player/player_Attack1.csv");
 				break;
 		}
-		//player2->getHit = true;
-		//player2->OnDamaged(10);
-		
 	}
 
 
@@ -624,8 +592,6 @@ void Player::Update(float dt)
 		animator.Play("Animations/player/player_Idle.csv");
 		kickTime = 0.7f;
 		inputOn = true;
-		//animatorEffect.ClearFrames();
-		//animatorEffect.SetTarget(&OnHitEffect);
 	}
 
 
@@ -693,16 +659,6 @@ void Player::Update(float dt)
 		isImpacted = true;
 	}
 
-
-	//if (isImpacted) {
-	//	sf::Time impactTime = impactClock.getElapsedTime();
-	//	if (impactTime.asSeconds() >= impactTimer) {
-	//		// 타격 시간이 종료되면 게임이 다시 진행됨
-	//		isImpacted = false;
-	//	}
-	//}
-
-
 	//잔상효과
 	trailDuration -= dt;
 
@@ -726,7 +682,6 @@ void Player::Update(float dt)
 			{
 				trail.setScale(1, 1);
 			}
-			//trail.setTexture(texture);
 			trails.push_back(trail);
 		}
 		else
@@ -768,15 +723,4 @@ void Player::Draw(sf::RenderWindow& window)
 		hitBox.setFillColor(sf::Color::Transparent);
 		attackBox.setFillColor(sf::Color::Transparent);
 	}
-
 }
-
-
-
-
-
-
-
-
-
-
