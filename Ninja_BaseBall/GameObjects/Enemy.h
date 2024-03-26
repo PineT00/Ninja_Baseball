@@ -25,7 +25,9 @@ protected:
     Player* player;
     Animator enemyAnimator;
 
+
     float speed = 60.f;
+
     int health = 100;
     int maxHealth = 100;
     int damage = 10;
@@ -43,12 +45,12 @@ protected:
     bool isInvincible = false;
     float invincibleTime = 0.2f;
     
-    float dashSpeed = 250.f;
+    float dashSpeed = 400.f;
     float dashCooldown = 3.f;
     float dashCooldownTimer = 0.f;
     float acceptableYDistance = 15.f;
     float attackTimer = 0.f;
-    const float attackCooldown = 1.5f;
+    const float attackCooldown = 2.5f;
     float dashYPos;
     
     sf::Vector2f dashDirection;
@@ -100,4 +102,6 @@ public:
     virtual void CheckAndResolveOverlap(std::vector<Enemy*>& allEnemies);
     virtual sf::FloatRect GetHitBox() const;
     virtual sf::FloatRect GetDamageBox() const;
+    virtual void Catch();
+    virtual void Damage();
 };

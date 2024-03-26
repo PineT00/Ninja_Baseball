@@ -11,7 +11,8 @@
 #include "Player.h"
 #include "Player2.h"
 
-SceneDev1::SceneDev1(SceneIDs id) 
+
+SceneDev1::SceneDev1(SceneIDs id)
     : Scene(id)
 {
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
@@ -43,7 +44,25 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
+    // yellowEnemy = new YellowBaseBall("YellowEnemy");
+    // yellowEnemy->SetPosition({ 1400.f, 700.f });
+    // AddGameObject(yellowEnemy, World);
+    //
+    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
+    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
+    // AddGameObject(yellowEnemy2, World);
+
+    //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
+
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+
+    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
+    //monster->SetPosition({ 1400.f, 700.f });
+    //AddMonster(monster,monster->GetDamageBox());
+
+
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -286,8 +305,6 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
         enemy->SetPosition(position);
         AddGameObject(enemy, World);
-        //enemies.push_back(enemy);
+        enemies.push_back(enemy);
     }
 }
-
-
