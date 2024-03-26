@@ -20,6 +20,7 @@ void Animator::Update(float dt)
 		return;
 
 	accumTime = 0.f;
+	currentFrame += addFrame;
 
 	if (currentFrame == totalFrame)
 	{
