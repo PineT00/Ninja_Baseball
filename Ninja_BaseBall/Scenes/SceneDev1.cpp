@@ -44,6 +44,23 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
+    // yellowEnemy = new YellowBaseBall("YellowEnemy");
+    // yellowEnemy->SetPosition({ 1400.f, 700.f });
+    // AddGameObject(yellowEnemy, World);
+    //
+    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
+    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
+    // AddGameObject(yellowEnemy2, World);
+
+    //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
+
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+
+    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
+    //monster->SetPosition({ 1400.f, 700.f });
+    //AddMonster(monster,monster->GetDamageBox());
+
+
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
     SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 

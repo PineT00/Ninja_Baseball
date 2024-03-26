@@ -39,8 +39,15 @@ protected :
 	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
 
+private:
+	struct MonsterInfo
+	{
+		sf::FloatRect damageBox;
+		std::shared_ptr<Enemy> monster;
+	};
+	std::vector<MonsterInfo> monsterInfos;
 	std::vector<Enemy*> enemies;
-
+	
 
 public:
 
@@ -48,7 +55,6 @@ public:
 
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
-
 	sf::Vector2f ClampByTileMap(const sf::Vector2f point);
 
 	void Init() override;
