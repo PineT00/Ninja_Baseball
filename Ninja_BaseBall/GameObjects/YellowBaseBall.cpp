@@ -207,7 +207,7 @@ void YellowBaseBall::Attack()
 void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
 {
     Enemy::DashToPlayer(dt,currentPosition);
-    if(isDash && !isCatched)
+    if(isDash && player->isGrip==false)
     {
         currentEnemy = EnemyState::DASH;
         SetState();
@@ -218,7 +218,7 @@ void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
 void YellowBaseBall::NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition,
     float xDistance, float yDistance)
 {
-    if(!isCatched)
+    if(player->isGrip==false)
     {
         Enemy::NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
         currentEnemy = EnemyState::MOVE;
@@ -228,7 +228,7 @@ void YellowBaseBall::NormalMovement(float dt, sf::Vector2f& currentPosition, con
 
 void YellowBaseBall::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition)
 {
-    if(!isCatched)
+    if(player->isGrip==false)
     {
         Enemy::StartDash(playerPosition, currentPosition);
         currentEnemy = EnemyState::MOVE;
