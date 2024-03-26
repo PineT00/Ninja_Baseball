@@ -64,7 +64,7 @@ void SceneDev1::Release()
 
 void SceneDev1::Reset()
 {
-    //stage->stageBroken1->SetActive(false);
+
 }
 
 void SceneDev1::Enter()
@@ -75,7 +75,6 @@ void SceneDev1::Enter()
 
     player2->SetActive(false);
     player->SetActive(false);
-
 
 }
 
@@ -131,11 +130,6 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    // for (Enemy* enemy : enemies) {
-    //     enemy->Update(dt);
-    // }
-    //
-    
     if (!isFighting && player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
@@ -147,6 +141,7 @@ void SceneDev1::UpdateGame(float dt)
 
     if (!(stage->clearStage1_1) && xMax >= camCenter1)
     {
+        currStage = 1;
         isFighting = true;
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
@@ -160,84 +155,58 @@ void SceneDev1::UpdateGame(float dt)
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
+        currStage = 2;
         isFighting = true;
         xMax = camCenter2;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
     }
     if (!(stage->clearStage1_3) && xMax >= camCenter3)
     {
+        currStage = 3;
         isFighting = true;
         xMax = camCenter3;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
     }
-    if (!(stage->clearStage1_4) && xMax >= camCenter4)
+    if (!(stage->clearStage1_6) && xMax >= camCenter4)
     {
+        currStage = 4;
         isFighting = true;
         xMax = camCenter4;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
     }
+    if (stage->clearStage1_4)
+    {
+        currStage = 5;
+    }
+    if (stage->clearStage1_5)
+    {
+        currStage = 6;
+    }
 
-    sf::Vector2f worldViewCenter = worldView.getCenter();
+    worldViewCenter = worldView.getCenter();
 
     worldViewCenter.x = xMax;
+    worldViewCenter.y = player->GetPosition().y;
 
     if (cameraShakeOn)
     {
-        cameraShakeTime -= dt;
-
-        int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
-        if (shakeTimeScaled % 2 == 0) // shakeTimeScaled가 짝수인 경우
-        {
-            // 카메라를 위로 흔들기
-            worldViewCenter.y -= 0.3;
-        }
-        else
-        {
-            // 카메라를 아래로 흔들기
-            worldViewCenter.y += 0.3;
-        }
-
-        if (cameraShakeTime <= 0.f)
-        {
-            cameraShakeOn = false;
-            cameraShakeTime = 1.f;
-        }
-
+        CameraShake(dt);
     }
-
 
     worldView.setCenter(worldViewCenter);
 
     stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f - 200.f, 0.f });
     stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 1588.f, 0.f });
-
-
-    if (InputManager::GetKeyDown(sf::Keyboard::Num1))
-    {
-        isFighting = false;
-        stage->clearStage1_1 = true;
-        cameraShakeOn = true;
-    }
-    else if (InputManager::GetKeyDown(sf::Keyboard::Num2))
-    {
-        isFighting = false;
-        stage->clearStage1_2 = true;
-    }
-    else if (InputManager::GetKeyDown(sf::Keyboard::Num3))
-    {
-        isFighting = false;
-        stage->clearStage1_3 = true;
-    }
-    else if (InputManager::GetKeyDown(sf::Keyboard::Num4))
-    {
-        isFighting = false;
-        stage->clearStage1_4 = true;
-    }
     
     if (InputManager::GetKeyDown(sf::Keyboard::Z))
     {
         player2->SetActive(true);
         player->SetActive(true);
+    }
+
+    if (InputManager::GetKeyDown(sf::Keyboard::Num0))
+    {
+        ClearStage();
     }
 
 }
@@ -255,12 +224,6 @@ void SceneDev1::UpdatePause(float dt)
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
-    window.draw(cameraRect);
-
-    // for(Enemy* enemy : enemies)
-    // {
-    //     enemy->Draw(window);
-    // }
 }
 
 void SceneDev1::SetStatus(GameStatus newStatus)
@@ -296,4 +259,63 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         enemies.push_back(enemy);
         enemy->SetActive(false);
     }
+}
+
+void SceneDev1::CameraShake(float dt)
+{
+    cameraShakeTime -= dt;
+
+    int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
+    if (shakeTimeScaled % 2 == 0) // shakeTimeScaled가 짝수인 경우
+    {
+        // 카메라를 위로 흔들기
+        worldViewCenter.y -= 0.4;
+    }
+    else
+    {
+        // 카메라를 아래로 흔들기
+        worldViewCenter.y += 0.4;
+    }
+
+    if (cameraShakeTime <= 0.f)
+    {
+        cameraShakeOn = false;
+        cameraShakeTime = 1.f;
+    }
+}
+
+void SceneDev1::ClearStage()
+{
+    switch (currStage)
+    {
+        case 1:
+            isFighting = false;
+            stage->clearStage1_1 = true;
+            break;
+        case 2:
+            isFighting = false;
+            stage->clearStage1_2 = true;
+            break;
+        case 3:
+            isFighting = false;
+            stage->clearStage1_3 = true;
+            break;
+        case 4:
+            isFighting = false;
+            stage->clearStage1_4 = true;
+            cameraShakeOn = true;
+            break;
+        case 5:
+            isFighting = false;
+            stage->clearStage1_5 = true;
+            cameraShakeOn = true;
+            break;
+        case 6:
+            isFighting = false;
+            stage->clearStage1_6 = true;
+            break;
+        case 7:
+            break;
+    }
+
 }

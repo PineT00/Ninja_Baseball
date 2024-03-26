@@ -14,11 +14,16 @@ class Player :
 public:
 	enum class Status
 	{
+		isHitted,
+		isKnockBack,
 		isDead,
 		isAttack,
 		isKick,
-		isHomeRun,
+		isJumping,
+		isGrip,
 	};
+
+	Status currStatus;
 
 	int score = 0;
 	int life = 1;

@@ -24,6 +24,10 @@ public:
 
 	bool isFighting = false;
 
+	sf::Vector2f worldViewCenter = {0.f,0.f};
+
+	int currStage = 0;
+
 protected :
 	SceneDev1(const SceneDev1&)				= delete;
 	SceneDev1(SceneDev1&&)					= delete;
@@ -52,7 +56,6 @@ private:
 	
 
 public:
-
 	std::vector<Enemy*> GetEnemyList() { return enemies; }
 
 	SceneDev1(SceneIDs id);
@@ -74,4 +77,6 @@ public:
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
+	void CameraShake(float dt);
+	void ClearStage();
 };
