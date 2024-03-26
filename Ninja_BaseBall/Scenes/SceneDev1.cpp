@@ -42,7 +42,7 @@ void SceneDev1::Init()
     AddGameObject(player, World);
 
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-    SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
+    //SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 
     // Boss
     windyPlane = new WindyPlane();
@@ -185,7 +185,6 @@ void SceneDev1::UpdateGame(float dt)
     worldViewCenter = worldView.getCenter();
 
     worldViewCenter.x = xMax;
-    worldViewCenter.y = player->GetPosition().y;
 
     if (cameraShakeOn)
     {
