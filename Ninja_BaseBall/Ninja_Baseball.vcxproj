@@ -146,6 +146,7 @@
     <ClCompile Include="Framework\InputManager.cpp" />
     <ClCompile Include="Framework\SoundManager.cpp" />
     <ClCompile Include="GameObjects\Enemy.cpp" />
+    <ClCompile Include="GameObjects\Enemy2.cpp" />
     <ClCompile Include="GameObjects\Spawner.cpp" />
     <ClCompile Include="GameObjects\TestPlayer.cpp" />
     <ClCompile Include="GameObjects\Tilemap.cpp" />
@@ -180,7 +181,7 @@
     <ClCompile Include="Utils\Sort.cpp" />
     <ClCompile Include="Utils\Vector2.cpp" />
     <ClCompile Include="GameObjects\WindyPlane.cpp" />
-    <ClCompile Include="WindEffect.cpp" />
+    <ClCompile Include="GameObjects\WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BossTable.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Framework\InputManager.h" />
     <ClInclude Include="Framework\SoundManager.h" />
     <ClInclude Include="GameObjects\Enemy.h" />
+    <ClInclude Include="GameObjects\Enemy2.h" />
     <ClInclude Include="GameObjects\Spawner.h" />
     <ClInclude Include="GameObjects\Stage1.h" />
     <ClInclude Include="GameObjects\TestPlayer.h" />
@@ -264,7 +266,7 @@
     <ClInclude Include="Utils\Sort.h" />
     <ClInclude Include="Utils\Vector2.h" />
     <ClInclude Include="GameObjects\WindyPlane.h" />
-    <ClInclude Include="WindEffect.h" />
+    <ClInclude Include="GameObjects\WindEffect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

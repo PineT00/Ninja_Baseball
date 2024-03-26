@@ -19,29 +19,40 @@ public :
         CATCHED,
     };
     EnemyState currentEnemy=EnemyState::IDLE;
-
+    enum class EnemyPattern
+    {
+        MOVE,
+        DASH,
+        ATTACK,
+        CATCH,
+        DAMAGE,
+    };
+    EnemyPattern currentPattern=EnemyPattern::MOVE;
 protected:
     SceneDev1* Scene;
     Player* player;
     Animator enemyAnimator;
-
-
+    
     float speed = 60.f;
 
     int health = 100;
-    int maxHealth;
+    int maxHealth=100;
     int damage = 10;
     int damageCount;
     
     bool isDead = false;
-    bool isReadyToDash=false;
+    
+    bool isReadyToDash =false;
     bool isDash =false;
+    
     bool isAttack = false;
     bool isAttackCoolOn = false;
     bool isAttacking=false;
+    bool isAttackReady = false;
+    
     bool isYPositionLocked = false;
     bool isCatched = false;
-    bool isAttackReady = false;
+    
     
     bool isInvincible = false;
     float invincibleTime = 0.2f;
@@ -106,4 +117,6 @@ public:
     virtual sf::FloatRect GetDamageBox() const;
     virtual void Catch();
     virtual void Damage();
+
+    virtual void SetEnemyPettarn(float dt);
 };

@@ -36,20 +36,6 @@ public :
     float deadTimer = 2.f;
     
 protected:
-    enum class YellowBaseBallState
-    {
-        INTRO,
-        MOVE,
-        DASH,
-        ATTACK,
-        CATCHED,
-        HURT,
-        DEAD,
-        WAIT
-    };
-    YellowBaseBallState currentState = YellowBaseBallState::INTRO;
-    
-    Animator yellowBaseBallAnimator;
     SceneDev1* sceneDev1 = nullptr;
     sf::FloatRect playerBounds;
     
@@ -64,7 +50,7 @@ protected:
 public:
     Player* player;
 
-    void SetState();
+    void SetState(int damageCount=0);
     YellowBaseBall(const std::string& name);
     void Init() override;
     void Release() override;

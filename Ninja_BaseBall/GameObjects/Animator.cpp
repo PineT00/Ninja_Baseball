@@ -22,7 +22,7 @@ void Animator::Update(float dt)
 	accumTime = 0.f;
 	currentFrame += addFrame;
 
-	bool isEnd = false;
+
 
 	if (currentFrame >= totalFrame)
 	{
@@ -43,7 +43,7 @@ void Animator::Update(float dt)
 		{
 		case AnimationLoopType::Single:
 			currentFrame = totalFrame - 1;
-			isEnd = true;
+
 			break;
 		case AnimationLoopType::Loop:
 			currentFrame = 0;
@@ -64,6 +64,10 @@ void Animator::Update(float dt)
 			break;
 		}
 	}
+	else
+	{
+		isCompleteClip = false;
+	}
 
 	for (auto& event : eventList)
 	{
@@ -73,26 +77,31 @@ void Animator::Update(float dt)
 			{
 				event.action();
 			}
+			else if (currentFrame == totalFrame - 1 && !isCompleteClip)
+			{
+				auto find = completeEvent.find(currentClip->id);
+				if (find == completeEvent.end())
+				{
+					// No completeEvent
+					continue;
+				}
+
+				isCompleteClip = true; 
+				find->second();
+			}
 		}
 	}
+	
 
 	if (currentClip->GetTotalFrame() >= 1)
 	{
 		SetFrame(currentClip->frames[currentFrame]);
 	}
-
-	if (isEnd)
-	{
-		if (currentClip->OnClipEnd != nullptr)
-		{
-			currentClip->OnClipEnd();
-		}
-	}
 }
 
 void Animator::Play(const std::string& clipId, bool clearQueue)
 {
-	std::cout << clipId << std::endl;	
+	//std::cout << clipId << std::endl;	
 	if (clearQueue)
 	{
 		while (!queue.empty())
@@ -189,7 +198,7 @@ void Animator::SetFrame(const AnimationFrame& frame)
 
 	if (frame.pivot == Origins::CUSTOM)
 	{
-		target->setOrigin(frame.customPivot);
+		target->setOrigin(frame.customPivot); 
 	}
 	else
 	{
@@ -214,14 +223,37 @@ void Animator::ClearFrames()
 	currentFrame = -1;
 }
 
+
 void Animator::SetClipEndEvent(const std::string& clipId, std::function<void()> event)
 {
 	auto clip = ANIMATION_CLIP_MANAGER.GetResource(clipId);
-	if(clip != nullptr)
+	if (clip != nullptr)
 	{
 		clip->OnClipEnd = event;
 	}
 	eventList.push_back({ clipId, clip->GetTotalFrame() - 1, event });
+}
+void Animator::AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action)
+{
+	auto find = completeEvent.find(clipId);
+	if (find != completeEvent.end())
+	{
+		// when complete Event exist replace complete Event
+		ClearCompleteEvent();
+	}
+	// when complete Event not exist
+	completeEvent[clipId] = action;
+}
+
+void Animator::ClearCompleteEvent()
+{
+	auto find = completeEvent.find(currentClip->id);
+
+	if (find != completeEvent.end())
+	{
+		completeEvent[currentClip->id] = NULL;
+	}
+
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)

@@ -39,15 +39,15 @@ void Enemy::Reset()
 
 void Enemy::Update(float dt)
 {
-    if (isInvincible)
-    {
-        invincibleTime -= dt;
-        if (invincibleTime <= 0.f)
-        {
-            isInvincible = false;
-            invincibleTime = 0.2f;
-        }
-    }
+    // if (isInvincible)
+    // {
+    //     invincibleTime -= dt;
+    //     if (invincibleTime <= 0.f)
+    //     {
+    //         isInvincible = false;
+    //         invincibleTime = 0.2f;
+    //     }
+    // }
 
     if (isDead || player == nullptr) return;
 
@@ -68,17 +68,17 @@ void Enemy::Update(float dt)
     // dash check logic
     if (!isDash && xDistance >= 400 && yDistance <= acceptableYDistance && dashCooldownTimer <= 0) {
         StartDash(playerPosition, currentPosition);
-        currentEnemy = EnemyState::DASH;
+        //currentEnemy = EnemyState::DASH;
     }
    
     if (isDash) {
         // dash movement logic
         DashToPlayer(dt, currentPosition);
-        currentEnemy = EnemyState::DASH;
+        //currentEnemy = EnemyState::DASH;
     } else{
         // normal movement logic
         NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
-        currentEnemy = EnemyState::MOVE;
+        //currentEnemy = EnemyState::MOVE;
     }
 
     if(isCatched)
@@ -94,7 +94,7 @@ void Enemy::Update(float dt)
         if (!isAttackReady) {
             isAttackReady = true;
             attackReadyTimer = 0.5f; // 공격 전 대기 시간 설정
-            currentEnemy = EnemyState::IDLE; // 공격 준비 상태에서는 IDLE 상태로
+            currentEnemy = EnemyState::MOVE;
         } else {
             // 공격 조건 충족
             Attack();
@@ -148,8 +148,9 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnDamage(int damage,int count)
 {
-    health -= damage;
+    maxHealth -= damage;
     this->damageCount=count;
+    std::cout<<maxHealth<<std::endl;
     currentEnemy = EnemyState::HURT;
     if(maxHealth <= 0)
     {
@@ -350,8 +351,11 @@ void Enemy::Catch()
 void Enemy::Damage()
 {
     player->OnDamage(damage,1,GetPosition().x);
+    std::cout<<health<<std::endl;
     currentEnemy=EnemyState::MOVE;
     std::cout<<"damage"<<std::endl;
 }
+
+
 
 

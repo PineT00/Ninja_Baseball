@@ -11,7 +11,8 @@
 #include "Player.h"
 #include "Player2.h"
 
-SceneDev1::SceneDev1(SceneIDs id) 
+
+SceneDev1::SceneDev1(SceneIDs id)
     : Scene(id)
 {
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
@@ -61,6 +62,7 @@ void SceneDev1::Init()
 
 
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    //SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -306,8 +308,6 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         enemy->SetPosition(position);
         enemy->SetActive(true);
         AddGameObject(enemy, World);
-        //enemies.push_back(enemy);
+        enemies.push_back(enemy);
     }
 }
-
-

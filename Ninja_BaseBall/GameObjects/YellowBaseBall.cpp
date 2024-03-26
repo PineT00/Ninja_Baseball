@@ -4,34 +4,34 @@
 #include "SceneDev1.h"
 #include "Player.h"
 
-void YellowBaseBall::SetState()
+void YellowBaseBall::SetState(int damageCount)
 {
 
     switch (currentEnemy)
     {
     case EnemyState::IDLE:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
+        enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Idle.csv");
         break;
     case EnemyState::MOVE:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
+        enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Move.csv");
         break;
     case EnemyState::ATTACK:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
+        enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv");
         break;
     case EnemyState::HURT:
         switch (damageCount)
             {
             case 1:
-                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage1.csv");
+                enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage1.csv");
                 break;
             case 2:
-                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage2.csv");
+                enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage2.csv");
                 break;
             case 3:
-                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage3.csv");
+                enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage3.csv");
                 break;
             case 4:
-                yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage4.csv");
+                enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Damage4.csv");
                 break;
             default:
                 std::cout<< "Error" << std::endl;
@@ -41,13 +41,13 @@ void YellowBaseBall::SetState()
         
         break;
     case EnemyState::DEAD:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
+        enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
         break;
     case EnemyState::CATCHED:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
+        enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
         break;
     case EnemyState::DASH:
-        yellowBaseBallAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
+        enemyAnimator.Play("animations/Enemy/YellowBaseBall/BaseballYellow_Dash.csv");
         break;
     }
 }
@@ -59,7 +59,7 @@ YellowBaseBall::YellowBaseBall(const std::string& name) : Enemy(name), player(nu
 void YellowBaseBall::Init()
 {
     Enemy::Init();
-    yellowBaseBallAnimator.SetTarget(&sprite);
+    enemyAnimator.SetTarget(&sprite);
     currentEnemy = EnemyState::MOVE;
     SetState();
     health = maxHealth;
@@ -73,7 +73,7 @@ void YellowBaseBall::Release()
 void YellowBaseBall::Reset()
 {
     Enemy::Reset();
-    yellowBaseBallAnimator.ClearEvent();
+    enemyAnimator.ClearEvent();
     sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     health = maxHealth;
@@ -95,7 +95,7 @@ void YellowBaseBall::Reset()
     
     // std::function<void()> attackOn = std::bind(&Enemy::Damage,this);
     // yellowBaseBallAnimator.SetClipEndEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", attackOn);
-    yellowBaseBallAnimator.SetClipEndEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", [this]() {
+    enemyAnimator.SetClipEndEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv", [this]() {
         std::cout << "Attack animation ended, calling Damage." << std::endl;
         this->Damage(); // Attack 애니메이션이 끝난 후 Damage 메서드 호출
     });
@@ -128,30 +128,18 @@ void YellowBaseBall::Update(float dt)
         attackBox.setPosition(sprite.getPosition());
         damageBox.setPosition(sprite.getPosition());
         //currentEnemy = EnemyState::MOVE;
-
-        if (!isDead && damageBox.getGlobalBounds().intersects(player->GetGrapBox()))
+        
+        if(attackBox.getGlobalBounds().intersects(player->GetAttackBox()))
         {
-            isCatched = true;
-            currentEnemy = EnemyState::CATCHED;
-            SetState();
-
-            SetPosition({ player->GetAttackBox().left, player->GetAttackBox().top + 70.f });
-            if (player->isAttack)
+            if (isAttackReady)
             {
-                if (player->gripAttackCount == 3)
-                {
-                    player->isGrip = false;
-                    OnDamage(50, 0);
-                }
-                else
-                {
-                    OnDamage(10, 0);
-                    std::cout << health << std::endl;
-                }
+                isAttackReady = false;
+                isAttack = true;
+                isAttackCoolOn = true;
+                currentEnemy = EnemyState::ATTACK;
+                SetState();
             }
         }
-        
-
         else
         {
             if (attackCooldown >= 2.f)
@@ -169,25 +157,34 @@ void YellowBaseBall::Update(float dt)
         }
 
     }
-    else
+
+    if(isDead)
     {
         deadTimer -= dt;
-    }
-    if (deadTimer <= 0.f)
-    {
-        SetActive(false);
-        damageBox.setSize({ 0,0 });
+        if(deadTimer<=0)
+        {
+            SetActive(false);
+            
+        }
     }
     
-    yellowBaseBallAnimator.Update(dt);
+    enemyAnimator.Update(dt);
 }
 
 void YellowBaseBall::OnDamage(int damage,int count)
 {
-    if (!isInvincible)
+    //Enemy::OnDamage(damage,count);
+    health -= damage;
+    
+    if(health>0)
     {
-        Enemy::OnDamage(damage, count);
         currentEnemy = EnemyState::HURT;
+        damageCount=count;
+        SetState(count);
+    }
+    else
+    {
+        currentEnemy = EnemyState::DEAD;
         SetState();
     }
 }

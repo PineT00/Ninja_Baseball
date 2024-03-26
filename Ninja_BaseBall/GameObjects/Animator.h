@@ -67,7 +67,12 @@ protected:
 
 	std::queue<std::string> queue;
 	std::list<AnimationEvent> eventList;
-	
+
+	std::unordered_map<std::string, std::function<void()>> completeEvent;
+
+	bool isCompleteClip = false;
+
+
 	sf::Sprite* target = nullptr;
 
 	float speed = 1.f;
@@ -99,20 +104,28 @@ public:
 
 	const int GetCurrentClipFrame() { return this->currentFrame; }
 	
-
-
 	sf::Sprite* GetTarget() const { return this->target; }
 	void SetTarget(sf::Sprite* target) { this->target = target; }
 
 	float GetSpeed() const { return this->speed; }
 	void SetSpeed(float speed) { this->speed = speed; }
-
 	void SetFrame(const AnimationFrame& frame);
 
 	bool IsPlaying() const { return this->isPlaying; }
-
 	void AddEvent(const std::string& clipId, int frame, std::function<void()> action);
 	void ClearEvent();
 	void ClearFrames();
+
 	void SetClipEndEvent(const std::string& clipId, std::function<void()> event);
+
+
+
+	/*
+	1. 프레임이 하나인 경우 실행할 이벤트를 처리
+	2. 애니메이션 클립의 Loop Type이 Single 경우 마지막 프레임에 실행할 이벤트를 처리
+	*/
+
+	void AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action);
+	void ClearCompleteEvent();
+
 };
