@@ -10,6 +10,7 @@
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
+#include "WindyPlane.h"
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -27,7 +28,6 @@ sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
 
 void SceneDev1::Init()
 {
-
     worldView.setSize(windowSize);
     worldView.setCenter(0, 360);
     uiView.setSize(windowSize);
@@ -36,41 +36,23 @@ void SceneDev1::Init()
     stage = new Stage1();
     AddGameObject(stage);
 
-    player2 = new Player2("Player2");
-    player2->SetPosition({ 400.f, 2500.f });
-    AddGameObject(player2);
-
+    // Player
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-    // yellowEnemy = new YellowBaseBall("YellowEnemy");
-    // yellowEnemy->SetPosition({ 1400.f, 700.f });
-    // AddGameObject(yellowEnemy, World);
-    //
-    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
-    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
-    // AddGameObject(yellowEnemy2, World);
-
-    //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
-
-    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-
-    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
-    //monster->SetPosition({ 1400.f, 700.f });
-    //AddMonster(monster,monster->GetDamageBox());
-
-
+    // Enemy
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
     SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 
+    // Boss
+    windyPlane = new WindyPlane();
+    enemies.push_back(windyPlane);
+    AddGameObject(windyPlane);
+    
+
     hud = new UiHUD();
     AddGameObject(hud, Ui);
-
-    //monster = new YellowBaseBall("Monster");
-    //AddGameObject(monster);
-
-
 
     Scene::Init();
 }
@@ -78,27 +60,22 @@ void SceneDev1::Init()
 void SceneDev1::Release()
 {
     Scene::Release();
-    // for (Enemy* enemy : enemies) {
-    //     delete enemy;
-    // }
-    //enemies.clear();
 }
 
 void SceneDev1::Reset()
 {
-    //stage->stageBroken1->SetActive(false);
+    windyPlane->SetPosition({ 1000, 360 });
 }
 
 void SceneDev1::Enter()
 {
 	Scene::Enter();
     status = GameStatus::Game;
+    Reset();
+
     xMax = 500.f; //카메라 시작 지점
 
-    player2->SetActive(false);
     player->SetActive(false);
-
-
 }
 
 void SceneDev1::Exit()
@@ -153,11 +130,6 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    // for (Enemy* enemy : enemies) {
-    //     enemy->Update(dt);
-    // }
-    //
-    
     if (player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
@@ -171,11 +143,6 @@ void SceneDev1::UpdateGame(float dt)
     {
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
-        //yellowEnemy->SetActive(true);
-
-        //yellowEnemy2->SetActive(true);
-
-        //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
@@ -245,13 +212,11 @@ void SceneDev1::UpdateGame(float dt)
     {
         stage->clearStage1_4 = true;
     }
-    
+
     if (InputManager::GetKeyDown(sf::Keyboard::Z))
     {
-        player2->SetActive(true);
         player->SetActive(true);
     }
-
 }
 
 void SceneDev1::UpdateGameover(float dt)
@@ -268,11 +233,6 @@ void SceneDev1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
     window.draw(cameraRect);
-
-    // for(Enemy* enemy : enemies)
-    // {
-    //     enemy->Draw(window);
-    // }
 }
 
 void SceneDev1::SetStatus(GameStatus newStatus)
@@ -287,7 +247,7 @@ void SceneDev1::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(0.f);
         break;
     case GameStatus::Game:
-        //FRAMEWORK.SetTimeScale(1.f);
+        FRAMEWORK.SetTimeScale(1.f);
         break;
     case GameStatus::GameOver:
         FRAMEWORK.SetTimeScale(0.f);

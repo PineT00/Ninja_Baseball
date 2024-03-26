@@ -56,10 +56,6 @@ protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
 
-	Player2* player2 = nullptr;
-	WindyPlane* windyPlane = nullptr;
-	YellowBaseBall* yellowBaseBall = nullptr;
-
 	Animator animator;
 	Animator animatorEffect;
 
@@ -128,16 +124,11 @@ protected:
 	sf::RectangleShape grapBox;
 	sf::RectangleShape hitBox;
 
-	sf::FloatRect enemyHitBox;
-
 	std::vector<Enemy*> enemyList;
 	
 public:
 	Player(const std::string& name = "");
-	~Player();
-
-	void TestInstance();
-	static void TestStatic();
+	~Player() override = default;
 
 	void SetAttackOn();
 	void SetAttackOff();
