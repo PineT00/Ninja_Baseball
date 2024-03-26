@@ -359,7 +359,7 @@ void WindyPlane::AttackWindEvent()
 	// 윈드 이펙트 표시 필요
 	currentSpeed = speed;
 
-	ApplyAttackEvent(false, true);
+	CheckEndFrame();
 }
 
 void WindyPlane::AttackGunEvent()

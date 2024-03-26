@@ -67,7 +67,9 @@ protected:
 
 	std::queue<std::string> queue;
 	std::list<AnimationEvent> eventList;
-	AnimationEvent* completeEvent = nullptr;
+	std::unordered_map<std::string, std::function<void()>> completeEvent;
+
+	bool isCompleteClip = false;
 
 	sf::Sprite* target = nullptr;
 

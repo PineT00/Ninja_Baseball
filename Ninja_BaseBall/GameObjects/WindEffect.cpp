@@ -59,6 +59,7 @@ void WindEffect::Update(float dt)
 	if (player->GetHitBox().intersects(GetGlobalBounds()))
 	{
 		// ³Ëº¤
+		player->OnDamage(1, 1, position.x);
 	}
 }
 

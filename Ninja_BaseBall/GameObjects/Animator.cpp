@@ -20,7 +20,6 @@ void Animator::Update(float dt)
 		return;
 
 	accumTime = 0.f;
-	currentFrame += addFrame;
 
 	if (currentFrame == totalFrame)
 	{
@@ -56,6 +55,10 @@ void Animator::Update(float dt)
 			break;
 		}
 	}
+	else
+	{
+		isCompleteClip = false;
+	}
 
 	for (auto& event : eventList)
 	{
@@ -65,14 +68,21 @@ void Animator::Update(float dt)
 			{
 				event.action();
 			}
+			else if (currentFrame == totalFrame - 1 && !isCompleteClip)
+			{
+				auto find = completeEvent.find(currentClip->id);
+				if (find == completeEvent.end())
+				{
+					// No completeEvent
+					continue;
+				}
+
+				isCompleteClip = true; 
+				find->second();
+			}
 		}
 	}
-
-	if (completeEvent != nullptr && currentClip->id == completeEvent->clipId && currentFrame == completeEvent->frame)
-	{
-		completeEvent->action();
-		ClearCompleteEvent();
-	}
+	
 
 	if (currentClip->GetTotalFrame() >= 1)
 	{
@@ -205,12 +215,24 @@ void Animator::ClearFrames()
 
 void Animator::AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action)
 {
-	completeEvent = new AnimationEvent({clipId, frames, action});
+	auto find = completeEvent.find(clipId);
+	if (find != completeEvent.end())
+	{
+		// when complete Event exist replace complete Event
+		ClearCompleteEvent();
+	}
+	// when complete Event not exist
+	completeEvent[clipId] = action;
 }
 
 void Animator::ClearCompleteEvent()
 {
-	completeEvent = nullptr;
+	auto find = completeEvent.find(currentClip->id);
+
+	if (find != completeEvent.end())
+	{
+		completeEvent[currentClip->id] = NULL;
+	}
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)
