@@ -492,7 +492,7 @@ void Player::Update(float dt)
 
 		for (auto& enemy : enemyList)
 		{
-			//if (enemy != nullptr) continue;
+			//if (enemy == nullptr) continue;
 
 			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 			{

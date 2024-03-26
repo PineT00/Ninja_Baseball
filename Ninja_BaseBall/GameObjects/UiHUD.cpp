@@ -33,8 +33,8 @@ void UiHUD::Init()
 	player1_Name->SetTexture("graphics/6_UI/inGame/red_nameJOSE.bmp");
 	//player1_Portrait;
 
-	player1_hpRedBack.SetTexture("graphics/6_UI/inGame/hp_red.bmp");
-	player1_hpBar.SetTexture("graphics/6_UI/inGame/hp_yellow.bmp");
+	player1_hpRedBack.SetTexture("graphics/6_UI/inGame/hp_red.png");
+	player1_hpBar.SetTexture("graphics/6_UI/inGame/hp_yellow.png");
 	
 
 	player1_Frame->Init();
