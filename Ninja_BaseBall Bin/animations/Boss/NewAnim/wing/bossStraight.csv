@@ -1,6 +1,6 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
-,10,0
-
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,10,0,,,,,
+,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
 graphics/4_Boss/boss_straight.bmp,133.076,185.737,653.649,437.209,9,334.024,430.432
 graphics/4_Boss/boss_straight.bmp,1024.87,188.572,656.385,441.798,9,341.604,426.019
@@ -20,16 +20,16 @@ graphics/4_Boss/boss_straight.bmp,12745.3,179.171,595.032,444.714,9,322.781,437.
 graphics/4_Boss/boss_straight.bmp,13650.7,178.206,586.999,442.201,9,317.131,438.674
 graphics/4_Boss/boss_straight.bmp,14535.2,182.171,606.948,438.475,9,332.304,433.41
 graphics/4_Boss/boss_straight.bmp,15448.7,189.944,588.82,432.319,9,319.106,426.215
-graphics/4_Boss/boss_straight.bmp,16279.4,181.064,542.758,440.089,9,386.256,435.649
-graphics/4_Boss/boss_straight.bmp,17184,178.844,542.201,450.633,9,382.371,437.314
-graphics/4_Boss/boss_straight.bmp,18010.9,184.394,611.018,437.314,9,457.848,431.209
-graphics/4_Boss/boss_straight.bmp,18907.7,188.834,581.605,432.319,9,458.957,427.325
-graphics/4_Boss/boss_straight.bmp,19802.4,172.185,597.145,456.738,9,464.506,443.974
-graphics/4_Boss/boss_straight.bmp,20703.1,192.719,593.26,427.325,9,461.178,422.885
-graphics/4_Boss/boss_straight.bmp,21604.9,192.164,588.818,428.99,9,459.512,423.44
-graphics/4_Boss/boss_straight.bmp,22485.1,188.108,644.107,441.674,9,482.16,429.405
-graphics/4_Boss/boss_straight.bmp,23401,173.386,622.025,452.716,9,463.758,441.674
-graphics/4_Boss/boss_straight.bmp,24305.8,178.293,588.285,441.674,9,459.463,437.993
-graphics/4_Boss/boss_straight.bmp,25277.5,183.201,550.865,438.607,9,388.92,432.472
-graphics/4_Boss/boss_straight.bmp,26185.4,194.243,530.621,427.565,9,380.33,421.431
-graphics/4_Boss/boss_straight.bmp,27080.4,177.066,538.598,444.128,9,387.078,439.22
+graphics/4_Boss/boss_straight2.bmp,48.3333,155,633.333,488.333,9,393.333,458.333
+graphics/4_Boss/boss_straight2.bmp,938.334,170,566.667,456.667,9,401.667,441.667
+graphics/4_Boss/boss_straight2.bmp,1773.33,171.667,643.333,466.667,9,470,443.333
+graphics/4_Boss/boss_straight2.bmp,2670,158.334,606.667,471.667,9,471.667,456.667
+graphics/4_Boss/boss_straight2.bmp,3573.33,165.001,615,470,9,471.667,448.333
+graphics/4_Boss/boss_straight2.bmp,4463.33,173.334,615,453.333,9,476.667,441.667
+graphics/4_Boss/boss_straight2.bmp,5358.33,156.667,650,485,9,481.667,456.667
+graphics/4_Boss/boss_straight2.bmp,6255,170,628.333,466.667,9,483.333,445
+graphics/4_Boss/boss_straight2.bmp,7146.66,160,641.667,470,9,493.333,453.333
+graphics/4_Boss/boss_straight2.bmp,8053.33,166.667,626.667,466.667,9,490,446.667
+graphics/4_Boss/boss_straight2.bmp,9036.66,181.667,563.333,440,9,400,433.333
+graphics/4_Boss/boss_straight2.bmp,9948.33,185,583.333,443.333,9,395,428.333
+graphics/4_Boss/boss_straight2.bmp,10830,180,586.667,466.667,9,406.667,435

@@ -1,0 +1,17 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_straight2.bmp,48.3333,155,633.333,488.333,9,393.333,458.333
+graphics/4_Boss/boss_straight2.bmp,938.334,170,566.667,456.667,9,401.667,441.667
+graphics/4_Boss/boss_straight2.bmp,1773.33,171.667,643.333,466.667,9,470,443.333
+graphics/4_Boss/boss_straight2.bmp,2670,158.334,606.667,471.667,9,471.667,456.667
+graphics/4_Boss/boss_straight2.bmp,3573.33,165.001,615,470,9,471.667,448.333
+graphics/4_Boss/boss_straight2.bmp,4463.33,173.334,615,453.333,9,476.667,441.667
+graphics/4_Boss/boss_straight2.bmp,5358.33,156.667,650,485,9,481.667,456.667
+graphics/4_Boss/boss_straight2.bmp,6255,170,628.333,466.667,9,483.333,445
+graphics/4_Boss/boss_straight2.bmp,7146.66,160,641.667,470,9,493.333,453.333
+graphics/4_Boss/boss_straight2.bmp,8053.33,166.667,626.667,466.667,9,490,446.667
+graphics/4_Boss/boss_straight2.bmp,9036.66,181.667,563.333,440,9,400,433.333
+graphics/4_Boss/boss_straight2.bmp,9948.33,185,583.333,443.333,9,395,428.333
+graphics/4_Boss/boss_straight2.bmp,10830,180,586.667,466.667,9,406.667,435

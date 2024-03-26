@@ -25,6 +25,7 @@
 // Window API
 #include <windows.h>
 #include <commdlg.h>
+#include <direct.h>
 
 // Framework
 #include "Defines.h"

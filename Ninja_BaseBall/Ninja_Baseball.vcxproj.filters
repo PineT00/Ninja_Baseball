@@ -42,7 +42,7 @@
     <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="GameObjects\WindyPlane.cpp" />
     <ClCompile Include="BossTable.cpp" />
-    <ClCompile Include="WindEffect.cpp" />
+    <ClCompile Include="GameObjects\WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\Button.h" />
@@ -126,6 +126,6 @@
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\uri.h" />
     <ClInclude Include="rapidjson\writer.h" />
-    <ClInclude Include="WindEffect.h" />
+    <ClInclude Include="GameObjects\WindEffect.h" />
   </ItemGroup>
 </Project>
