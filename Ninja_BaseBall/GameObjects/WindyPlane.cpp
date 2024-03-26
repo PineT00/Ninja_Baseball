@@ -4,6 +4,7 @@
 #include "SceneDev1.h"
 #include "WindEffect.h"
 #include "rapidcsv.h"
+#include "Stage1.h"
 
 WindyPlane::WindyPlane(const std::string& name)
 	: Enemy(name), data(BOSS_TABLE->Get(BossType::WINDYPLANE))
@@ -26,10 +27,7 @@ void WindyPlane::Init()
 	{
 		windEffects[i] = new WindEffect();
 		windEffects[i]->Init();
-		windEffects[i]->Reset();
 
-		windEffects[i]->SetSortLayer(1);
-		sceneDev1->ResortGameObject(windEffects[i]);
 		sceneDev1->AddGameObject(windEffects[i]);
 	}
 
@@ -75,6 +73,16 @@ void WindyPlane::Init()
 void WindyPlane::Reset()
 {
 	SetOrigin(Origins::BC);
+	SetPosition({ sceneDev1->stage->groundBoundBoss.getGlobalBounds().left + sceneDev1->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, sceneDev1->stage->groundBoundBoss.getGlobalBounds().top + sceneDev1->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
+
+	for (int i = 0; i < EFFECTS_COUNT; ++i)
+	{
+		windEffects[i]->Reset();
+		windEffects[i]->SetPosition({position.x, Utils::Random::RandomRange(position.y - 120, position.y) });
+		windEffects[i]->SetSortLayer(1);
+		sceneDev1->ResortGameObject(windEffects[i]);
+		std::cout << windEffects[i]->GetPosition().x << ", " << windEffects[i]->GetPosition().y << std::endl;
+	}
 }
 
 void WindyPlane::Update(float dt)
@@ -86,7 +94,7 @@ void WindyPlane::Update(float dt)
 	rangedAttackBox.setPosition(position);
 	hitBox.setPosition(position);
 	uppercutAttackBox.setPosition(position);
-
+	float dist = Utils::MyMath::Distance(player->GetPosition(), position);
 	// HP 마다 상태가 바뀐다.
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
 	{
@@ -94,19 +102,28 @@ void WindyPlane::Update(float dt)
 		std::cout << hp << std::endl;
 	}
 
-	if (InputManager::GetKeyDown(sf::Keyboard::Numpad1))
+	//상태마다 재생 애니메이션이 바뀐다.
+	if (hp <= 0)
 	{
-		currentStatus = WindyPlaneStatus::DAMAGED;
+		currentStatus = WindyPlaneStatus::DEATH;
+		currentSpeed = 0.f;
 	}
-
-	if (InputManager::GetKeyDown(sf::Keyboard::Numpad2))
+	else if (hp <= maxHp * 0.2f)
 	{
-		currentStatus = WindyPlaneStatus::GUN;
+		currentPartsStatus = BossPartsStatus::NoArm;
+		currentStatus = WindyPlaneStatus::FINAL;
 	}
-
-	if (InputManager::GetKeyDown(sf::Keyboard::Numpad3))
+	else if (hp <= maxHp * 0.4f)
 	{
-		currentStatus = WindyPlaneStatus::WIND;
+		currentPartsStatus = BossPartsStatus::OneArm;
+	}
+	else if (hp <= maxHp * 0.6f)
+	{
+		currentPartsStatus = BossPartsStatus::NoProp;
+	}
+	else if (hp <= maxHp * 0.8f)
+	{
+		currentPartsStatus = BossPartsStatus::NoWing;
 	}
 
 	switch (currentPartsStatus)
@@ -126,9 +143,6 @@ void WindyPlane::Update(float dt)
 
 			if (statusTimer >= statusInterval)
 			{
-				float dist = Utils::MyMath::Distance(player->GetPosition(), position);
-				std::cout << dist << std::endl;
-
 				statusTimer = 0.f;
 				hitCount = 0;
 
@@ -157,12 +171,25 @@ void WindyPlane::Update(float dt)
 	}
 		break;
 	case BossPartsStatus::OneArm:
+		if (closeAttackBox.getGlobalBounds().intersects(player->GetHitBox()))
+		{
+			statusTimer += dt;
+
+			if (statusTimer >= statusInterval)
+			{
+				statusTimer = 0.f;
+
+				if (dist <= 600)
+				{
+					currentStatus = WindyPlaneStatus::STRAIGHT;
+				}
+			}
+		}
+
 		break;
 	case BossPartsStatus::NoArm:
-		break;
-	case BossPartsStatus::UNDEFINED:
-		break;
-	default:
+		Crying(dt);
+
 		break;
 	}
 
@@ -176,8 +203,14 @@ void WindyPlane::Update(float dt)
 		currentSpeed = speed;
 	}
 
-
-	ChasePlayer(dt);
+	if (dist > 30 && currentPartsStatus != BossPartsStatus::NoArm)
+	{
+		ChasePlayer(dt);
+	}
+	else
+	{
+		findTimer = 0.f;
+	}
 	PlayAnimation(currentPartsStatus, currentStatus);
 }
 
@@ -319,6 +352,30 @@ void WindyPlane::AttackGunReady()
 	currentStatus = WindyPlaneStatus::GUNREADY;
 }
 
+void WindyPlane::Crying(float dt)
+{
+	sf::FloatRect rect = sceneDev1->stage->groundBoundBoss.getGlobalBounds();
+
+	if (position.x < rect.left + 10)
+	{
+		cryingDirection.x = 1.f;
+	}
+	if (position.x > rect.left + rect.width - 10)
+	{
+		cryingDirection.x = -1.f;
+	}
+	if (position.y < rect.top + 10)
+	{
+		cryingDirection.y = 1.f;
+	}
+	if (position.y > rect.top + rect.height - 10)
+	{
+		cryingDirection.y = -1.f;
+	}
+
+	Translate(cryingDirection * currentSpeed * 3.f * dt);
+}
+
 void WindyPlane::AttackOneTwoEvent()
 {
 	currentSpeed = speed;
@@ -397,6 +454,13 @@ void WindyPlane::FindPlayer()
 void WindyPlane::OnDamage(int damage, int count)
 {
 	Enemy::OnDamage(damage, count);
+
+	hp -= damage;
+	if (hp <= 0)
+	{
+		OnDie();
+		return;
+	}
 
 	direction.x /= 10.f;
 	direction.y = 0.f;
@@ -536,32 +600,12 @@ void WindyPlane::LoadAllEvents()
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
 
 	std::function<void()> deathEvent = std::bind(&WindyPlane::OnDieEvent, this);
-	animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], 6, deathEvent);
+	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoArm].clips[(int)WindyPlaneStatus::DEATH], 6, deathEvent);
 
 }
 
 void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus planeStatus)
 {
-	 //상태마다 재생 애니메이션이 바뀐다.
-
-	if (hp <= maxHp * 0.2f)
-	{
-		currentPartsStatus = BossPartsStatus::NoArm;
-		currentStatus = WindyPlaneStatus::FINAL;
-	}
-	else if (hp <= maxHp * 0.4f)
-	{
-		currentPartsStatus = BossPartsStatus::OneArm;
-	}
-	else if (hp <= maxHp * 0.6f)
-	{
-		currentPartsStatus = BossPartsStatus::NoProp;
-	}
-	else if (hp <= maxHp * 0.8f)
-	{
-		currentPartsStatus = BossPartsStatus::NoWing;
-	}
-
 	if (animator.GetCurrentClipId() != clipInfos[(int)currentPartsStatus].clips[(int)currentStatus])
 	{
 		currentClipId = clipInfos[(int)currentPartsStatus].clips[(int)currentStatus];
