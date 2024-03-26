@@ -193,6 +193,9 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 
 void Button::SaveSelectedAreasWithDialog()
 {
+	wchar_t currentPath[1024];
+	GetCurrentDirectory(1024, currentPath);
+
 	std::vector<sf::FloatRect>& area = sceneAnimationTool->GetSelectedAreas();
 	std::vector<Origins>& pivotList = sceneAnimationTool->GetSelectedAreasPivot();
 	std::vector<sf::Vector2f>& customPivots = sceneAnimationTool->GetCustomPivot();
@@ -226,6 +229,8 @@ void Button::SaveSelectedAreasWithDialog()
 			MessageBox(NULL, L"File could not be opened.", L"Error", MB_OK);
 			return;
 		}
+		
+		SetCurrentDirectory(currentPath);
 
 		std::string sFp = Utils::MyString::WideStringToString(sceneAnimationTool->GetAtlasPath());
 
@@ -319,6 +324,9 @@ void Button::AutoSlice(const std::vector<int> intValues)
 
 void Button::LoadCsv()
 {
+	wchar_t currentPath[1024];
+	GetCurrentDirectory(1024, currentPath);
+
 	OPENFILENAME ofn;
 	wchar_t szFileName[MAX_PATH] = L"";
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -336,6 +344,8 @@ void Button::LoadCsv()
 			MessageBox(NULL, L"File could not be opened.", L"Error", MB_OK);
 			return;
 		}
+
+		SetCurrentDirectory(currentPath);
 
 		if (obj->GetAnimator().IsPlaying())
 		{
@@ -386,7 +396,7 @@ void Button::LoadCsv()
 
 			if (sceneAnimationTool->GetAtlasPath() == L"")
 			{
-				std::wstring formattedPath = pathFormat + texturePath;
+				std::wstring formattedPath = texturePath;
 
 				sceneAnimationTool->SetIsAtlasPath(false);
 				sceneAnimationTool->SetAtlasPath(formattedPath);
