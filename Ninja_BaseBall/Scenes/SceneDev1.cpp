@@ -10,6 +10,7 @@
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
+#include "Enemy2.h"
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -61,12 +62,15 @@ void SceneDev1::Init()
     //AddMonster(monster,monster->GetDamageBox());
 
 
-    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
     //SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
-
+    
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
+    enemy2=new Enemy2("Enemy2");
+    enemy2->SetPosition({ 1000.f, 500.f });
+    AddGameObject(enemy2, World);
     //monster = new YellowBaseBall("Monster");
     //AddGameObject(monster);
 
@@ -310,4 +314,8 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         AddGameObject(enemy, World);
         enemies.push_back(enemy);
     }
+    // if(type == "Enemy2")
+    // {
+    //     Enemy2 enemy = new
+    // }
 }

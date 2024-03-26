@@ -118,5 +118,5 @@ public:
     virtual void Catch();
     virtual void Damage();
 
-    virtual void SetEnemyPettarn(float dt);
+    //virtual void SetEnemyPettarn(float dt);
 };

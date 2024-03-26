@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 
+class Enemy2;
 class Tilemap;
 class UiHUD;
 class SpriteGo;
@@ -17,8 +18,8 @@ class SceneDev1 : public Scene
 public:
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
-	Enemy* enemy = nullptr;
-
+	//Enemy* enemy = nullptr;
+	Enemy2* enemy2 = nullptr;
 	bool cameraShakeOn = false;
 	float cameraShakeTime = 1.f;
 
