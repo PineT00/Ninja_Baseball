@@ -2,13 +2,14 @@
 #include "SpriteGo.h"
 #include "Animator.h"
 #include "BossTable.h"
+#include "Enemy.h"
 
 class WindEffect;
 class Player;
-class SceneDevBoss;
+class SceneDev1;
 struct BossData;
 
-class WindyPlane : public SpriteGo
+class WindyPlane : public Enemy
 {
 public :
 	enum class WindyPlaneStatus
@@ -51,13 +52,14 @@ protected:
 	WindyPlane& operator=(const WindyPlane&) = delete;
 	WindyPlane& operator=(WindyPlane&&) = delete;
 
-	SceneDevBoss* sceneDevBoss = nullptr;
+	SceneDev1* sceneDev1 = nullptr;
 	Player* player = nullptr;
 	Animator animator;
 
 	ClipInfo currentClipInfo;
 	BossPartsStatus currentPartsStatus = BossPartsStatus::Wing;
 	WindyPlaneStatus currentStatus = WindyPlaneStatus::IDLE;
+	EnemyType enemyType = EnemyType::Boss;
 
 	std::string currentClipId;
 
@@ -129,7 +131,7 @@ public:
 	void FindPlayer();
 
 	// 피격
-	void OnDamaged(float damage);
+	void OnDamage(int damage, int count = -1) override; 
 	void OnDamagedEvent();
 	void OnDie();
 	void OnDieEvent();
@@ -137,9 +139,10 @@ public:
 
 	// 상태
 	void LoadAllEvents();
-	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void CheckEndFrame();
+	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
+	void HoldAction();
 
-	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
+	sf::FloatRect GetDamageBox()  const override { return hitBox.getGlobalBounds(); }
 };

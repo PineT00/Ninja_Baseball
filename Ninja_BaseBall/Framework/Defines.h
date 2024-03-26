@@ -72,3 +72,9 @@ enum class EnemyAttackType
 	ThrowBack,
 	Homerun
 };
+
+enum class EnemyType
+{
+	Normal,
+	Boss
+};

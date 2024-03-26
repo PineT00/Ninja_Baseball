@@ -11,12 +11,12 @@ class Stage1;
 class Player;
 class Player2;
 class Enemy;
+class WindyPlane;
 
 class SceneDev1 : public Scene
 {
 public:
 	Player* player = nullptr;
-	Player2* player2 = nullptr;
 	Enemy* enemy = nullptr;
 
 	bool cameraShakeOn = false;
@@ -32,6 +32,7 @@ protected :
 
 	float xMax = 0.f;
 
+	WindyPlane* windyPlane = nullptr;
 	Stage1* stage = nullptr;
 	
 	UiHUD* hud = nullptr;
