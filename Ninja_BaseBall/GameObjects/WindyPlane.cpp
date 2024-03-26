@@ -15,8 +15,8 @@ void WindyPlane::Init()
 	SpriteGo::Init();
 
 	// FindGo
-	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
+	// sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	// player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
 
 	animator.SetTarget(&sprite);
 

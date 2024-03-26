@@ -1,0 +1,5 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,1,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/baseball/gBaseball_idle.bmp,35.201,123.6,207.9,174.15,9,102.6,166.05

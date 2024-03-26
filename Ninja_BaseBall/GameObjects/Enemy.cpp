@@ -44,13 +44,26 @@ void Enemy::Init()
     enemyAnimator.SetTarget(&sprite);
 
     
-    enemyAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv",
-        2,[this]()
-        {
-            
-            SetState(EnemyState::MOVE);
-        });
-
+    // enemyAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv",
+    //     2,[this]()
+    //     {
+    //            SetState(EnemyState::MOVE);
+    //     });
+    // enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
+    //     2,[this]()
+    //     {
+    //         SetState(EnemyState::MOVE);
+    //     });
+    // enemyAnimator.AddEvent("animations/Enemy/GreenBaseBall/BaseballGreen_Attack.csv",
+    //     2,[this]()
+    //     {
+    //         SetState(EnemyState::MOVE);
+    //     });
+    // enemyAnimator.AddEvent("animations/Enemy/WhiteBaseBall/BaseballWhite_Attack.csv",
+    //     2,[this]()
+    //     {
+    //         SetState(EnemyState::MOVE);
+    //     });
     
 }
 
@@ -153,7 +166,11 @@ void Enemy::UpdateDead(float dt)
 
 void Enemy::UpdateCatched(float dt)
 {
-    
+    SetPosition(player->GetPosition());
+    if(!player->isGrip)
+    {
+        SetState(EnemyState::MOVE);
+    }    
 }
 
 void Enemy::Update(float dt)
@@ -274,6 +291,12 @@ void Enemy::OnDamage(int damage, int count)
     damageCount=count;
     Enemystate = EnemyState::HURT;
 }
+
+void Enemy::HoldAction()
+{
+    SetState(EnemyState::CATCHED);
+}
+
 
 
 

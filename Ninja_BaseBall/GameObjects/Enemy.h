@@ -31,7 +31,7 @@ protected:
     Player* player;
     Animator enemyAnimator;
 
-
+    bool isCatch=false;
     sf::Vector2f playerPos;
 
     sf::RectangleShape damageBox;
@@ -84,4 +84,5 @@ public:
 
     virtual sf::FloatRect GetDamageBox() const;
     virtual void OnDamage(int damage, int count);
+    virtual void HoldAction();
 };
