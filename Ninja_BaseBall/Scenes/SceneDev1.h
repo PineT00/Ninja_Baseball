@@ -7,7 +7,7 @@ class UiHUD;
 class SpriteGo;
 class TextGo;
 class InputField;
-class YellowBaseBall;
+class BaseBall;
 class Stage1;
 class Player;
 class Player2;
@@ -19,7 +19,8 @@ public:
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
 	//Enemy* enemy = nullptr;
-	Enemy2* enemy2 = nullptr;
+	//Enemy2* enemy2 = nullptr;
+	BaseBall* baseBall = nullptr;
 	bool cameraShakeOn = false;
 	float cameraShakeTime = 1.f;
 

@@ -4,6 +4,7 @@
 #include "SceneDev1.h"
 #include "Player2.h"
 #include "WindyPlane.h"
+#include "Enemy2.h"
 
 Player::Player(const std::string& name)
 	: SpriteGo(name), combo(nullptr)

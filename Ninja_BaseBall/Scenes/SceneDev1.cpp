@@ -6,7 +6,7 @@
 #include "TextGo.h"
 #include "InputField.h"
 #include "Enemy.h"
-#include "YellowBaseBall.h"
+#include "..\GameObjects\BaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
@@ -68,9 +68,11 @@ void SceneDev1::Init()
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
-    enemy2=new Enemy2("Enemy2");
-    enemy2->SetPosition({ 1000.f, 500.f });
-    AddGameObject(enemy2, World);
+    // enemy2=new Enemy2("Enemy2");
+    // enemy2->SetPosition({ 1000.f, 500.f });
+    // AddGameObject(enemy2, World);
+
+    SpawnEnemy("Enemy2", { 1000.f, 500.f });
     //monster = new YellowBaseBall("Monster");
     //AddGameObject(monster);
 
@@ -306,16 +308,20 @@ void SceneDev1::SetStatus(GameStatus newStatus)
 
 void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position)
 {
-    if(type == "YellowBaseBall")
+    // if(type == "YellowBaseBall")
+    // {
+    //     YellowBaseBall* enemy2 = new YellowBaseBall("YellowBaseBall");
+    //     enemy2->SetPosition(position);
+    //     enemy2->SetActive(true);
+    //     AddGameObject(enemy2, World);
+    //     enemies.push_back(enemy2);
+    // }
+    if(type == "Enemy2")
     {
-        YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
+        BaseBall* enemy = BaseBall::Create(BaseBall::BaseBallColor::YELLOW);
         enemy->SetPosition(position);
         enemy->SetActive(true);
         AddGameObject(enemy, World);
         enemies.push_back(enemy);
     }
-    // if(type == "Enemy2")
-    // {
-    //     Enemy2 enemy = new
-    // }
 }

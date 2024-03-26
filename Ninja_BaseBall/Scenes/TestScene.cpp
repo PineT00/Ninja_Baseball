@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "TestScene.h"
 #include "TestPlayer.h"
-#include "YellowBaseBall.h"
+#include "..\GameObjects\BaseBall.h"
 #include "Stage1.h"
 
 

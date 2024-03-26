@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "TestPlayer.h"
 #include "TestScene.h"
-#include "YellowBaseBall.h"
+#include "BaseBall.h"
 
 
 TestPlayer::TestPlayer(const std::string& name): SpriteGo(name), testScene(nullptr), enemy(nullptr)
