@@ -137,7 +137,7 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    if (!enterToBossFloor)
+    if (!enterToBossFloor && player->currStatus == Player::Status::isIdleWalk)
     {
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stageRect));
     }

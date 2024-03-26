@@ -9,18 +9,24 @@ class WindyPlane;
 class YellowBaseBall;
 
 class Player :
-    public SpriteGo
+	public SpriteGo
 {
 public:
 	enum class Status
 	{
+		isIdleWalk,
+		isJumping,
+
+		isDash,
+		isDashAttack,
+		isAttack,
+		isKick,
+
+		isGrip,
+
 		isHitted,
 		isKnockBack,
 		isDead,
-		isAttack,
-		isKick,
-		isJumping,
-		isGrip,
 	};
 
 	Status currStatus;
@@ -30,7 +36,6 @@ public:
 
 	int normalAttack = 0;
 	bool isAttack = false;
-	bool isHomerun = false;
 
 	//Turn THIS ON when monster Attacks Player.
 	bool getHit = false;
@@ -46,16 +51,11 @@ public:
 
 	//Grip Time
 	bool isGrip = false;
-	float gripTimer = 0.f;
 	float gripTime = 2.f;
 	float gripCoolTime = 1.f;
 	int gripAttackCount = 0;
 
-	int testVar = 0;
-
 	int hitWay = 0;
-
-
 
 protected:
 	ComboCommands* combo;
@@ -81,7 +81,7 @@ protected:
 	bool isGrounded = true;
 
 	//Dash
-	float dashTimer = 0.5f;
+	float dashTimer = 1.0f;
 
 	float leftDashTime = 0.f;
 	bool leftDashReady = false;
@@ -93,23 +93,19 @@ protected:
 
 
 	//Dash Attack
-	float dashAttackTimer = 0.f;
 	float dashAttackTime = 0.3f;
 	bool dashAttackTimeOn = false;
 
 	//Kick Attack
 	float kickTime = 0.6f;
-	float kickTimer = 0.f;
 	bool kickTimeOn = false;
 
 	//Attack Time
-	float attackTimer = 0.f;
 	float attackTime = 0.3f;
 	bool attackTimeOn = false;
 
 
 	//Hit
-	float hitTimer = 0.15f;
 	float hitTime = 0.f;
 	bool hitTimeOn = false;
 
@@ -130,7 +126,7 @@ protected:
 	sf::RectangleShape hitBox;
 
 	std::vector<Enemy*> enemyList;
-	
+
 public:
 	Player(const std::string& name = "");
 	~Player() override = default;
@@ -141,8 +137,6 @@ public:
 
 	void SetBox();
 	void SetGripBox();
-
-
 
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
 	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
@@ -162,9 +156,21 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 
+	void UpdateIdle(float dt);
+	void UpdateJumping(float dt);
+	void UpdateDash(float dt);
+	void UpdateDashAttack(float dt);
+	void UpdateAttack(float dt);
+	void UpdateKick(float dt);
+	void UpdateGetHit(float dt);
+	void UpdateGrip(float dt);
+
 	void Draw(sf::RenderWindow& window) override;
+
 	const sf::FloatRect& GetHitBox() const { return hitBox.getGlobalBounds(); }
-	bool IsJumping () const { return isJumping; }
+	bool IsJumping() const { return isJumping; }
 	bool IsInvincible() const { return invincible; }
+
+	void SetStatus(Status newStatus);
 };
 

@@ -90,20 +90,6 @@ void Player::OnDamage(int damage, int type, float positionX)
 	{
 		hitWay = 1;
 	}
-
-	//switch(type)
-	//{
-	//	case 1:
-
-	//		break;
-
-	//	case 2:
-
-	//		break;
-	//	case 3:
-
-	//		break;
-	//}
 }
 
 void Player::DynamiteKick()
@@ -127,7 +113,7 @@ void Player::Init()
 	attackBox.setFillColor(sf::Color::Red);
 	grapBox.setFillColor(sf::Color::Blue);
 	hitBox.setFillColor(sf::Color::Yellow);
-	
+
 	attackBox.setSize({ 50, 80 });
 	grapBox.setSize({ 20,20 });
 	hitBox.setSize({ 70,160 });
@@ -137,14 +123,15 @@ void Player::Init()
 	hitBox.setOrigin({ 35.f, 190.f });
 
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
-	playerShadow.SetOrigin({90.f, 35.f});
+	playerShadow.SetOrigin({ 90.f, 35.f });
 
 	float hp = maxHp;
+
+	currStatus = Status::isIdleWalk;
 }
 
 void Player::Reset()
 {
-
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
@@ -175,13 +162,10 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
 
-
-
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
-
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 
@@ -190,12 +174,13 @@ void Player::Reset()
 	hitBox.setPosition({ GetPosition() });
 
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
-	OnHitEffect.setScale({1.5f, 1.5f});
+	OnHitEffect.setScale({ 1.5f, 1.5f });
 
 	combo = new ComboCommands();
 
 	combo->SetCombo();
 
+	SetStatus(Status::isIdleWalk);
 }
 
 void Player::Update(float dt)
@@ -204,220 +189,133 @@ void Player::Update(float dt)
 	animator.Update(dt);
 	animatorEffect.Update(dt);
 
+	attackBox.setPosition({ GetPosition() });
+	grapBox.setPosition({ GetPosition() });
+	hitBox.setPosition({ GetPosition() });
+
+	if (getHit)
+	{
+		hitTime = 0.2f;
+		SetStatus(Status::isHitted);
+	}
+
+	switch (currStatus)
+	{
+		case Status::isIdleWalk:
+			UpdateIdle(dt);
+			break;
+		case Status::isJumping:
+			UpdateJumping(dt);
+			break;
+		case Status::isDash:
+			UpdateDash(dt);
+			break;
+		case Status::isDashAttack:
+			UpdateDashAttack(dt);
+			break;
+		case Status::isAttack:
+			UpdateAttack(dt);
+			break;
+		case Status::isKick:
+			UpdateKick(dt);
+			break;
+		case Status::isGrip:
+			UpdateGrip(dt);
+			break;
+		case Status::isHitted:
+			UpdateGetHit(dt);
+			break;
+			//case Status::isKnockBack:
+				//UpdateIdle(dt);
+				//break;
+		default:
+			break;
+	}
+
+
+}
+
+void Player::UpdateIdle(float dt)
+{
 	float v = 0;
 	float h = 0;
 
-	if (inputOn)
+	if (!leftDashReady && InputManager::GetKeyDown(sf::Keyboard::Left))
 	{
-
-		if (isRightDashing || isLeftDashing)
-		{
-			v = 0;
-		}
-		else
-		{
-			if (InputManager::GetKey(sf::Keyboard::Up))
-			{
-				v = -1;
-			}
-			else if (InputManager::GetKey(sf::Keyboard::Down))
-			{
-				v = 1;
-			}
-		}
-
-		if (InputManager::GetKeyDown(sf::Keyboard::Right) && isGrounded)
-		{
-			rightDashReady = true;
-		}
-		if (InputManager::GetKeyDown(sf::Keyboard::Left) && isGrounded)
-		{
-			leftDashReady = true;
-		}
-
-		if (InputManager::GetKey(sf::Keyboard::Left) && isGrounded)
-		{
-			h = -1;
-		}
-		else if (InputManager::GetKey(sf::Keyboard::Right) && isGrounded)
-		{
-			h = 1;
-		}
-
-		//대시기능
-		{
-			//왼쪽 대시 모음
-			if (leftDashReady && leftDashTime > 0.f && leftDashTime < dashTimer)
-			{
-				if (InputManager::GetKeyDown(sf::Keyboard::Left))
-				{
-					isLeftDashing = true; // 대쉬 상태 활성화
-					animator.Play("Animations/player/player_Dash.csv");
-				}
-			}
-			if (leftDashTime > dashTimer)
-			{
-				leftDashTime = 0.f;
-				leftDashReady = false;
-			}
-			if (leftDashReady)
-			{
-				leftDashTime += dt;
-			}
-			if (InputManager::GetKeyUp(sf::Keyboard::Left))
-			{
-				isLeftDashing = false;
-			}
-
-			//오른쪽 대시 모음
-
-			if (rightDashReady && rightDashTime > 0.f && rightDashTime < dashTimer)
-			{
-				if (InputManager::GetKeyDown(sf::Keyboard::Right))
-				{
-					isRightDashing = true; // 대쉬 상태 활성화
-					animator.Play("Animations/player/player_Dash.csv");
-				}
-			}
-			if (rightDashTime > dashTimer)
-			{
-				rightDashTime = 0.f;
-				rightDashReady = false;
-			}
-			if (rightDashReady)
-			{
-				rightDashTime += dt;
-			}
-			if (InputManager::GetKeyUp(sf::Keyboard::Right))
-			{
-				isRightDashing = false;
-			}
-		}
-
+		leftDashTime = 0.3f;
+	}
+	if (!rightDashReady && InputManager::GetKeyDown(sf::Keyboard::Right))
+	{
+		rightDashTime = 0.3f;
+	}
+	if (leftDashTime >= 0.f)
+	{
+		leftDashTime -= dt;
+	}
+	if (rightDashTime >= 0.f)
+	{
+		rightDashTime -= dt;
 	}
 
-
-	//대쉬 스피드
-	if (isRightDashing || isLeftDashing)
+	if (InputManager::GetKey(sf::Keyboard::Up))
 	{
-		velocity.x = h * dashSpeed;
+		v = -1;
 	}
-	else
+	else if (InputManager::GetKey(sf::Keyboard::Down))
 	{
-		velocity.x = h * speed;
+		v = 1;
 	}
 
-	//점프
-
-	if (!isGrounded)
+	if (InputManager::GetKey(sf::Keyboard::Left))
 	{
-		if (position.y > jumpY)
+		h = -1;
+	}
+	else if (InputManager::GetKey(sf::Keyboard::Right))
+	{
+		h = 1;
+	}
+
+	if (!leftDashReady && InputManager::GetKeyUp(sf::Keyboard::Left))
+	{
+		leftDashReady = true; // 대쉬 대기
+	}
+	if (!rightDashReady && InputManager::GetKeyUp(sf::Keyboard::Right))
+	{
+		rightDashReady = true; // 대쉬 대기
+	}
+
+	//왼쪽 대시 준비
+	if (leftDashReady && leftDashTime > 0.f)
+	{
+		if (InputManager::GetKeyDown(sf::Keyboard::Left))
 		{
-			isGrounded = true;
-			isJumping = false;
-			SetPosition({ position.x, jumpY });
-
+			leftDashReady = false;
+			isLeftDashing = true; // 대쉬 상태 활성화
+			dashDirection = h;
+			animator.Play("Animations/player/player_Dash.csv");
+			SetStatus(Status::isDash);
 		}
 	}
-
-	if (isGrounded && !isLeftDashing && !isRightDashing && !(InputManager::GetKey(sf::Keyboard::Q)) && InputManager::GetKeyDown(sf::Keyboard::W))
+	if (leftDashTime <= 0.f)
 	{
-		isGrounded = false;
-		jumpY = GetPosition().y;
-		animator.Play("Animations/player/player_Jump.csv");
-		velocity.y = -800.f;
-		jumpDirection = h;
+		leftDashReady = false;
 	}
+	//오른쪽 대시 준비
 
-	if (!isGrounded)
+	if (rightDashReady && rightDashTime > 0.f)
 	{
-		velocity.y += gravity * dt;
-		
-		if (jumpDirection != 0.f)
+		if (InputManager::GetKeyDown(sf::Keyboard::Right))
 		{
-			velocity.x = jumpDirection * speed;
-		}
-		else
-		{
-			velocity.x = 0.f;
+			rightDashReady = false;
+			isRightDashing = true; // 대쉬 상태 활성화
+			dashDirection = h;
+			animator.Play("Animations/player/player_Dash.csv");
+			SetStatus(Status::isDash);
 		}
 	}
-	else
+	if (rightDashTime <= 0.f)
 	{
-		velocity.y = v * speed;
-	}
-
-	if (getHit && !invincible)
-	{
-		inputOn = false;
-		hitTimeOn = true;
-		isLeftDashing = false;
-		isRightDashing = false;
-
-		if (hp <= 0.f)
-		{
-			isAlive = false;
-		}
-
-		invincible = true;
-	}
-
-	if (invincible)
-	{
-		invincibleTime -= dt;
-		if (invincibleTime <= 0.f)
-		{
-			invincible = false;
-			invincibleTime = 1.5f;
-		}
-	}
-
-	//피격시
-	{
-		if (hitTimeOn)
-		{
-			if (!isAlive)
-			{
-				hitTime += dt;
-				isGrounded = false;
-				isJumping = true;
-				jumpY = GetPosition().y + 50.f;
-				velocity.y = -800.f;
-				jumpDirection = hitWay;
-				Death();
-			}
-			else
-			{
-				hitTime += dt;
-				isJumping = false;
-				velocity.x = hitWay * 800.f;
-				Bitted();
-
-			}
-		}
-
-
-		if (!isAlive && isGrounded && animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
-		{
-			animator.Play("Animations/player/player_Death2.csv");
-			//inputOn = false;
-		}
-
-		if (hitTime > hitTimer)
-		{
-			hitTimeOn = false;
-			hitTime = 0.f;
-			inputOn = true;
-			getHit = false;
-			hitWay = 0;
-		}
-
-	}
-
-	//이동영역 제한
-	if ((sceneDev1 != nullptr) && isGrounded)
-	{
-		//position = sceneDev1->ClampByTileMap(position);
+		rightDashReady = false;
 	}
 
 	if (h != 0.f)
@@ -426,179 +324,12 @@ void Player::Update(float dt)
 		SetBox();
 	}
 
-	if (attackTimeOn)
-	{
-		attackTime -= dt;
-	}
-
-	// (중요)
-	// TODO : 잡기박스 전체 적용 필요
-	// 공격할 때랑 비슷한 경우로 처리
-
-	//잡기박스와 닿았을때
-	//if (!isLeftDashing && !isRightDashing && !isGrip && (gripCoolTime == 0.f) && grapBox.getGlobalBounds().intersects(enemyHitBox))
-	//{
-	//	animator.Play("Animations/player/player_Grip.csv");
-	//	isGrip = true;
-	//	inputOn = false;
-	//	attackTimeOn = true;
-	//	attackTime = 2.f;
-	//}
-
-
-	if (gripCoolTime > 0.f)
-	{
-		gripCoolTime -= dt;
-		if (gripCoolTime <= 0.f)
-		{
-			gripCoolTime = 0.f;
-		}
-	}
-
-
-	//공격상황
-	if (!isGrip && InputManager::GetKeyDown(sf::Keyboard::Q))
-	{
-		attackTimeOn = true;
-
-		enemyList = sceneDev1->GetEnemyList();
-		  
-		for (auto& enemy : enemyList)
-		{
-			if (enemy == nullptr) continue;
-
-			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
-			{
-				normalAttack += 1;
-				enemy->OnDamage(20, normalAttack);
-			}
-		}
-
-		switch (normalAttack)
-		{
-			case 1:
-				animator.Play("Animations/player/player_Attack1.csv");
-				attackTime = 0.5f;
-				break;
-			case 2:
-				animator.Play("Animations/player/player_Attack2.csv");
-				attackTime = 0.5f;
-				break;
-			case 3:
-				animator.Play("Animations/player/player_Attack3.csv");
-				attackTime = 0.5f;
-				break;
-			case 4:
-				animator.Play("Animations/player/player_Attack4.csv");
-				attackTime = 0.5f;
-				normalAttack = 0;
-				break;
-			default:
-				animator.Play("Animations/player/player_Attack1.csv");
-				break;
-		}
-	}
-
-
-	//기술 모음
-	{
-		//점프중일때 기술
-		if (!isGrounded)
-		{
-			if (InputManager::GetKeyDown(sf::Keyboard::Q))
-			{
-				animator.Play("Animations/player/player_JumpAttackSK.csv"); //점프옆차기
-				animator.PlayQueue("Animations/player/player_Jump.csv");
-			}
-		}
-
-		//대시중일때 기술
-		if (isGrounded && (isLeftDashing || isRightDashing))
-		{
-			if (InputManager::GetKeyDown(sf::Keyboard::Q))
-			{
-				DashAttack();
-				dashDirection = h;
-			}
-		}
-
-		//잡기중일때 기술
-		if (isGrip && isGrounded)
-		{
-			if (InputManager::GetKeyDown(sf::Keyboard::Q))
-			{
-				SetGripBox();
-				animator.Play("Animations/player/player_GripAttack1.csv");
-				attackTime = 2.f;
-				gripAttackCount += 1;
-			}
-		}
-
-		//다이너마이트 킥
-		if (InputManager::GetKey(sf::Keyboard::Q))
-		{
-			if (InputManager::GetKeyDown(sf::Keyboard::W))
-			{
-				inputOn = false;
-				DynamiteKick();
-
-			}
-		}
-
-
-
-		////콤보 기록용
-		//if (InputManager::GetKeyDown(sf::Keyboard::L))
-		//{
-		//	InputManager::StopComboRecord();
-		//	InputManager::ClearCombo();
-		//	InputManager::ComboRecord(10.f);
-		//}
-
-		//if (InputManager::IsRecording() && InputManager::IsComboSuccess(*(combo->comboList[0])))
-		//{
-		//	animator.Play("Animations/player/player_DashAttack.csv");
-		//	InputManager::StopComboRecord();
-		//}
-	}
-
-
-	//기술 움직임 처리
-	if (dashAttackTimeOn)
-	{
-		velocity.x = dashDirection * 800.f;
-		dashAttackTime -= dt;
-	}
-
-	if (dashAttackTime <= dashAttackTimer)
-	{
-		dashAttackTimeOn = false;
-		animator.Play("Animations/player/player_Idle.csv");
-		isLeftDashing = false;
-		isRightDashing = false;
-		dashAttackTime = 0.3f;
-		inputOn = true;
-	}
-
-	if (kickTimeOn)
-	{
-		velocity.x = sprite.getScale().x * 700.f;
-		kickTime -= dt;
-	}
-
-	if (kickTime <= kickTimer)
-	{
-		kickTimeOn = false;
-		animator.Play("Animations/player/player_Idle.csv");
-		kickTime = 0.7f;
-		inputOn = true;
-	}
-
+	velocity.x = h * speed;
+	velocity.y = v * speed;
 
 	position += velocity * dt;
 
 	SetPosition(position);
-	playerShadow.SetPosition(GetPosition());
 
 
 	if (animator.GetCurrentClipId() == "Animations/player/player_Idle.csv")
@@ -615,85 +346,305 @@ void Player::Update(float dt)
 			animator.Play("Animations/player/player_Idle.csv");
 		}
 	}
-	else if (animator.GetCurrentClipId() == "Animations/player/player_Jump.csv" && isGrounded)
-	{
-		animator.Play("Animations/player/player_Idle.csv");
-	}
-	else if (animator.GetCurrentClipId() == "Animations/player/player_Dash.csv" && !isLeftDashing && !isRightDashing)
+	if (animator.GetCurrentClipId() == "Animations/player/player_Jump.csv")
 	{
 		animator.Play("Animations/player/player_Idle.csv");
 	}
 
-	if (!isAttack && animator.GetCurrentClipId() == "Animations/player/player_Attack1.csv")
+	enemyList = sceneDev1->GetEnemyList();
+
+	for (auto& enemy : enemyList)
 	{
-		animator.PlayQueue("Animations/player/player_Idle.csv");
+		if (enemy == nullptr) continue;
+
+		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		{
+			animator.Play("Animations/player/player_Grip.csv");
+			isGrip = true;
+			//enemy.holdAction();
+			SetStatus(Status::isGrip);
+		}
 	}
 
-	if (attackTimeOn && attackTime <= 0.f)
+	if (attackTimeOn)
 	{
-		animator.PlayQueue("Animations/player/player_Idle.csv");
-		attackTimeOn = false;
-		inputOn = true;
-		normalAttack = 0;
+		attackTime -= dt;
 
-		isGrip = false;
-		gripCoolTime = 2.f;
-		gripAttackCount = 0;
-		isAttack = false;
+		if (attackTime <= 0.f)
+		{
+			animator.Play("Animations/player/player_Idle.csv");
+			attackTimeOn = false;
+			normalAttack = 0;
+		}
 	}
-
-	if (!isGrip)
+	if (InputManager::GetKeyDown(sf::Keyboard::W))
 	{
-		gripAttackCount = 0;
-	}
-
-
-	attackBox.setPosition({ GetPosition() });
-	grapBox.setPosition({ GetPosition() });
-	hitBox.setPosition({ GetPosition() });
-	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 130);
-	attackEffect.setPosition(attackBox.getPosition());
-
-	if (InputManager::GetKeyDown(sf::Keyboard::Num0))
-	{
-		isImpacted = true;
-	}
-
-	//잔상효과
-	trailDuration -= dt;
-
-	if (trailDuration <= 0)
-	{
-		if (trails.size() < 3)
-		{ 
-			sf::Sprite trail;
-			Animator trailAnimator;
-
-			trailAnimator.SetTarget(&trail);
-			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
-			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 250.f);
-			trail.setColor(sf::Color(0, 0, 0, 100));
-			trail.setPosition(GetPosition());
-			if (h < 0.f || jumpDirection < 0.f)
-			{
-				trail.setScale(-1, 1);
-			}
-			else
-			{
-				trail.setScale(1, 1);
-			}
-			trails.push_back(trail);
+		if (InputManager::GetKey(sf::Keyboard::Q))
+		{
+			attackTimeOn = false;
+			normalAttack = 0;
+			DynamiteKick();
+			SetStatus(Status::isKick);
 		}
 		else
 		{
-			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
+			jumpY = GetPosition().y;
+			velocity.y = -800.f;
+			jumpDirection = h;
+			animator.Play("Animations/player/player_Jump.csv");
+			SetStatus(Status::isJumping);
+
 		}
-		trailDuration = 0.05f; // 잔상 유지 시간 초기화
+	}
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Q))
+	{
+		SetStatus(Status::isAttack);
+	}
+
+}
+
+void Player::UpdateJumping(float dt)
+{
+	if (position.y > jumpY)
+	{
+		SetPosition({ position.x, jumpY });
+		SetStatus(Status::isIdleWalk);
+	}
+	else
+	{
+		velocity.y += gravity * dt;
+	}
+	if (jumpDirection != 0.f)
+	{
+		velocity.x = jumpDirection * speed;
+	}
+	else
+	{
+		velocity.x = 0.f;
+	}
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Q))
+	{
+		enemyList = sceneDev1->GetEnemyList();
+
+		for (auto& enemy : enemyList)
+		{
+			if (enemy == nullptr) continue;
+			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+			{
+				enemy->OnDamage(20, normalAttack);
+			}
+		}
+		animator.Play("Animations/player/player_JumpAttackSK.csv"); //점프옆차기
+		animator.PlayQueue("Animations/player/player_Jump.csv");
+	}
+
+	position += velocity * dt;
+	SetPosition(position);
+}
+
+void Player::UpdateDash(float dt)
+{
+	if (InputManager::GetKeyUp(sf::Keyboard::Left))
+	{
+		isLeftDashing = false;
+
+	}
+	else if (InputManager::GetKeyUp(sf::Keyboard::Right))
+	{
+		isRightDashing = false;
+
+	}
+
+	if (!isLeftDashing && !isRightDashing)
+	{
+		rightDashReady = false;
+		leftDashReady = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		SetStatus(Status::isIdleWalk);
+	}
+	else
+	{
+		velocity.x = dashDirection * dashSpeed;
+		position.x += velocity.x * dt;
+	}
+
+	SetPosition(position);
+
+	if (InputManager::GetKeyUp(sf::Keyboard::Q))
+	{
+		isLeftDashing = false;
+		isRightDashing = false;
+		animator.Play("Animations/player/player_DashAttack.csv");
+		SetStatus(Status::isDashAttack);
+	}
+}
+
+void Player::UpdateDashAttack(float dt)
+{
+	enemyList = sceneDev1->GetEnemyList();
+
+	for (auto& enemy : enemyList)
+	{
+		if (enemy == nullptr) continue;
+		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		{
+			enemy->OnDamage(20, normalAttack);
+		}
+	}
+
+	if (dashAttackTime > 0.f)
+	{
+		velocity.x = dashDirection * 800.f;
+		position.x += velocity.x * dt;
+		dashAttackTime -= dt;
+	}
+	else
+	{
+		dashAttackTime = 0.3f;
+		animator.Play("Animations/player/player_Idle.csv");
+		SetStatus(Status::isIdleWalk);
+	}
+
+	SetPosition(position);
+}
+
+void Player::UpdateAttack(float dt)
+{
+	enemyList = sceneDev1->GetEnemyList();
+
+	for (auto& enemy : enemyList)
+	{
+		if (enemy == nullptr) continue;
+		//isAttack&&
+		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		{
+			normalAttack += 1;
+			enemy->OnDamage(20, normalAttack);
+		}
+	}
+
+	switch (normalAttack)
+	{
+		case 1:
+			animator.Play("Animations/player/player_Attack1.csv");
+			attackTime = 0.5f;
+			break;
+		case 2:
+			animator.Play("Animations/player/player_Attack2.csv");
+			attackTime = 0.5f;
+			break;
+		case 3:
+			animator.Play("Animations/player/player_Attack3.csv");
+			attackTime = 0.5f;
+			break;
+		case 4:
+			animator.Play("Animations/player/player_Attack4.csv");
+			attackTime = 0.5f;
+			normalAttack = 0;
+			break;
+		default:
+			animator.Play("Animations/player/player_Attack1.csv");
+			break;
+	}
+
+	attackTimeOn = true;
+	attackTime = 0.3f;
+
+
+	SetStatus(Status::isIdleWalk);
+}
+
+void Player::UpdateKick(float dt)
+{
+
+	enemyList = sceneDev1->GetEnemyList();
+
+	for (auto& enemy : enemyList)
+	{
+		if (enemy == nullptr) continue;
+		//isAttack&&
+		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		{
+			enemy->OnDamage(20, normalAttack);
+		}
+	}
+
+	if (kickTimeOn)
+	{
+		velocity.x = sprite.getScale().x * 700.f;
+		velocity.y += gravity * dt;
+		kickTime -= dt;
+	}
+
+	if (kickTime <= 0.f)
+	{
+		kickTimeOn = false;
+		animator.Play("Animations/player/player_Idle.csv");
+		kickTime = 0.7f;
+		SetStatus(Status::isIdleWalk);
+	}
+	position += velocity * dt;
+	SetPosition(position);
+
+}
+
+void Player::UpdateGrip(float dt)
+{
+	if (InputManager::GetKeyDown(sf::Keyboard::Q))
+	{
+		SetGripBox();
+		animator.Play("Animations/player/player_GripAttack1.csv");
+		gripTime = 2.f;
+		gripAttackCount += 1;
+	}
+	gripTime -= dt;
+
+	if (gripTime <= 0.f)
+	{
+		isGrip = false;
+		gripAttackCount = 0;
+		animator.Play("Animations/player/player_Idle.csv");
+		SetStatus(Status::isIdleWalk);
+	}
+
+	else if (gripAttackCount == 3)
+	{
+		isGrip = false;
+		gripAttackCount = 0;
+		animator.Play("Animations/player/player_Idle.csv");
+		SetStatus(Status::isIdleWalk);
+	}
+}
+
+void Player::UpdateGetHit(float dt)
+{
+	if (getHit)
+	{
+		velocity.x = hitWay * 800.f;
+		Bitted();
+	}
+	else
+	{
+		hitTime -= dt;
+	}
+	getHit = false;
+
+	position.x += velocity.x * dt;
+	SetPosition(position);
+
+	if (hitTime <= 0.f)
+	{
+		hitTimeOn = false;
+		hitTime = 0.2f;
+		animator.Play("Animations/player/player_Idle.csv");
+		SetStatus(Status::isIdleWalk);
 	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
-{	
+{
 	playerShadow.Draw(window);
 
 	if (kickTimeOn)
@@ -709,7 +660,7 @@ void Player::Draw(sf::RenderWindow& window)
 	window.draw(attackBox);
 	window.draw(grapBox);
 	window.draw(hitBox);
-	window.draw(OnHitEffect,shader);
+	window.draw(OnHitEffect, shader);
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
@@ -723,4 +674,32 @@ void Player::Draw(sf::RenderWindow& window)
 		hitBox.setFillColor(sf::Color::Transparent);
 		attackBox.setFillColor(sf::Color::Transparent);
 	}
+}
+
+void Player::SetStatus(Status newStatus)
+{
+	Status prevStatus = currStatus;
+	currStatus = newStatus;
+
+	switch (currStatus)
+	{
+		case Status::isIdleWalk:
+			//mainScreen->SetActive(true);
+			//selectScreen->SetActive(false);
+			break;
+		case Status::isJumping:
+			//mainScreen->SetActive(false);
+			//selectScreen->SetActive(true);
+			break;
+		case Status::isDash:
+			//mainScreen->SetActive(false);
+			//selectScreen->SetActive(false);
+			break;
+		case Status::isDashAttack:
+			break;
+		case Status::isAttack:
+			break;
+
+	}
+
 }
