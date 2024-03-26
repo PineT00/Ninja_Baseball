@@ -22,6 +22,7 @@ public:
 		isHomeRun,
 	};
 	int life = 1;
+	int score = 0;
 
 	int normalAttack = 0;
 	bool isAttack = false;
@@ -49,6 +50,8 @@ public:
 	int testVar = 0;
 
 	int hitWay = 0;
+
+
 
 protected:
 	ComboCommands* combo;
