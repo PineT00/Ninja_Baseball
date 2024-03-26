@@ -92,6 +92,7 @@ void Animator::Update(float dt)
 
 void Animator::Play(const std::string& clipId, bool clearQueue)
 {
+	std::cout << clipId << std::endl;	
 	if (clearQueue)
 	{
 		while (!queue.empty())
@@ -220,6 +221,7 @@ void Animator::SetClipEndEvent(const std::string& clipId, std::function<void()> 
 	{
 		clip->OnClipEnd = event;
 	}
+	eventList.push_back({ clipId, clip->GetTotalFrame() - 1, event });
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)

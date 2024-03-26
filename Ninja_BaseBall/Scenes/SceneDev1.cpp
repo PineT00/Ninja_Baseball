@@ -169,9 +169,11 @@ void SceneDev1::UpdateGame(float dt)
     {
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
-        //yellowEnemy->SetActive(true);
 
-        //yellowEnemy2->SetActive(true);
+        for(auto enemy : enemies)
+        {
+            enemy->SetActive(true);
+        }
 
         //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
     }
@@ -302,6 +304,7 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
     {
         YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
         enemy->SetPosition(position);
+        enemy->SetActive(true);
         AddGameObject(enemy, World);
         //enemies.push_back(enemy);
     }

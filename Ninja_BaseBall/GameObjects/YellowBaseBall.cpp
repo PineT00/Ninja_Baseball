@@ -184,27 +184,12 @@ void YellowBaseBall::Update(float dt)
 
 void YellowBaseBall::OnDamage(int damage,int count)
 {
-
-    // Enemy::OnDamage(damage,count);
-    // //currentEnemy = EnemyState::HURT;
-    // maxHealth -= damage;
-    // this->damageCount=count;
-    // currentEnemy = EnemyState::HURT;
-    // if(maxHealth <= 0)
-    // {
-    //     isDead = true;
-    //     currentEnemy = EnemyState::DEAD;
-    // }
-    // SetState();
-
     if (!isInvincible)
     {
         Enemy::OnDamage(damage, count);
         //currentEnemy = EnemyState::HURT;
         SetState();
     }
-
-
 }
 
 void YellowBaseBall::TargetDirection(const sf::Vector2f& playerPosition)
@@ -222,7 +207,7 @@ void YellowBaseBall::Attack()
 void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
 {
     Enemy::DashToPlayer(dt,currentPosition);
-    if(isDash)
+    if(isDash && !isCatched)
     {
         currentEnemy = EnemyState::DASH;
         SetState();
@@ -233,18 +218,23 @@ void YellowBaseBall::DashToPlayer(float dt,sf::Vector2f& currentPosition)
 void YellowBaseBall::NormalMovement(float dt, sf::Vector2f& currentPosition, const sf::Vector2f& playerPosition,
     float xDistance, float yDistance)
 {
-    Enemy::NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
-    currentEnemy = EnemyState::MOVE;
-    SetState();
-    
+    if(!isCatched)
+    {
+        Enemy::NormalMovement(dt, currentPosition, playerPosition, xDistance, yDistance);
+        currentEnemy = EnemyState::MOVE;
+        SetState();
+    }
 }
 
 void YellowBaseBall::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& currentPosition)
 {
-    Enemy::StartDash(playerPosition, currentPosition);
-    currentEnemy = EnemyState::MOVE;
-    SetState();                    
+    if(!isCatched)
+    {
+        Enemy::StartDash(playerPosition, currentPosition);
+        currentEnemy = EnemyState::MOVE;
+        SetState();                    
     
+    }
 }
 
 sf::FloatRect YellowBaseBall::GetHitBox() const

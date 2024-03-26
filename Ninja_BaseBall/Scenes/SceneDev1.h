@@ -47,8 +47,6 @@ private:
 	};
 	std::vector<MonsterInfo> monsterInfos;
 	std::vector<Enemy*> enemies;
-	
-
 public:
 
 	SceneDev1(SceneIDs id);
