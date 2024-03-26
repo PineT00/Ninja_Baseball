@@ -1,9 +1,5 @@
-ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,1,1,,,,,
-,,,,,,,
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,3,0
+
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
-graphics/3_Enemy/baseball/ybaseball_damaged.bmp,1013.09,115.323,-275.464,186.004,9,-141.718,175.376
-graphics/3_Enemy/baseball/ybaseball_damaged.bmp,1013.09,115.323,-275.464,186.004,9,-141.718,175.376
-graphics/3_Enemy/baseball/ybaseball_damaged.bmp,1013.09,115.323,-275.464,186.004,9,-141.718,175.376
-graphics/3_Enemy/baseball/ybaseball_damaged.bmp,1013.09,115.323,-275.464,186.004,9,-141.718,175.376
-graphics/3_Enemy/baseball/ybaseball_damaged.bmp,1013.09,115.323,-275.464,186.004,9,-141.718,175.376
+graphics/3_Enemy/baseball/ybaseball_damaged.bmp,738.786,121.024,265.72,178.918,9,137.289,172.718

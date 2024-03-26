@@ -187,7 +187,7 @@ void YellowBaseBall::OnDamage(int damage,int count)
     if (!isInvincible)
     {
         Enemy::OnDamage(damage, count);
-        //currentEnemy = EnemyState::HURT;
+        currentEnemy = EnemyState::HURT;
         SetState();
     }
 }

@@ -35,7 +35,6 @@ void Enemy::Reset()
     
     attackBox.setFillColor(sf::Color::Red);
     damageBox.setFillColor(sf::Color::Blue);
-    health = maxHealth;
 }
 
 void Enemy::Update(float dt)
@@ -118,6 +117,11 @@ void Enemy::Update(float dt)
     sprite.setPosition(currentPosition);
     // animation update
     //enemyAnimator.Update(dt);
+
+    if(InputManager::GetKeyDown(sf::Keyboard::F1))
+    {
+        OnDamage(10,1);
+    }
 }
 
 void Enemy::LateUpdate(float dt)
@@ -144,8 +148,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::OnDamage(int damage,int count)
 {
-
-    maxHealth -= damage;
+    health -= damage;
     this->damageCount=count;
     currentEnemy = EnemyState::HURT;
     if(maxHealth <= 0)
@@ -153,35 +156,9 @@ void Enemy::OnDamage(int damage,int count)
         isDead = true;
         currentEnemy = EnemyState::DEAD;
     }
-
-    health -= damage;
-
-    if(health <= 0)
-    {
-        isDead = true;
-        currentEnemy = EnemyState::DEAD;
-        return;
-    }
-    else if (count == 0)
-    {
-        currentEnemy = EnemyState::HURT;
-        isInvincible = true;
-        return;
-    }
-    else
-    {
-        this->damageCount=count;
-        isInvincible = true;
-        currentEnemy = EnemyState::HURT;
-
-    }
 }
 
 void Enemy::DashTowards(float dt){
-    // if (!isReadyToDash) return;
-    // sf::Vector2f direction = Normalize(player->GetPosition() - sprite.getPosition());
-    // sprite.move(direction * dashSpeed * dt);
-
     if (!isReadyToDash) return;
 
     sf::Vector2f direction = player->GetPosition() - sprite.getPosition();
@@ -193,13 +170,12 @@ void Enemy::DashTowards(float dt){
     }
 
     sprite.move(direction * dashSpeed * dt);
-    
 }
 
 void Enemy::Attack()
 {
-    //attackTimer = attackCooldown;
-    if(player->hp <=0 )
+    
+    if(player->hp <=0)
     {
         currentEnemy = EnemyState::MOVE;
         return;
@@ -225,11 +201,6 @@ void Enemy::MoveTowards(const sf::Vector2f& target, float dt)
     float distanceToTarget = Utils::MyMath::Distance(target, currentPosition);
     currentEnemy = EnemyState::MOVE;
     constexpr float minDistance = 500.0f;
-    
-    if(currentEnemy==EnemyState::ATTACK)
-    {
-        return;
-    }
     if (distanceToTarget > minDistance)
     {
         float yDistance = std::abs(target.y - currentPosition.y);
@@ -298,8 +269,6 @@ void Enemy::StartDash(const sf::Vector2f& playerPosition, const sf::Vector2f& cu
     isDash = true;
     currentEnemy = EnemyState::DASH;
     dashCooldownTimer = dashCooldown; // 대쉬 후 쿨다운 재설정
-
-  
 }
 
 
@@ -384,3 +353,5 @@ void Enemy::Damage()
     currentEnemy=EnemyState::MOVE;
     std::cout<<"damage"<<std::endl;
 }
+
+

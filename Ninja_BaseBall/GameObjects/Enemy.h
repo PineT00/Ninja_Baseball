@@ -29,7 +29,7 @@ protected:
     float speed = 60.f;
 
     int health = 100;
-    int maxHealth = 100;
+    int maxHealth;
     int damage = 10;
     int damageCount;
     
