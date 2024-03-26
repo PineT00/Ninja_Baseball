@@ -22,6 +22,8 @@ public:
 	bool cameraShakeOn = false;
 	float cameraShakeTime = 1.f;
 
+	bool isFighting = false;
+
 protected :
 	SceneDev1(const SceneDev1&)				= delete;
 	SceneDev1(SceneDev1&&)					= delete;

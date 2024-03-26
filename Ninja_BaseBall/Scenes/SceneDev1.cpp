@@ -44,33 +44,11 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-    // yellowEnemy = new YellowBaseBall("YellowEnemy");
-    // yellowEnemy->SetPosition({ 1400.f, 700.f });
-    // AddGameObject(yellowEnemy, World);
-    //
-    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
-    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
-    // AddGameObject(yellowEnemy2, World);
-
-    //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
-
-    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-
-    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
-    //monster->SetPosition({ 1400.f, 700.f });
-    //AddMonster(monster,monster->GetDamageBox());
-
-
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
     SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
-
-    //monster = new YellowBaseBall("Monster");
-    //AddGameObject(monster);
-
-
 
     Scene::Init();
 }
@@ -158,7 +136,7 @@ void SceneDev1::UpdateGame(float dt)
     // }
     //
     
-    if (player->GetPosition().x > xMax)
+    if (!isFighting && player->GetPosition().x > xMax)
     {
         xMax = player->GetPosition().x;
     }
@@ -169,26 +147,32 @@ void SceneDev1::UpdateGame(float dt)
 
     if (!(stage->clearStage1_1) && xMax >= camCenter1)
     {
+        isFighting = true;
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
-        //yellowEnemy->SetActive(true);
-
-        //yellowEnemy2->SetActive(true);
-
-        //SpawnEnemy("YellowBaseBall", { 1400.f, 900.f });
+        
+        std::list <GameObject*> yellowBaseBallList;
+        FindAll("YellowBaseBall", yellowBaseBallList);
+        for (auto& yellowBaseBall : yellowBaseBallList)
+        {
+            yellowBaseBall->SetActive(true);
+        }
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
+        isFighting = true;
         xMax = camCenter2;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
     }
     if (!(stage->clearStage1_3) && xMax >= camCenter3)
     {
+        isFighting = true;
         xMax = camCenter3;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
     }
     if (!(stage->clearStage1_4) && xMax >= camCenter4)
     {
+        isFighting = true;
         xMax = camCenter4;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
     }
@@ -230,19 +214,23 @@ void SceneDev1::UpdateGame(float dt)
 
     if (InputManager::GetKeyDown(sf::Keyboard::Num1))
     {
+        isFighting = false;
         stage->clearStage1_1 = true;
         cameraShakeOn = true;
     }
     else if (InputManager::GetKeyDown(sf::Keyboard::Num2))
     {
+        isFighting = false;
         stage->clearStage1_2 = true;
     }
     else if (InputManager::GetKeyDown(sf::Keyboard::Num3))
     {
+        isFighting = false;
         stage->clearStage1_3 = true;
     }
     else if (InputManager::GetKeyDown(sf::Keyboard::Num4))
     {
+        isFighting = false;
         stage->clearStage1_4 = true;
     }
     
@@ -306,5 +294,6 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         enemy->SetPosition(position);
         AddGameObject(enemy, World);
         enemies.push_back(enemy);
+        enemy->SetActive(false);
     }
 }
