@@ -24,7 +24,7 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             dashTimer = 0.f;
             break;
         case EnemyState::HURT:
-
+            hurtTimer=0.f;
             break;
         case EnemyState::DEAD:
             
@@ -143,14 +143,11 @@ void Enemy::UpdateDash(float dt)
 
 void Enemy::UpdateHurt(float dt)
 {
-    if(health>0)
-    {
-        SetState(EnemyState::HURT,damageCount);
-    }
-    else
-    {
-        SetState(EnemyState::DEAD);
+    hurtTimer += dt;
 
+    if(hurtTimer>=hurtDuration)
+    {
+        SetState(EnemyState::MOVE);
     }
 }
 
@@ -289,7 +286,14 @@ void Enemy::OnDamage(int damage, int count)
     std::cout<<"OnDamage"<<std::endl;
     health-=damage;
     damageCount=count;
-    Enemystate = EnemyState::HURT;
+    if(health<=0)
+    {
+        SetState(EnemyState::DEAD);
+    }
+    else
+    {
+        SetState(EnemyState::HURT, damageCount);
+    }
 }
 
 void Enemy::HoldAction()

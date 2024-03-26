@@ -46,6 +46,8 @@ protected:
     float attackCooldown = 2.f;
     float dashTimer = 0.f;
     float dashCooldown = 3.f;
+    float hurtTimer=0.f;
+    float hurtDuration=1.5f;
 
     float normalAttackDistance = 170.f;
     float dashMaxDistance=300.f;
