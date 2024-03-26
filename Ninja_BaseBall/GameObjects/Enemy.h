@@ -24,6 +24,7 @@ protected:
     SceneDev1* Scene;
     Player* player;
     Animator enemyAnimator;
+    EnemyType enemyType = EnemyType::Normal;
 
 
     float speed = 60.f;

@@ -10,6 +10,7 @@
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
+#include "WindyPlane.h"
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -27,7 +28,6 @@ sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point)
 
 void SceneDev1::Init()
 {
-
     worldView.setSize(windowSize);
     worldView.setCenter(0, 360);
     uiView.setSize(windowSize);
@@ -36,16 +36,19 @@ void SceneDev1::Init()
     stage = new Stage1();
     AddGameObject(stage);
 
-    player2 = new Player2("Player2");
-    player2->SetPosition({ 400.f, 2500.f });
-    AddGameObject(player2);
-
+    // Player
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
     SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
     SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
+
+    // Boss
+    windyPlane = new WindyPlane();
+    enemies.push_back(windyPlane);
+    AddGameObject(windyPlane);
+    
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -56,26 +59,22 @@ void SceneDev1::Init()
 void SceneDev1::Release()
 {
     Scene::Release();
-    // for (Enemy* enemy : enemies) {
-    //     delete enemy;
-    // }
-    //enemies.clear();
 }
 
 void SceneDev1::Reset()
 {
-
+    windyPlane->SetPosition({ 1000, 360 });
 }
 
 void SceneDev1::Enter()
 {
 	Scene::Enter();
     status = GameStatus::Game;
+    Reset();
+
     xMax = 500.f; //카메라 시작 지점
 
-    player2->SetActive(false);
     player->SetActive(false);
-
 }
 
 void SceneDev1::Exit()
@@ -145,13 +144,13 @@ void SceneDev1::UpdateGame(float dt)
         isFighting = true;
         xMax = camCenter1;
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
-        
         std::list <GameObject*> yellowBaseBallList;
         FindAll("YellowBaseBall", yellowBaseBallList);
         for (auto& yellowBaseBall : yellowBaseBallList)
         {
             yellowBaseBall->SetActive(true);
         }
+
     }
     if (!(stage->clearStage1_2) && xMax >= camCenter2)
     {
@@ -197,10 +196,10 @@ void SceneDev1::UpdateGame(float dt)
 
     stage->stageBack1.SetPosition({ worldViewCenter.x * 0.3f - 200.f, 0.f });
     stage->stageBack2.SetPosition({ worldViewCenter.x * 0.3f + 1588.f, 0.f });
-    
+
+
     if (InputManager::GetKeyDown(sf::Keyboard::Z))
     {
-        player2->SetActive(true);
         player->SetActive(true);
     }
 
@@ -208,7 +207,6 @@ void SceneDev1::UpdateGame(float dt)
     {
         ClearStage();
     }
-
 }
 
 void SceneDev1::UpdateGameover(float dt)
@@ -238,7 +236,7 @@ void SceneDev1::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(0.f);
         break;
     case GameStatus::Game:
-        //FRAMEWORK.SetTimeScale(1.f);
+        FRAMEWORK.SetTimeScale(1.f);
         break;
     case GameStatus::GameOver:
         FRAMEWORK.SetTimeScale(0.f);
