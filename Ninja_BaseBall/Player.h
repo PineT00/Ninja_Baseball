@@ -127,6 +127,8 @@ protected:
 	sf::RectangleShape hitBox;
 
 	sf::FloatRect enemyHitBox;
+
+	std::vector<Enemy*> enemyList;
 	
 public:
 	Player(const std::string& name = "");

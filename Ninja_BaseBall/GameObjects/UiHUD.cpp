@@ -68,12 +68,21 @@ void UiHUD::Reset()
 
 	player1_Score.Set(font, std::to_string(score), 30, sf::Color::Yellow);
 	player1_Life.Set(font, std::to_string(life), 30, sf::Color::Yellow);
+
+	player1_prevHP = player->maxHp;
 }
 
 void UiHUD::Update(float dt)
 {
 	GameObject::Update(dt);
 	uiAnimator.Update(dt);
+
+	if (player1_prevHP < player->hp)
+	{
+		uiAnimator.Play("animations/ui/player1_PortraitHurt.csv");
+		player1_hpBar.SetScale({ player1_hpBar.GetScale().x - 50.f, player1_hpBar.GetScale().y });
+		player1_prevHP = player->hp;
+	}
 }
 
 void UiHUD::LateUpdate(float dt)

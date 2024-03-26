@@ -30,6 +30,8 @@ public:
 
 	sf::Font font;
 
+	float player1_prevHP;
+
 
 protected:
 	UiHUD(const UiHUD&) = delete;

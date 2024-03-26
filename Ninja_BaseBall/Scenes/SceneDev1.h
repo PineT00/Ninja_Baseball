@@ -44,6 +44,8 @@ protected :
 
 public:
 
+	std::vector<Enemy*> GetEnemyList() { return enemies; }
+
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 

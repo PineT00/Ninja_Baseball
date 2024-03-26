@@ -206,7 +206,7 @@ void Player::Reset()
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	//windyPlane = dynamic_cast<WindyPlane*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("windyplane"));
 	//player2 = dynamic_cast<Player2*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player2"));
-	yellowBaseBall = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
+	//yellowBaseBall = dynamic_cast<YellowBaseBall*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("YellowBaseBall"));
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -223,7 +223,7 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-	enemyHitBox = yellowBaseBall->GetHitBox();
+	//enemyHitBox = yellowBaseBall->GetHitBox();
 	//enemyHitBox = windyPlane->GetHitBox();
 
 	//SpriteGo::Update(dt);
@@ -379,6 +379,8 @@ void Player::Update(float dt)
 	{
 		inputOn = false;
 		hitTimeOn = true;
+		isLeftDashing = false;
+		isRightDashing = false;
 
 		if (hp <= 0.f)
 		{
@@ -481,49 +483,53 @@ void Player::Update(float dt)
 	}
 
 
-	//공격박스와 닿았을때
-	if (!isGrip && attackBox.getGlobalBounds().intersects(enemyHitBox))
+	//공격상황
+	if (!isGrip && InputManager::GetKeyDown(sf::Keyboard::Q))
 	{
+		attackTimeOn = true;
 
-		if (InputManager::GetKeyDown(sf::Keyboard::Q))
+		enemyList = sceneDev1->GetEnemyList();
+
+		for (auto& enemy : enemyList)
 		{
-			attackTimeOn = true;
+			//if (enemy != nullptr) continue;
 
-			normalAttack += 1;
-			switch (normalAttack)
+			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 			{
-				case 1:
-					animator.Play("Animations/player/player_Attack1.csv");
-					attackTime = 0.5f;
-					break;
-				case 2:
-					animator.Play("Animations/player/player_Attack2.csv");
-					attackTime = 0.5f;
-					break;
-				case 3:
-					animator.Play("Animations/player/player_Attack3.csv");
-					attackTime = 0.5f;
-					break;
-				case 4:
-					animator.Play("Animations/player/player_Attack4.csv");
-					attackTime = 0.5f;
-					normalAttack = 0;
-					break;
-				default:
-					break;
+				normalAttack += 1;
+				enemy->OnDamage(20, normalAttack);
 			}
-			//player2->getHit = true;
-			//player2->OnDamaged(10);
 		}
-	}
-	else
-	{
-		if (InputManager::GetKeyDown(sf::Keyboard::Q))
+
+
+		switch (normalAttack)
 		{
-			animator.Play("Animations/player/player_Attack1.csv");
-			
+			case 1:
+				animator.Play("Animations/player/player_Attack1.csv");
+				attackTime = 0.5f;
+				break;
+			case 2:
+				animator.Play("Animations/player/player_Attack2.csv");
+				attackTime = 0.5f;
+				break;
+			case 3:
+				animator.Play("Animations/player/player_Attack3.csv");
+				attackTime = 0.5f;
+				break;
+			case 4:
+				animator.Play("Animations/player/player_Attack4.csv");
+				attackTime = 0.5f;
+				normalAttack = 0;
+				break;
+			default:
+				animator.Play("Animations/player/player_Attack1.csv");
+				break;
 		}
+		//player2->getHit = true;
+		//player2->OnDamaged(10);
+		
 	}
+
 
 	//기술 모음
 	{
