@@ -5,10 +5,8 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
-class Enemy;
 class WindyPlane;
 class YellowBaseBall;
-
 
 class Player :
     public SpriteGo
@@ -21,6 +19,8 @@ public:
 		isKick,
 		isHomeRun,
 	};
+
+	int score = 0;
 	int life = 1;
 	int score = 0;
 
@@ -56,13 +56,10 @@ public:
 protected:
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
+
 	Player2* player2 = nullptr;
-
-	Enemy* enemy;
-
 	WindyPlane* windyPlane = nullptr;
 	YellowBaseBall* yellowBaseBall = nullptr;
-
 
 	Animator animator;
 	Animator animatorEffect;
