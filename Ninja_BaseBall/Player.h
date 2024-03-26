@@ -22,7 +22,6 @@ public:
 
 	int score = 0;
 	int life = 1;
-	int score = 0;
 
 	int normalAttack = 0;
 	bool isAttack = false;
