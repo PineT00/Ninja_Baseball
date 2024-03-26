@@ -51,6 +51,8 @@ private:
 
 public:
 
+	std::vector<Enemy*> GetEnemyList() { return enemies; }
+
 	SceneDev1(SceneIDs id);
 	~SceneDev1() override = default;
 	sf::Vector2f ClampByTileMap(const sf::Vector2f point);
