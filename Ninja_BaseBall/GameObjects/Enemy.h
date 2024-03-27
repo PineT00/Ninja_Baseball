@@ -29,6 +29,17 @@ protected:
     bool flicker=false;
     sf::Vector2f playerPos;
 
+    float flickerIntensity=(std::sin(deadTimer * 20 )+1 )/2;
+    float baseIntensity=0.5f;
+    float intensity=baseIntensity + flickerIntensity * (1-baseIntensity);
+
+    sf::Color flickerColor=sf::Color(
+        255 * intensity,
+        255 * intensity,
+        255 * intensity,
+        255
+    );
+
     sf::RectangleShape damageBox;
     sf::RectangleShape attackBox;
     float minDistance = 2000.f;
@@ -53,7 +64,7 @@ protected:
     sf::Vector2f dashEndPosition;
     
     bool isAttackPlay = false;
-    bool isDead = false;
+
 
     int damageCount;
 
@@ -64,7 +75,7 @@ public:
     Enemy(const std::string& name) : SpriteGo(name), Scene(nullptr), player(nullptr)
     {
     }
-
+    bool isDead = false;
     virtual void SetState(EnemyState Enemystate,int damageCount=1);
     void Init() override;
     virtual void UpdateIdle(float dt);

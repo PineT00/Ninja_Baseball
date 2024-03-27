@@ -161,14 +161,14 @@ void Enemy::UpdateDead(float dt)
 {
     if(flicker)
     {
-        //sprite.setColor(sf::Color::White * ((sin(deadTimer * 20 )+1)/2));
+        sprite.setColor(flickerColor);
     }
     deadTimer += dt;
     if(deadTimer>=deadDuration)
     {
         flicker = false;
-        isDead = true;
         SetActive(false);
+        isCatch=false;
     }
     
 }
@@ -184,20 +184,12 @@ void Enemy::UpdateCatched(float dt)
         SetState(EnemyState::MOVE);
         SetPosition(catchedPosition);
     }
-    
-    
-   
 }
 
 void Enemy::Update(float dt)
 {
     SpriteGo::Update(dt);
     enemyAnimator.Update(dt);
-
-    if(isDead)
-    {
-        return;
-    }    
     attackTimer += dt;
     dashTimer += dt;
     
@@ -225,7 +217,10 @@ void Enemy::Update(float dt)
         UpdateDash(dt);       
         break;
     case EnemyState::HURT:
-        UpdateHurt(dt);       
+        if(!isDead)
+        {
+            UpdateHurt(dt);       
+        }
         break;
     case EnemyState::DEAD:
         UpdateDead(dt);      
@@ -306,24 +301,29 @@ sf::FloatRect Enemy::GetDamageBox() const
 
 void Enemy::OnDamage(int damage, int count)
 {
-    std::cout<<"OnDamage"<<std::endl;
-    health-=damage;
-    damageCount=count;
-    if(health<=0)
+    if(!isDead)
     {
-        SetState(EnemyState::DEAD);
-    }
-    else
-    {
-        SetState(EnemyState::HURT, damageCount);
+        health-=damage;
+        damageCount=count;
+        if(health<=0)
+        {
+            SetState(EnemyState::DEAD);
+            isDead = true;
+        }
+        else
+        {
+            std::cout<<"OnDamage"<<std::endl;
+            SetState(EnemyState::HURT, damageCount);
+        }
     }
 }
 
 void Enemy::HoldAction()
 {
-    if(player->isGrip)
+    if(player->isGrip && !isCatch && !isDead)
     {
         SetState(EnemyState::CATCHED);
+        isCatch=true;
     }
     else
     {
