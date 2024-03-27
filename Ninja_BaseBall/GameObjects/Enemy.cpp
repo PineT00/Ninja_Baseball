@@ -248,10 +248,10 @@ void Enemy::Reset()
     attackBox.setFillColor(sf::Color::Red);
     damageBox.setFillColor(sf::Color::Blue);
     SetState(EnemyState::MOVE);
-    if (scene != nullptr)
-    {
-        SetPosition(scene->ClampByTileMap(position));
-    }
+    // if (scene != nullptr)
+    // {
+    //     SetPosition(scene->ClampByTileMap(position));
+    // }
     SetOrigin(Origins::BC);
     SetFlipX(false);
     health = maxHealth;

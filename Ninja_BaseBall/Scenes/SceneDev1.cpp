@@ -42,6 +42,7 @@ void SceneDev1::Init()
     // Player
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
+    
     AddGameObject(player, World);
 
     SpawnEnemy("Stage1", { 1250.f, 500.f });
@@ -495,9 +496,7 @@ void SceneDev1::UpdateGame(float dt)
 void SceneDev1::UpdateGameover(float dt)
 {
     //Bgm Ãß°¡
-
-        
-
+    
 }
 
 void SceneDev1::UpdatePause(float dt)
