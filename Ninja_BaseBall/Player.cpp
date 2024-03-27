@@ -361,7 +361,7 @@ void Player::UpdateIdle(float dt)
 		{
 			animator.Play("Animations/player/player_Grip.csv");
 			isGrip = true;
-			//enemy.holdAction();
+			enemy->HoldAction();
 			SetStatus(Status::isGrip);
 		}
 	}
@@ -565,9 +565,10 @@ void Player::UpdateKick(float dt)
 	{
 		if (enemy == nullptr) continue;
 		//isAttack&&
-		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		if (isAttack && attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
 			enemy->OnDamage(20, normalAttack);
+			isAttack = false;
 		}
 	}
 

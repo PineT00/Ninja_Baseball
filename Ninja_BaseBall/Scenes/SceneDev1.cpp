@@ -47,7 +47,6 @@ void SceneDev1::Init()
 
 
     SpawnEnemy("Stage1", { 1250.f, 500.f });
-
     SpawnEnemy("Stage2", { 1413.f, 500.f});
     SpawnEnemy("Stage3", { 2332.f, 500.f });
     SpawnEnemy("Stage4", { 3230.f, 500.f });
@@ -194,68 +193,246 @@ void SceneDev1::UpdateGame(float dt)
     }
 
 
-    if (!(stage->clearStage1_1) && xMax > camCenter1)
+    if (!(stage->clearStage1_1))
     {
-        currStage = 1;
-        FightOn();
+        if (xMax > camCenter1)
+        {
+            currStage = 1;
+            FightOn();
+
+            std::list <GameObject*> BaseBallList2;
+            FindAll("BaseBallStage1", BaseBallList2);
+            for (auto& BaseBall : BaseBallList2)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
+        {
+            int monsterNum = 2;
+            std::list <GameObject*> BaseBallList2;
+            FindAll("BaseBallStage1", BaseBallList2);
+            for (auto& BaseBall : BaseBallList2)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }
+
+        }
+    }
+    else if (!(stage->clearStage1_2) )
+    {
+        if (xMax > camCenter2)
+        {
+            currStage = 2;
+            FightOn();
+
+            std::list <GameObject*> BaseBallList2;
+            FindAll("BaseBallStage2", BaseBallList2);
+            for (auto& BaseBall : BaseBallList2)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
+        {
+            int monsterNum = 2;
+            std::list <GameObject*> BaseBallList2;
+            FindAll("BaseBallStage2", BaseBallList2);
+            for (auto& BaseBall : BaseBallList2)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }
+                
+        }
         
-        std::list <GameObject*> BaseBallList2;
-        FindAll("BaseBallStage1", BaseBallList2);
-        for (auto& BaseBall : BaseBallList2)
+    }
+    else if (!(stage->clearStage1_3) )
+    {
+        if (xMax > camCenter3)
         {
-            BaseBall->SetActive(true);
-        }
-    }
-    else if (!(stage->clearStage1_2) && xMax > camCenter2)
-    {
-        currStage = 2;
-        FightOn();
+            currStage = 3;
+            FightOn();
 
-        std::list <GameObject*> BaseBallList2;
-        FindAll("BaseBallStage2", BaseBallList2);
-        for (auto& BaseBall : BaseBallList2)
+            std::list <GameObject*> BaseBallList3;
+            FindAll("BaseBallStage3", BaseBallList3);
+            for (auto& BaseBall : BaseBallList3)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
         {
-            BaseBall->SetActive(true);
-        }
+            int monsterNum = 2;
+            std::list <GameObject*> BaseBallList3;
+            FindAll("BaseBallStage3", BaseBallList3);
+            for (auto& BaseBall : BaseBallList3)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }
+        } 
     }
-    else if (!(stage->clearStage1_3) && xMax > camCenter3)
+    else if (!(stage->clearStage1_4) )
     {
-        currStage = 3;
-        FightOn();
-
-        std::list <GameObject*> BaseBallList2;
-        FindAll("BaseBallStage3", BaseBallList2);
-        for (auto& BaseBall : BaseBallList2)
+        if (xMax > camCenter4)
         {
-            BaseBall->SetActive(true);
-        }
-        
-    }
-    else if (!(stage->clearStage1_4) && xMax > camCenter4)
-    {
-        currStage = 4;
-        FightOn();
-    }
-    else if (stage->clearStage1_4 && !(stage->clearStage1_5) && xMax > camCenter4)
-    {
-        currStage = 5;
-        FightOn();
-    }
-    else if (stage->clearStage1_5 && !(stage->clearStage1_6) && xMax > camCenter4)
-    {
-        currStage = 6;
-        FightOn();
-    }
-    else if (stage->clearStage1_6 && !(stage->clearStage1_7) && xMax > camCenter7)
-    {
-        currStage = 7;
-        FightOn();
-    }
-    else if (stage->clearStage1_7 && !(stage->clearStage1_8) && xMax > camCenter8)
-    {
-        currStage = 8;
-        FightOn();
+            currStage = 4;
+            FightOn();
 
+            std::list <GameObject*> BaseBallList4;
+            FindAll("BaseBallStage4", BaseBallList4);
+            for (auto& BaseBall : BaseBallList4)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
+        {
+            int monsterNum = 3;
+            std::list <GameObject*> BaseBallList4;
+            FindAll("BaseBallStage4", BaseBallList4);
+            for (auto& BaseBall : BaseBallList4)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }
+
+        }
+
+    }
+    else if (stage->clearStage1_4 && !(stage->clearStage1_5) )
+    {
+        if (xMax > camCenter4)
+        {
+            currStage = 5;
+            FightOn();
+
+            std::list <GameObject*> BaseBallList5;
+            FindAll("BaseBallStage5", BaseBallList5);
+            for (auto& BaseBall : BaseBallList5)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
+        {
+            int monsterNum = 3;
+            std::list <GameObject*> BaseBallList5;
+            FindAll("BaseBallStage5", BaseBallList5);
+            for (auto& BaseBall : BaseBallList5)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }
+        }
+
+    }
+    else if (stage->clearStage1_5 && !(stage->clearStage1_6) )
+    {
+        if (xMax > camCenter4)
+        {
+            currStage = 6;
+            FightOn();
+
+            std::list <GameObject*> BaseBallList6;
+            FindAll("BaseBallStage6", BaseBallList6);
+            for (auto& BaseBall : BaseBallList6)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
+        {
+            int monsterNum = 3;
+            std::list <GameObject*> BaseBallList6;
+            FindAll("BaseBallStage6", BaseBallList6);
+            for (auto& BaseBall : BaseBallList6)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }
+        }
+
+    }
+    else if (stage->clearStage1_6 && !(stage->clearStage1_7) )
+    {
+        if (xMax > camCenter7)
+        {
+            currStage = 7;
+            FightOn();
+
+            /*std::list <GameObject*> BaseBallList7;
+            FindAll("BaseBallStage7", BaseBallList7);
+            for (auto& BaseBall : BaseBallList7)
+            {
+                BaseBall->SetActive(true);
+            }
+        }
+        else
+        {
+            int monsterNum = 3;
+            std::list <GameObject*> BaseBallList7;
+            FindAll("BaseBallStage7", BaseBallList7);
+            for (auto& BaseBall : BaseBallList7)
+            {
+                if (BaseBall->GetActive() == 0)
+                {
+                    monsterNum -= 1;
+                }
+            }
+            if (monsterNum == 0)
+            {
+                ClearStage();
+            }*/
+        }
+
+    }
+    else if (stage->clearStage1_7 && !(stage->clearStage1_8))
+    {
+        if (xMax > camCenter8)
+        {
+            currStage = 8;
+            windyPlane->SetActive(true);
+            FightOn();
+        }
     }
 
     worldViewCenter = worldView.getCenter();
@@ -285,6 +462,9 @@ void SceneDev1::UpdateGame(float dt)
     {
         player->SetActive(true);
     }
+
+
+
 
     if (InputManager::GetKeyDown(sf::Keyboard::Num0))
     {
@@ -575,7 +755,7 @@ void SceneDev1::ClearStage()
             isFighting = false;
             stage->clearStage1_7 = true;
             currStage = 0;
-            windyPlane->SetActive(true);
+
             break;
         case 8:
             isFighting = false;
@@ -592,7 +772,7 @@ void SceneDev1::MoveToBoss()
     enterToBossFloor = true;
     stageRect = stage->groundBoundBoss.getGlobalBounds();
     player->SetPosition({ player->GetPosition().x, -1090.f });
-    worldViewCenter.y -= 1400.f;
+    worldViewCenter.y -= 1500.f;
     worldView.setCenter(worldViewCenter);
     enterToBossFloor = false;
 }
