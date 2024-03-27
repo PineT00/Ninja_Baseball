@@ -7,6 +7,7 @@
 void Enemy::SetState(EnemyState Enemystate,int damageCount)
 {
     this->Enemystate = Enemystate;
+    
     switch (Enemystate)
     {
         // case EnemyState::IDLE:
@@ -24,10 +25,11 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             dashTimer = 0.f;
             break;
         case EnemyState::HURT:
-
+            hurtTimer=0.f;
             break;
         case EnemyState::DEAD:
-            
+            deadTimer=0.f;
+            flicker = true;
             break;
         case EnemyState::CATCHED:
             catchedPosition=position;
@@ -44,13 +46,26 @@ void Enemy::Init()
     enemyAnimator.SetTarget(&sprite);
 
     
-    enemyAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv",
-        2,[this]()
-        {
-            
-            SetState(EnemyState::MOVE);
-        });
-
+    // enemyAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv",
+    //     2,[this]()
+    //     {
+    //            SetState(EnemyState::MOVE);
+    //     });
+    // enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
+    //     2,[this]()
+    //     {
+    //         SetState(EnemyState::MOVE);
+    //     });
+    // enemyAnimator.AddEvent("animations/Enemy/GreenBaseBall/BaseballGreen_Attack.csv",
+    //     2,[this]()
+    //     {
+    //         SetState(EnemyState::MOVE);
+    //     });
+    // enemyAnimator.AddEvent("animations/Enemy/WhiteBaseBall/BaseballWhite_Attack.csv",
+    //     2,[this]()
+    //     {
+    //         SetState(EnemyState::MOVE);
+    //     });
     
 }
 
@@ -105,8 +120,12 @@ void Enemy::UpdateAttack(float dt)
 {
     if(!isAttackPlay&&normalAttackDistance>Utils::MyMath::Distance(playerPos,position))
     {
-        player->OnDamage(damage,1,position.x);
-        std::cout<<"attack"<<std::endl;
+        if(std::abs(playerPos.y-position.y)<20)
+        {
+            player->OnDamage(damage,1,position.x);
+            std::cout<<"attack"<<std::endl;
+           
+        }
         isAttackPlay = true;
     }
 }
@@ -130,30 +149,38 @@ void Enemy::UpdateDash(float dt)
 
 void Enemy::UpdateHurt(float dt)
 {
-    if(health>0)
-    {
-        SetState(EnemyState::HURT,damageCount);
-    }
-    else
-    {
-        SetState(EnemyState::DEAD);
+    hurtTimer += dt;
 
+    if(hurtTimer>=hurtDuration)
+    {
+        SetState(EnemyState::MOVE);
     }
 }
 
 void Enemy::UpdateDead(float dt)
 {
-    if(maxHealth<=0)
+    if(flicker)
     {
-        isDead = true;
-        SetState(EnemyState::DEAD);
+        //sprite.setColor(sf::Color::White * ((sin(deadTimer * 20 )+1)/2));
     }
-  
+    deadTimer += dt;
+    if(deadTimer>=deadDuration)
+    {
+        flicker = false;
+        isDead = true;
+        SetActive(false);
+    }
+    
 }
 
 void Enemy::UpdateCatched(float dt)
 {
-    
+    SetPosition(player->GetAttackBox().getPosition());
+    SetState(EnemyState::CATCHED);
+    if(!player->isGrip)
+    {
+        SetState(EnemyState::MOVE);
+    }    
 }
 
 void Enemy::Update(float dt)
@@ -161,6 +188,10 @@ void Enemy::Update(float dt)
     SpriteGo::Update(dt);
     enemyAnimator.Update(dt);
 
+    if(isDead)
+    {
+        return;
+    }    
     attackTimer += dt;
     dashTimer += dt;
     
@@ -272,8 +303,21 @@ void Enemy::OnDamage(int damage, int count)
     std::cout<<"OnDamage"<<std::endl;
     health-=damage;
     damageCount=count;
-    Enemystate = EnemyState::HURT;
+    if(health<=0)
+    {
+        SetState(EnemyState::DEAD);
+    }
+    else
+    {
+        SetState(EnemyState::HURT, damageCount);
+    }
 }
+
+void Enemy::HoldAction()
+{
+    SetState(EnemyState::CATCHED);
+}
+
 
 
 

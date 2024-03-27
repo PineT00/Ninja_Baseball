@@ -22,8 +22,8 @@ void SceneDevBoss::Init()
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
     // 보스 추가
 
-    windyPlane = new WindyPlane();
-    AddGameObject(windyPlane);
+    // windyPlane = new WindyPlane();
+    // AddGameObject(windyPlane);
 
     player = new Player("player");
     player->SetPosition({ -200, -100 });

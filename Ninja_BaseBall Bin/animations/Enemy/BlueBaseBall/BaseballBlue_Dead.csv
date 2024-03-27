@@ -1,0 +1,12 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,16,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,94.757,109.581,200.943,188.128,9,108.673,185.052
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,461.787,109.068,188.64,186.59,9,116.362,184.027
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,846.245,112.656,174.287,181.976,9,108.161,176.85
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,1211.73,109.58,176.85,178.388,9,124.564,173.775
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,74.1062,404.365,175.921,192.862,9,84.3257,188.04
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,430.058,400.804,179.288,196.987,9,77.7173,191.6
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,787.096,395.418,166.977,203.142,9,66.1752,196.217
+graphics/3_Enemy/baseball/bBaseball_spin.bmp,1128.74,396.957,180.058,190.831,9,50.0161,186.214

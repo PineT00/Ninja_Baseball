@@ -59,7 +59,7 @@ protected:
 	ClipInfo currentClipInfo;
 	BossPartsStatus currentPartsStatus = BossPartsStatus::Wing;
 	WindyPlaneStatus currentStatus = WindyPlaneStatus::IDLE;
-	EnemyType enemyType = EnemyType::BOSS;
+	EnemyType enemyType = EnemyType::Boss;
 
 	std::string currentClipId;
 
