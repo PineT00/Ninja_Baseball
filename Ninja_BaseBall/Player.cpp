@@ -357,7 +357,7 @@ void Player::UpdateIdle(float dt)
 	{
 		if (enemy == nullptr) continue;
 
-		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && enemy->GetActive())
 		{
 			animator.Play("Animations/player/player_Grip.csv");
 			isGrip = true;
