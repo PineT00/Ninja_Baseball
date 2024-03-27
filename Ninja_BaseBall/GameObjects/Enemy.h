@@ -46,7 +46,7 @@ protected:
     float deadTimer=0.f;
     float deadDuration=2.5f;
 
-    float normalAttackDistance = 170.f;
+    float normalAttackDistance = 175.f;
     float dashMaxDistance=300.f;
     sf::Vector2f dashDirection;
     int damage=10;

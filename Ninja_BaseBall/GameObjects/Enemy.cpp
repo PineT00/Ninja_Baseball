@@ -7,10 +7,7 @@
 void Enemy::SetState(EnemyState Enemystate,int damageCount)
 {
     this->Enemystate = Enemystate;
-    if(isDead)
-    {
-        return;
-    }
+    
     switch (Enemystate)
     {
         // case EnemyState::IDLE:
@@ -123,8 +120,12 @@ void Enemy::UpdateAttack(float dt)
 {
     if(!isAttackPlay&&normalAttackDistance>Utils::MyMath::Distance(playerPos,position))
     {
-        player->OnDamage(damage,1,position.x);
-        std::cout<<"attack"<<std::endl;
+        if(std::abs(playerPos.y-position.y)<20)
+        {
+            player->OnDamage(damage,1,position.x);
+            std::cout<<"attack"<<std::endl;
+           
+        }
         isAttackPlay = true;
     }
 }
@@ -186,6 +187,10 @@ void Enemy::Update(float dt)
     SpriteGo::Update(dt);
     enemyAnimator.Update(dt);
 
+    if(isDead)
+    {
+        return;
+    }    
     attackTimer += dt;
     dashTimer += dt;
     

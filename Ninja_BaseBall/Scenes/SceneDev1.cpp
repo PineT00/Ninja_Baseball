@@ -69,10 +69,10 @@ void SceneDev1::Init()
     // enemy2->SetPosition({ 1000.f, 500.f });
     // AddGameObject(enemy2, World);
 
-    //SpawnEnemy("Stage1", { 1400.f, 500.f });
-    //SpawnEnemy("Stage2", { 1400.f, 500.f });
-    SpawnEnemy("Stage3", { 1400.f, 500.f });
-    //SpawnEnemy("Stage4", { 1400.f, 500.f });
+    SpawnEnemy("Stage1", { 1400.f, 400.f });
+    SpawnEnemy("Stage2", { 1400.f, 500.f });
+    SpawnEnemy("Stage3", { 1400.f, 600.f });
+    SpawnEnemy("Stage4", { 1400.f, 700.f });
     
     // Boss
     // windyPlane = new WindyPlane();
@@ -322,24 +322,24 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
     //     AddGameObject(enemy2, World);
     //     enemies.push_back(enemy2);
     // }
-    // if(type == "Stage1")
-    // {
-    //     BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW);
-    //     BaseBall->SetPosition(position);
-    //     
-    //     AddGameObject(BaseBall, World);
-    //     enemies.push_back(BaseBall);
-    //     BaseBall->SetActive(false);
-    // }
-    // if(type == "Stage2")
-    // {
-    //     BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE);
-    //     BaseBall->SetPosition(position);
-    //     
-    //     AddGameObject(BaseBall, World);
-    //     enemies.push_back(BaseBall);
-    //     BaseBall->SetActive(false);
-    // }
+    if(type == "Stage1")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage2")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
     if(type == "Stage3")
     {
         BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::GREEN);
@@ -349,15 +349,15 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         enemies.push_back(BaseBall);
         BaseBall->SetActive(false);
     }
-    // if(type == "Stage4")
-    // {
-    //     BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::WHITE);
-    //     BaseBall->SetPosition(position);
-    //     
-    //     AddGameObject(BaseBall, World);
-    //     enemies.push_back(BaseBall);
-    //     BaseBall->SetActive(false);
-    // }
+    if(type == "Stage4")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::WHITE);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
 }
 
 void SceneDev1::CameraShake(float dt)
