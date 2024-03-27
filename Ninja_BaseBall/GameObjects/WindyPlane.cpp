@@ -15,15 +15,9 @@ void WindyPlane::Init()
 {
 	SpriteGo::Init();
 	
-	// FindGo
-	// sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	// player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
-
 	animator.SetTarget(&sprite);
 
 	windEffects.resize(EFFECTS_COUNT);
-
-	
 
 	// Hit, Attack Box
 	hitBox.setFillColor(sf::Color::Yellow);
@@ -69,11 +63,11 @@ void WindyPlane::Init()
 void WindyPlane::Reset()
 {
 	// FindGo
-	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
+	scene = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	player = dynamic_cast<Player*>(scene->FindGameObject("Player"));
 
 	SetOrigin(Origins::BC);
-	SetPosition({ sceneDev1->stage->groundBoundBoss.getGlobalBounds().left + sceneDev1->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, sceneDev1->stage->groundBoundBoss.getGlobalBounds().top + sceneDev1->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
+	SetPosition({ scene->stage->groundBoundBoss.getGlobalBounds().left + scene->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, scene->stage->groundBoundBoss.getGlobalBounds().top + scene->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
 	for (int i = 0; i < EFFECTS_COUNT; ++i)
 	{
@@ -82,9 +76,9 @@ void WindyPlane::Reset()
 		windEffects[i]->Reset();
 		windEffects[i]->SetPosition({position.x, Utils::Random::RandomRange(position.y - 120, position.y) });
 		windEffects[i]->SetSortLayer(1);
-		sceneDev1->ResortGameObject(windEffects[i]);
+		scene->ResortGameObject(windEffects[i]);
 
-		sceneDev1->AddGameObject(windEffects[i]);
+		scene->AddGameObject(windEffects[i]);
 	}
 }
 
@@ -232,8 +226,8 @@ void WindyPlane::Draw(sf::RenderWindow& window)
 		player->SetSortLayer(1);
 	}
 	
-	sceneDev1->ResortGameObject(player);
-	sceneDev1->ResortGameObject(this);
+	scene->ResortGameObject(player);
+	scene->ResortGameObject(this);
 
 	SpriteGo::Draw(window);
 
@@ -337,8 +331,6 @@ void WindyPlane::AttackWind(float dt)
 
 	currentStatus = WindyPlaneStatus::WIND;
 
-	// rangedAttackBox 내에 이펙트를 재생시켜야 함
-
 	for (int i = 0; i < EFFECTS_COUNT; ++i)
 	{
 		windEffects[i]->Call();
@@ -359,7 +351,7 @@ void WindyPlane::AttackGunReady()
 
 void WindyPlane::Crying(float dt)
 {
-	sf::FloatRect rect = sceneDev1->stage->groundBoundBoss.getGlobalBounds();
+	sf::FloatRect rect = scene->stage->groundBoundBoss.getGlobalBounds();
 
 	if (position.x < rect.left + 10)
 	{
@@ -486,7 +478,6 @@ void WindyPlane::OnDie()
 
 void WindyPlane::OnDieEvent()
 {
-	isAlive = false;
 	isDead = true;
 	SetActive(false);
 }

@@ -27,7 +27,7 @@ protected:
     sf::Sprite enemyOnHit;
 
 
-    SceneDev1* Scene;
+    SceneDev1* scene;
     Player* player;
     Animator enemyAnimator;
 
@@ -78,7 +78,7 @@ protected:
     int maxHealth=100;
     sf::Vector2f catchedPosition;
 public:
-    Enemy(const std::string& name) : SpriteGo(name), Scene(nullptr), player(nullptr)
+    Enemy(const std::string& name) : SpriteGo(name), scene(nullptr), player(nullptr)
     {
     }
 

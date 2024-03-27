@@ -54,7 +54,6 @@ protected:
 	WindyPlane& operator=(const WindyPlane&) = delete;
 	WindyPlane& operator=(WindyPlane&&) = delete;
 
-	SceneDev1* sceneDev1 = nullptr;
 	Player* player = nullptr;
 	Animator animator;
 
@@ -93,10 +92,8 @@ protected:
 
 	int hitCount = 0;
 
-	bool isAlive = true;
 	bool isAscending = false; // 현재 상승 중인지 여부
 	bool isAwake = true;
-
 
 public:
 	WindyPlane(const std::string& name = "windyplane");
@@ -147,7 +144,7 @@ public:
 	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
 	void HoldAction();
-	bool GetAlive() const { return isAlive; }
+	bool GetAlive() const { return !isDead; }
 
 	sf::FloatRect GetDamageBox()  const override { return hitBox.getGlobalBounds(); }
 };
