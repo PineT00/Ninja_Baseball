@@ -522,6 +522,7 @@ void Player::UpdateAttack(float dt)
 		{
 			normalAttack += 1;
 			enemy->OnDamage(20, normalAttack);
+			score += 10;
 		}
 	}
 
