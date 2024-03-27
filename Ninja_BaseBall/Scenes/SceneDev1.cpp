@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Player2.h"
 #include "WindyPlane.h"
+#include "Bat.h"
 
 
 
@@ -68,9 +69,8 @@ void SceneDev1::Init()
     // enemy2=new Enemy2("Enemy2");
     // enemy2->SetPosition({ 1000.f, 500.f });
     // AddGameObject(enemy2, World);
-
+    
     SpawnEnemy("Stage1", { 1250.f, 500.f });
-
     SpawnEnemy("Stage2", { 1413.f, 500.f});
     SpawnEnemy("Stage3", { 2332.f, 500.f });
     SpawnEnemy("Stage4", { 3230.f, 500.f });
@@ -242,21 +242,45 @@ void SceneDev1::UpdateGame(float dt)
     {
         currStage = 4;
         FightOn();
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage4", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     if (stage->clearStage1_4 && !(stage->clearStage1_5) && xMax > camCenter4)
     {
         currStage = 5;
         FightOn();
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage5", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     if (stage->clearStage1_5 && !(stage->clearStage1_6) && xMax > camCenter4)
     {
         currStage = 6;
         FightOn();
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage6", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     if (stage->clearStage1_6 && !(stage->clearStage1_7) && xMax > camCenter7)
     {
         currStage = 7;
         FightOn();
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage7", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     if (stage->clearStage1_7 && !(stage->clearStage1_8) && xMax > camCenter8)
     {
@@ -339,6 +363,7 @@ void SceneDev1::SetStatus(GameStatus newStatus)
 
 void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position)
 {
+   
     if(type == "Stage1")
     {
         BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW,type);
@@ -478,6 +503,30 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         AddGameObject(BaseBall, World);
         enemies.push_back(BaseBall);
         BaseBall->SetActive(false);
+    }
+    if(type =="Stage7")
+    {
+        Bat* bat = Bat::Create(Bat::BatColor::YELLOW,type);
+        bat->SetPosition(position);
+        AddGameObject(bat, World);
+        enemies.push_back(bat);
+        bat->SetActive(true);
+    }
+    if(type =="Stage7")
+    {
+        Bat* bat = Bat::Create(Bat::BatColor::YELLOW,type);
+        bat->SetPosition(position);
+        AddGameObject(bat, World);
+        enemies.push_back(bat);
+        bat->SetActive(true);
+    }
+    if(type =="Stage7")
+    {
+        Bat* bat = Bat::Create(Bat::BatColor::YELLOW,type);
+        bat->SetPosition(position);
+        AddGameObject(bat, World);
+        enemies.push_back(bat);
+        bat->SetActive(true);
     }
 }
 

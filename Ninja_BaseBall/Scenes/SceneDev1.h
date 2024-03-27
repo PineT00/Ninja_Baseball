@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 
+class Bat;
 class Enemy2;
 class Tilemap;
 class UiHUD;
@@ -23,7 +24,7 @@ public:
 	//Enemy* enemy = nullptr;
 	//Enemy2* enemy2 = nullptr;
 	BaseBall* baseBall = nullptr;
-
+	Bat* bat = nullptr;
 	Enemy* enemy = nullptr;
 
 	bool cameraShakeOn = false;

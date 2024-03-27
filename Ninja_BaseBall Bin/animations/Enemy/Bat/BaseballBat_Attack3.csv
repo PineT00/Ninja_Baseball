@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
-,30,0,,,,,
+,15,0,,,,,
 ,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
 graphics/3_Enemy/bat/tbat_attack.bmp,0,0,600,450,7,0,0
