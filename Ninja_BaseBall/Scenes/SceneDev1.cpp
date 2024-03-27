@@ -6,11 +6,12 @@
 //#include "TextGo.h"
 //#include "InputField.h"
 #include "Enemy.h"
-#include "YellowBaseBall.h"
+#include "..\GameObjects\BaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
 #include "WindyPlane.h"
+
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -40,14 +41,41 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-    SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-    //SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
 
+    // yellowEnemy = new YellowBaseBall("YellowEnemy");
+    // yellowEnemy->SetPosition({ 1400.f, 700.f });
+    // AddGameObject(yellowEnemy, World);
+    //
+    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
+    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
+    // AddGameObject(yellowEnemy2, World);
+
+    //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
+
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+
+    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
+    //monster->SetPosition({ 1400.f, 700.f });
+    //AddMonster(monster,monster->GetDamageBox());
+
+
+    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
+    //SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
+    
+    hud = new UiHUD();
+    AddGameObject(hud, Ui);
+
+    // enemy2=new Enemy2("Enemy2");
+    // enemy2->SetPosition({ 1000.f, 500.f });
+    // AddGameObject(enemy2, World);
+
+    SpawnEnemy("Stage1", { 1400.f, 500.f });
+    
     // Boss
     windyPlane = new WindyPlane();
     enemies.push_back(windyPlane);
-    AddGameObject(windyPlane);
     windyPlane->SetActive(false);
+    AddGameObject(windyPlane);
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -62,7 +90,7 @@ void SceneDev1::Release()
 
 void SceneDev1::Reset()
 {
-    windyPlane->SetPosition({ 1000, 360 });
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 }
 
 void SceneDev1::Enter()
@@ -74,6 +102,7 @@ void SceneDev1::Enter()
     xMax = 500.f; //카메라 시작 지점
 
     stageRect = stage->groundBound.getGlobalBounds(); //시작시 이동가능바닥
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
     player->SetActive(false);
 
@@ -158,11 +187,18 @@ void SceneDev1::UpdateGame(float dt)
         currStage = 1;
         FightOn();
 
-        std::list <GameObject*> yellowBaseBallList;
-        FindAll("YellowBaseBall", yellowBaseBallList);
-        for (auto& yellowBaseBall : yellowBaseBallList)
+        // std::list <GameObject*> BaseBallList;
+        // FindAll("Stage1", BaseBallList);
+        // for (auto& BaseBall : BaseBallList)
+        // {
+        //     BaseBall->SetActive(true);
+        // }
+
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBall", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
         {
-            yellowBaseBall->SetActive(true);
+            BaseBall->SetActive(true);
         }
     }
     if (!(stage->clearStage1_2) && xMax > camCenter2)
@@ -276,13 +312,22 @@ void SceneDev1::SetStatus(GameStatus newStatus)
 
 void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position)
 {
-    if(type == "YellowBaseBall")
+    // if(type == "YellowBaseBall")
+    // {
+    //     YellowBaseBall* enemy2 = new YellowBaseBall("YellowBaseBall");
+    //     enemy2->SetPosition(position);
+    //     enemy2->SetActive(true);
+    //     AddGameObject(enemy2, World);
+    //     enemies.push_back(enemy2);
+    // }
+    if(type == "Stage1")
     {
-        YellowBaseBall* enemy = new YellowBaseBall("YellowBaseBall");
-        enemy->SetPosition(position);
-        AddGameObject(enemy, World);
-        enemies.push_back(enemy);
-        enemy->SetActive(false);
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
     }
 }
 
@@ -387,6 +432,7 @@ void SceneDev1::ClearStage()
         case 7:
             isFighting = false;
             stage->clearStage1_7 = true;
+            windyPlane->SetActive(true);
             break;
         case 8:
             isFighting = false;

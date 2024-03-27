@@ -1,5 +1,5 @@
 #pragma once
-#include "YellowBaseBall.h"
+#include "..\GameObjects\BaseBall.h"
 
 namespace Utils
 {

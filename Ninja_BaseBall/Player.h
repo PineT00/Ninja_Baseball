@@ -7,6 +7,7 @@ class SceneDev1;
 class Player2;
 class WindyPlane;
 class YellowBaseBall;
+class Enemy2;
 
 class Player :
 	public SpriteGo

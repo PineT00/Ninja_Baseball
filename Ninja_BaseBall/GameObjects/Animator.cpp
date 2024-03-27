@@ -22,8 +22,15 @@ void Animator::Update(float dt)
 	accumTime = 0.f;
 	currentFrame += addFrame;
 
-	if (currentFrame == totalFrame)
+
+
+	if (currentFrame >= totalFrame)
 	{
+		currentFrame = 0; 
+		if (currentClip->OnClipEnd) {
+			currentClip->OnClipEnd(); 
+		}
+		
 		if (!queue.empty())
 		{
 			std::string id = queue.front();
@@ -36,6 +43,7 @@ void Animator::Update(float dt)
 		{
 		case AnimationLoopType::Single:
 			currentFrame = totalFrame - 1;
+
 			break;
 		case AnimationLoopType::Loop:
 			currentFrame = 0;
@@ -93,6 +101,7 @@ void Animator::Update(float dt)
 
 void Animator::Play(const std::string& clipId, bool clearQueue)
 {
+	//std::cout << clipId << std::endl;	
 	if (clearQueue)
 	{
 		while (!queue.empty())
@@ -214,6 +223,16 @@ void Animator::ClearFrames()
 	currentFrame = -1;
 }
 
+
+void Animator::SetClipEndEvent(const std::string& clipId, std::function<void()> event)
+{
+	auto clip = ANIMATION_CLIP_MANAGER.GetResource(clipId);
+	if (clip != nullptr)
+	{
+		clip->OnClipEnd = event;
+	}
+	eventList.push_back({ clipId, clip->GetTotalFrame() - 1, event });
+}
 void Animator::AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action)
 {
 	auto find = completeEvent.find(clipId);
@@ -234,6 +253,7 @@ void Animator::ClearCompleteEvent()
 	{
 		completeEvent[currentClip->id] = NULL;
 	}
+
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)

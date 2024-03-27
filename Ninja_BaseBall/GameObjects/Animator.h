@@ -38,7 +38,7 @@ struct AnimationClip
 	AnimationLoopType loopType = AnimationLoopType::Single;
 
 	std::vector<AnimationFrame> frames;
-
+	std::function<void()> OnClipEnd;
 	int GetTotalFrame() const
 	{
 		return frames.size();
@@ -67,9 +67,11 @@ protected:
 
 	std::queue<std::string> queue;
 	std::list<AnimationEvent> eventList;
+
 	std::unordered_map<std::string, std::function<void()>> completeEvent;
 
 	bool isCompleteClip = false;
+
 
 	sf::Sprite* target = nullptr;
 
@@ -114,6 +116,9 @@ public:
 	void ClearEvent();
 	void ClearFrames();
 
+	void SetClipEndEvent(const std::string& clipId, std::function<void()> event);
+
+
 
 	/*
 	1. 프레임이 하나인 경우 실행할 이벤트를 처리
@@ -122,4 +127,5 @@ public:
 
 	void AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action);
 	void ClearCompleteEvent();
+
 };

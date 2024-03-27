@@ -1,12 +1,13 @@
 #pragma once
 #include "Scene.h"
 
+class Enemy2;
 class Tilemap;
 class UiHUD;
 class SpriteGo;
 class TextGo;
 class InputField;
-class YellowBaseBall;
+class BaseBall;
 class Stage1;
 class Player;
 class Player2;
@@ -17,6 +18,12 @@ class SceneDev1 : public Scene
 {
 public:
 	Player* player = nullptr;
+
+	Player2* player2 = nullptr;
+	//Enemy* enemy = nullptr;
+	//Enemy2* enemy2 = nullptr;
+	BaseBall* baseBall = nullptr;
+
 	Enemy* enemy = nullptr;
 
 	bool cameraShakeOn = false;
@@ -70,8 +77,6 @@ private:
 	};
 	std::vector<MonsterInfo> monsterInfos;
 	std::vector<Enemy*> enemies;
-	
-
 public:
 	std::vector<Enemy*> GetEnemyList() { return enemies; }
 
