@@ -133,11 +133,11 @@ void BaseBall::Init()
     else if (color == BaseBallColor::BLUE)
     {
         enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
-                               2, [this]()
+                               1, [this]()
                                {
                                    //여기서 플레이어 방향쪽으로 좀 전진하고
                                    sf::Vector2f direction = Utils::MyMath::GetNormal(playerPos - this->GetPosition());
-                                   float move = 30.0f;
+                                   float move = 10.0f;
                                    this->SetPosition(this->position + direction * move);
                                });
         enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",

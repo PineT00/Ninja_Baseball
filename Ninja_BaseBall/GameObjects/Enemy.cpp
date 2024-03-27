@@ -110,10 +110,6 @@ void Enemy::UpdateMove(float dt)
     {
         SetState(EnemyState::ATTACK);
     }
-    else if(player->isGrip)
-    {
-        //SetState(EnemyState::CATCHED);
-    }
 }
 
 void Enemy::UpdateAttack(float dt)
@@ -140,10 +136,6 @@ void Enemy::UpdateDash(float dt)
     else if(Utils::MyMath::Distance(dashEndPosition,position)<normalAttackDistance*0.5)
     {
         SetState(EnemyState::MOVE);
-    }
-    else if(player->isGrip)
-    {
-        SetState(EnemyState::CATCHED);
     }
 }
 
@@ -175,7 +167,7 @@ void Enemy::UpdateDead(float dt)
 
 void Enemy::UpdateCatched(float dt)
 {
-    if(player->isGrip)
+    if(player->isGrip && isCatch)
     {
         SetPosition(player->GetAttackBox().getPosition());
     }

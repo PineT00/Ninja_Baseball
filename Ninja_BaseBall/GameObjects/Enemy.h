@@ -50,7 +50,7 @@ protected:
     float dashSpeed = 400.f;
 
     float attackTimer = 0.f;
-    float attackCooldown = 2.f;
+    float attackCooldown = 4.f;
     float dashTimer = 0.f;
     float dashCooldown = 3.f;
     float hurtTimer=0.f;
@@ -76,7 +76,7 @@ public:
     Enemy(const std::string& name) : SpriteGo(name), Scene(nullptr), player(nullptr)
     {
     }
-    bool isDead = false;
+
     virtual void SetState(EnemyState Enemystate,int damageCount=1);
     void Init() override;
     virtual void UpdateIdle(float dt);
