@@ -52,14 +52,14 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
     }
 }
 
-BaseBall::BaseBall(BaseBallColor color): Enemy("BaseBall")
+BaseBall::BaseBall(BaseBallColor color,const std::string& name): Enemy(name)
 {
     
 }
 
-BaseBall* BaseBall::Create(BaseBallColor color)
+BaseBall* BaseBall::Create(BaseBallColor color,const std::string& stageName)
 {
-    BaseBall* baseBall = new BaseBall(color);
+    BaseBall* baseBall = new BaseBall(color,"BaseBall"+stageName);
     baseBall->color = color;
     switch (color)
     {
@@ -73,7 +73,8 @@ BaseBall* BaseBall::Create(BaseBallColor color)
             baseBall->animationClipNames.emplace_back("animations/Enemy/YellowBaseBall/BaseballYellow_Damage4.csv");
             baseBall->animationClipNames.emplace_back("animations/Enemy/YellowBaseBall/BaseballYellow_Dead.csv");
             baseBall->animationClipNames.emplace_back("animations/Enemy/YellowBaseBall/BaseballYellow_Catch.csv");
-            break;
+            
+        break;
         case BaseBallColor::BLUE:
             baseBall->animationClipNames.emplace_back("animations/Enemy/BlueBaseBall/BaseballBlue_MoveFront.csv");
             baseBall->animationClipNames.emplace_back("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv");
@@ -107,11 +108,10 @@ BaseBall* BaseBall::Create(BaseBallColor color)
             baseBall->animationClipNames.emplace_back("animations/Enemy/WhiteBaseBall/BaseballWhite_Dead.csv");
             baseBall->animationClipNames.emplace_back("animations/Enemy/WhiteBaseBall/BaseballWhite_Catch.csv");
             break;
-        default:
-            break;
 
-        
+       
     }
+    baseBall->speed = (Utils::Random::RandomRange(75.f,150.f));
     return baseBall;
 }
 

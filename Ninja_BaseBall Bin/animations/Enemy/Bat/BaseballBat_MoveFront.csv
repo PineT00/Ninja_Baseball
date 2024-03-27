@@ -1,0 +1,7 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,3,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/bat/fbat_move.bmp,134.258,78.3751,241.169,370.797,9,162.789,367.782
+graphics/3_Enemy/bat/fbat_move.bmp,734.165,64.8094,211.023,384.362,9,165.803,375.319
+graphics/3_Enemy/bat/fbat_move.bmp,1341.61,64.8093,217.052,387.377,9,165.803,381.348

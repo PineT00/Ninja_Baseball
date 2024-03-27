@@ -45,7 +45,16 @@ void SceneDev1::Init()
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
-    SpawnEnemy("Stage1", { 1400.f, 500.f });
+
+    SpawnEnemy("Stage1", { 1250.f, 500.f });
+
+    SpawnEnemy("Stage2", { 1413.f, 500.f});
+    SpawnEnemy("Stage3", { 2332.f, 500.f });
+    SpawnEnemy("Stage4", { 3230.f, 500.f });
+    SpawnEnemy("Stage5", { 3230.f, 500.f });
+    SpawnEnemy("Stage6", { 3230.f, 500.f });
+    SpawnEnemy("Stage7", { 3538.f, -1020.f });
+    
     
     // Boss
     windyPlane = new WindyPlane();
@@ -189,16 +198,38 @@ void SceneDev1::UpdateGame(float dt)
     {
         currStage = 1;
         FightOn();
+        
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage1", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     else if (!(stage->clearStage1_2) && xMax > camCenter2)
     {
         currStage = 2;
         FightOn();
+
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage2", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     else if (!(stage->clearStage1_3) && xMax > camCenter3)
     {
         currStage = 3;
         FightOn();
+
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage3", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
+        
     }
     else if (!(stage->clearStage1_4) && xMax > camCenter4)
     {
@@ -301,17 +332,141 @@ void SceneDev1::SetStatus(GameStatus newStatus)
 
 void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position)
 {
-    // if(type == "YellowBaseBall")
-    // {
-    //     YellowBaseBall* enemy2 = new YellowBaseBall("YellowBaseBall");
-    //     enemy2->SetPosition(position);
-    //     enemy2->SetActive(true);
-    //     AddGameObject(enemy2, World);
-    //     enemies.push_back(enemy2);
-    // }
     if(type == "Stage1")
     {
-        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW);
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage1")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::YELLOW,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    
+    if(type == "Stage2")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::GREEN,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+
+    if(type == "Stage2")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::GREEN,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    
+    if(type == "Stage3")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::GREEN,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage3")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    
+    if(type == "Stage4")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage4")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage4")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::GREEN,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+
+    if(type == "Stage5")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage5")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::WHITE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage5")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::WHITE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+
+    if(type == "Stage6")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::BLUE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage6")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::WHITE,type);
+        BaseBall->SetPosition(position);
+        
+        AddGameObject(BaseBall, World);
+        enemies.push_back(BaseBall);
+        BaseBall->SetActive(false);
+    }
+    if(type == "Stage6")
+    {
+        BaseBall* BaseBall = BaseBall::Create(BaseBall::BaseBallColor::WHITE,type);
         BaseBall->SetPosition(position);
         
         AddGameObject(BaseBall, World);
