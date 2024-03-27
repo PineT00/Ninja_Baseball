@@ -41,11 +41,6 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-    
-    hud = new UiHUD();
-    AddGameObject(hud, Ui);
-
-
     SpawnEnemy("Stage1", { 1250.f, 500.f });
 
     SpawnEnemy("Stage2", { 1413.f, 500.f});
