@@ -53,7 +53,7 @@ public:
 	//Grip Time
 	bool isGrip = false;
 	float gripTime = 2.f;
-	float gripCoolTime = 1.f;
+	float gripCoolTime = 0.f;
 	int gripAttackCount = 0;
 
 	int hitWay = 0;
