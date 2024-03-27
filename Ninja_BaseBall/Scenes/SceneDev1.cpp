@@ -41,33 +41,9 @@ void SceneDev1::Init()
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
 
-
-    // yellowEnemy = new YellowBaseBall("YellowEnemy");
-    // yellowEnemy->SetPosition({ 1400.f, 700.f });
-    // AddGameObject(yellowEnemy, World);
-    //
-    // yellowEnemy2 = new YellowBaseBall("YellowEnemy2");
-    // yellowEnemy2->SetPosition({ 1400.f, 500.f });
-    // AddGameObject(yellowEnemy2, World);
-
-    //SpawnEnemy("YellowBaseBall2", { 1400.f, 500.f });
-
-    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-
-    //auto monster=std::make_shared<YellowBaseBall>("YellowBaseBall");
-    //monster->SetPosition({ 1400.f, 700.f });
-    //AddMonster(monster,monster->GetDamageBox());
-
-
-    //SpawnEnemy("YellowBaseBall", { 1400.f, 500.f });
-    //SpawnEnemy("YellowBaseBall", { 1800.f, 500.f });
     
     hud = new UiHUD();
     AddGameObject(hud, Ui);
-
-    // enemy2=new Enemy2("Enemy2");
-    // enemy2->SetPosition({ 1000.f, 500.f });
-    // AddGameObject(enemy2, World);
 
     SpawnEnemy("Stage1", { 1400.f, 500.f });
     
@@ -170,9 +146,36 @@ void SceneDev1::UpdateGame(float dt)
     {
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stageRect));
     }
-    else
-    {
 
+
+    switch (currStage)
+    {
+        case 1:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
+            break;
+        case 2:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
+            break;
+        case 3:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
+            break;
+        case 4:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+            break;
+        case 5:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+            break;
+        case 6:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
+            break;
+        case 7:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_7.getGlobalBounds()));
+            break;
+        case 8:
+            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_8.getGlobalBounds()));
+            break;
+        default:
+            break;
     }
 
 
@@ -186,52 +189,38 @@ void SceneDev1::UpdateGame(float dt)
     {
         currStage = 1;
         FightOn();
-
-        // std::list <GameObject*> BaseBallList;
-        // FindAll("Stage1", BaseBallList);
-        // for (auto& BaseBall : BaseBallList)
-        // {
-        //     BaseBall->SetActive(true);
-        // }
-
-        std::list <GameObject*> BaseBallList2;
-        FindAll("BaseBall", BaseBallList2);
-        for (auto& BaseBall : BaseBallList2)
-        {
-            BaseBall->SetActive(true);
-        }
     }
-    if (!(stage->clearStage1_2) && xMax > camCenter2)
+    else if (!(stage->clearStage1_2) && xMax > camCenter2)
     {
         currStage = 2;
         FightOn();
     }
-    if (!(stage->clearStage1_3) && xMax > camCenter3)
+    else if (!(stage->clearStage1_3) && xMax > camCenter3)
     {
         currStage = 3;
         FightOn();
     }
-    if (!(stage->clearStage1_4) && xMax > camCenter4)
+    else if (!(stage->clearStage1_4) && xMax > camCenter4)
     {
         currStage = 4;
         FightOn();
     }
-    if (stage->clearStage1_4 && !(stage->clearStage1_5) && xMax > camCenter4)
+    else if (stage->clearStage1_4 && !(stage->clearStage1_5) && xMax > camCenter4)
     {
         currStage = 5;
         FightOn();
     }
-    if (stage->clearStage1_5 && !(stage->clearStage1_6) && xMax > camCenter4)
+    else if (stage->clearStage1_5 && !(stage->clearStage1_6) && xMax > camCenter4)
     {
         currStage = 6;
         FightOn();
     }
-    if (stage->clearStage1_6 && !(stage->clearStage1_7) && xMax > camCenter7)
+    else if (stage->clearStage1_6 && !(stage->clearStage1_7) && xMax > camCenter7)
     {
         currStage = 7;
         FightOn();
     }
-    if (stage->clearStage1_7 && !(stage->clearStage1_8) && xMax > camCenter8)
+    else if (stage->clearStage1_7 && !(stage->clearStage1_8) && xMax > camCenter8)
     {
         currStage = 8;
         FightOn();
@@ -364,35 +353,27 @@ void SceneDev1::FightOn()
     {
         case 1:
             xMax = camCenter1;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_1.getGlobalBounds()));
             break;
         case 2:
             xMax = camCenter2;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_2.getGlobalBounds()));
             break;
         case 3:
             xMax = camCenter3;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_3.getGlobalBounds()));
             break;
         case 4:
             xMax = camCenter4;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
             break;
         case 5:
             xMax = camCenter4;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
             break;
         case 6:
             xMax = camCenter4;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_4.getGlobalBounds()));
             break;
         case 7:
             xMax = camCenter7;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_7.getGlobalBounds()));
             break;
         case 8:
             xMax = camCenter8;
-            player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stage->stageBound1_8.getGlobalBounds()));
             break;
     }
     
@@ -405,33 +386,40 @@ void SceneDev1::ClearStage()
         case 1:
             isFighting = false;
             stage->clearStage1_1 = true;
+            currStage = 0;
             break;
         case 2:
             isFighting = false;
             stage->clearStage1_2 = true;
+            currStage = 0;
             break;
         case 3:
             isFighting = false;
             stage->clearStage1_3 = true;
+            currStage = 0;
             break;
         case 4:
             isFighting = false;
             stage->clearStage1_4 = true;
             cameraShakeOn = true;
+            currStage = 0;
             break;
         case 5:
             isFighting = false;
             stage->clearStage1_5 = true;
             cameraShakeOn = true;
+            currStage = 0;
             break;
         case 6:
             isFighting = false;
             stage->clearStage1_6 = true;
+            currStage = 0;
             MoveToBoss();
             break;
         case 7:
             isFighting = false;
             stage->clearStage1_7 = true;
+            currStage = 0;
             windyPlane->SetActive(true);
             break;
         case 8:
@@ -447,8 +435,8 @@ void SceneDev1::ClearStage()
 void SceneDev1::MoveToBoss()
 {
     enterToBossFloor = true;
-    player->SetPosition({ player->GetPosition().x, -1090.f });
     stageRect = stage->groundBoundBoss.getGlobalBounds();
+    player->SetPosition({ player->GetPosition().x, -1090.f });
     worldViewCenter.y -= 1400.f;
     worldView.setCenter(worldViewCenter);
     enterToBossFloor = false;
