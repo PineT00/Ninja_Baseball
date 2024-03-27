@@ -1,5 +1,6 @@
 ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
 ,4,0,,,,,
+,,,,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
 graphics/3_Enemy/baseball/gBaseball_punch.bmp,35,50,310,248.333,9,86.6667,243.333
 graphics/3_Enemy/baseball/gBaseball_punch.bmp,400,31.6667,323.333,270,9,81.6667,258.333

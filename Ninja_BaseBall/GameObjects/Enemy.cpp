@@ -7,6 +7,10 @@
 void Enemy::SetState(EnemyState Enemystate,int damageCount)
 {
     this->Enemystate = Enemystate;
+    if(isDead)
+    {
+        return;
+    }
     switch (Enemystate)
     {
         // case EnemyState::IDLE:
@@ -27,7 +31,8 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             hurtTimer=0.f;
             break;
         case EnemyState::DEAD:
-            
+            deadTimer=0.f;
+            flicker = true;
             break;
         case EnemyState::CATCHED:
             catchedPosition=position;
@@ -153,12 +158,18 @@ void Enemy::UpdateHurt(float dt)
 
 void Enemy::UpdateDead(float dt)
 {
-    if(maxHealth<=0)
+    if(flicker)
     {
-        isDead = true;
-        SetState(EnemyState::DEAD);
+        //sprite.setColor(sf::Color::White * ((sin(deadTimer * 20 )+1)/2));
     }
-  
+    deadTimer += dt;
+    if(deadTimer>=deadDuration)
+    {
+        flicker = false;
+        isDead = true;
+        SetActive(false);
+    }
+    
 }
 
 void Enemy::UpdateCatched(float dt)
@@ -298,6 +309,7 @@ void Enemy::OnDamage(int damage, int count)
 
 void Enemy::HoldAction()
 {
+    
     SetState(EnemyState::CATCHED);
 }
 

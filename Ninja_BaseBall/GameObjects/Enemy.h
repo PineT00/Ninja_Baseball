@@ -19,19 +19,14 @@ public:
         CATCHED,
     };
     EnemyState Enemystate=EnemyState::MOVE;
-    enum EnemyType
-    {
-        NONE,
-        NORMAL,
-        BOSS,
-    };
-    EnemyType enemyType=EnemyType::NONE;
+
 protected:
     SceneDev1* Scene;
     Player* player;
     Animator enemyAnimator;
 
     bool isCatch=false;
+    bool flicker=false;
     sf::Vector2f playerPos;
 
     sf::RectangleShape damageBox;
@@ -48,6 +43,8 @@ protected:
     float dashCooldown = 3.f;
     float hurtTimer=0.f;
     float hurtDuration=1.5f;
+    float deadTimer=0.f;
+    float deadDuration=2.5f;
 
     float normalAttackDistance = 170.f;
     float dashMaxDistance=300.f;
