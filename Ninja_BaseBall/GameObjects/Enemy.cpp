@@ -26,6 +26,7 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             break;
         case EnemyState::HURT:
             hurtTimer=0.f;
+            
             break;
         case EnemyState::DEAD:
             deadTimer=0.f;
@@ -291,16 +292,17 @@ sf::FloatRect Enemy::GetDamageBox() const
     return damageBox.getGlobalBounds();
 }
 
-void Enemy::OnDamage(int damage, int count)
+void Enemy::OnDamage(int damage,int count)
 {
+    damageCount=Scene->GetNormalAttack();
+    //damageCount=count;
     if(!isDead)
     {
         health-=damage;
-        damageCount=count;
         if(health<=0)
         {
             SetState(EnemyState::DEAD);
-            isDead = true;
+            //isDead = true;
         }
         else
         {

@@ -79,6 +79,8 @@ private:
 	};
 	std::vector<MonsterInfo> monsterInfos;
 	std::vector<Enemy*> enemies;
+
+	int sharedNormalAttack=0;
 public:
 	std::vector<Enemy*> GetEnemyList() { return enemies; }
 
@@ -102,7 +104,8 @@ public:
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
 	void CameraShake(float dt);
-
+	void SetNormalAttack(int value){ sharedNormalAttack = value; }
+	int GetNormalAttack() const { return sharedNormalAttack; }
 	void FightOn();
 	void ClearStage();
 	void MoveToBoss();

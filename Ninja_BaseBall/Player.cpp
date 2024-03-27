@@ -574,19 +574,25 @@ void Player::UpdateDashAttack(float dt)
 void Player::UpdateAttack(float dt)
 {
 	enemyList = sceneDev1->GetEnemyList();
-
+	bool demageDealt = false;
 	for (auto& enemy : enemyList)
 	{
 		if (enemy == nullptr) continue;
 		//isAttack&&
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
-			normalAttack += 1;
-			enemy->OnDamage(20, normalAttack);
+			enemy->OnDamage(20,-1);
 			score += 10;
+			demageDealt = true;
 		}
 	}
 
+	if(demageDealt)
+	{
+		normalAttack += sceneDev1->GetNormalAttack()+1;
+		sceneDev1->SetNormalAttack(normalAttack);	
+	}
+	
 	switch (normalAttack)
 	{
 	case 1:
@@ -604,7 +610,7 @@ void Player::UpdateAttack(float dt)
 	case 4:
 		animator.Play("Animations/player/player_Attack4.csv");
 		attackTime = 0.5f;
-		normalAttack = 0;
+		sceneDev1->SetNormalAttack(0);
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");

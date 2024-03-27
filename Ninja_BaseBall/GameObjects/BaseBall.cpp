@@ -2,6 +2,7 @@
 #include "BaseBall.h"
 
 #include "Player.h"
+#include "SceneDev1.h"
 
 void BaseBall::SetState(EnemyState Enemystate, int damageCount)
 {
