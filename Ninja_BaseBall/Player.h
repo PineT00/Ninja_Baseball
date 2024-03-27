@@ -25,6 +25,8 @@ public:
 		isHitted,
 		isKnockBack,
 		isDead,
+
+		isPickUp,
 	};
 
 	Status currStatus;
@@ -165,6 +167,7 @@ public:
 	void UpdateGetHit(float dt);
 	void UpdateGrip(float dt);
 	void UpdateDead(float dt);
+	void UpdatePickUp(float dt);
 
 	void Draw(sf::RenderWindow& window) override;
 

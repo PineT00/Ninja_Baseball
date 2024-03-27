@@ -49,7 +49,9 @@ protected:
 	//SceneGame* sceneGame = nullptr;
 	//SceneDev1* sceneDev1 = nullptr;
 
-
+	TextGo gameOver;
+	TextGo gameOverTimer;
+	TextGo insertCoin;
 
 
 public:

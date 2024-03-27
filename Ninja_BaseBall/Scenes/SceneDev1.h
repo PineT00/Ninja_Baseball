@@ -62,12 +62,13 @@ protected :
 	float xMax = 0.f;
 
 	WindyPlane* windyPlane = nullptr;
-
 	
 	UiHUD* hud = nullptr;
 	// YellowBaseBall* yellowEnemy;
 	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
+
+	float gameOverTimer = 30.f;
 
 private:
 	struct MonsterInfo

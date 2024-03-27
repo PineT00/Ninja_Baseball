@@ -66,29 +66,30 @@ void Player::Death()
 {
 	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
 	animator.Play("Animations/player/player_Damage3.csv");
-	inputOn = false;
 }
 
 void Player::DashAttack()
 {
 	dashAttackTimeOn = true;
 	animator.Play("Animations/player/player_DashAttack.csv");
-	inputOn = false;
 }
 
 
 void Player::OnDamage(int damage, int type, float positionX)
 {
-	getHit = true;
-	hp -= damage;
+	if (!hitTimeOn)
+	{
+		getHit = true;
+		hp -= damage;
 
-	if (positionX > GetPosition().x)
-	{
-		hitWay = -1;
-	}
-	else
-	{
-		hitWay = 1;
+		if (positionX > GetPosition().x)
+		{
+			hitWay = -1;
+		}
+		else
+		{
+			hitWay = 1;
+		}
 	}
 }
 
@@ -125,13 +126,12 @@ void Player::Init()
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
 
-	float hp = maxHp;
 
-	currStatus = Status::isIdleWalk;
 }
 
 void Player::Reset()
 {
+	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
@@ -162,12 +162,19 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
 
+	hp = maxHp;
+
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+
+	if (life == 0)
+	{
+		SetPosition(sceneDev1->worldViewCenter);
+	}
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -195,8 +202,21 @@ void Player::Update(float dt)
 
 	if (getHit)
 	{
-		hitTime = 0.2f;
-		SetStatus(Status::isHitted);
+		hitTimeOn = true;
+		if (hp > 0.f)
+		{
+			hitTime = 0.2f;
+			SetStatus(Status::isHitted);
+		}
+		else
+		{
+			hitTime = 2.5f;
+			jumpY = GetPosition().y;
+			velocity.y = -800.f;
+			Death();
+			SetStatus(Status::isDead);
+		}
+
 	}
 	if (!isGrip)
 	{
@@ -229,13 +249,13 @@ void Player::Update(float dt)
 		case Status::isHitted:
 			UpdateGetHit(dt);
 			break;
-
 		case Status::isDead:
 			UpdateDead(dt);
 			break;
-			//case Status::isKnockBack:
-				//UpdateIdle(dt);
-				//break;
+		case Status::isPickUp:
+			UpdateDead(dt);
+			break;
+
 		default:
 			break;
 	}
@@ -408,9 +428,25 @@ void Player::UpdateIdle(float dt)
 		}
 	}
 
+
 	if (InputManager::GetKeyDown(sf::Keyboard::Q))
 	{
-		SetStatus(Status::isAttack);
+		{
+			//if (/*아이템 감지, 아이템과의 거리 조건*/)
+			//{
+				//SetStatus(Status::isPickUp);
+			//}
+			//else
+			{
+				SetStatus(Status::isAttack);
+			}
+		}
+	}
+		
+
+	if (InputManager::GetKeyDown(sf::Keyboard::Q))
+	{
+		
 	}
 
 }
@@ -426,6 +462,7 @@ void Player::UpdateJumping(float dt)
 	{
 		velocity.y += gravity * dt;
 	}
+
 	if (jumpDirection != 0.f)
 	{
 		velocity.x = jumpDirection * speed;
@@ -665,6 +702,56 @@ void Player::UpdateGetHit(float dt)
 	}
 }
 
+void Player::UpdateDead(float dt)
+{
+	isGrip = false;
+	if (getHit)
+	{
+		Death();
+	}
+	else
+	{
+		hitTime -= dt;
+	}
+	getHit = false;
+
+	if (position.y > jumpY)
+	{
+		animator.Play("Animations/player/player_Death2.csv");
+		velocity.x = 0.f;
+		velocity.y = 0.f;
+		SetPosition({ position.x, jumpY });
+	}
+
+	if (animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
+	{
+		velocity.x = hitWay * speed;
+		velocity.y += gravity * dt;
+	}
+
+	if (hitTime <= 0.f)
+	{
+		hitTimeOn = false;
+		hitTime = 0.2f;
+		if (life == 1)
+		{
+			life = 0;
+			Reset();
+		}
+		else
+		{
+			SetActive(false);
+		}
+	}
+	position += velocity * dt;
+	SetPosition(position);
+	/////
+}
+
+void Player::UpdatePickUp(float dt)
+{
+}
+
 void Player::Draw(sf::RenderWindow& window)
 {
 	playerShadow.Draw(window);
@@ -698,9 +785,7 @@ void Player::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Player::UpdateDead(float dt)
-{
-}
+
 
 void Player::SetStatus(Status newStatus)
 {

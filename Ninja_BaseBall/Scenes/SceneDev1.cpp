@@ -145,11 +145,16 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+    if (!player->GetActive() && player->life == 0)
+    {
+        SetStatus(GameStatus::GameOver);
+    }
+
+
     if (!enterToBossFloor && player->currStatus == Player::Status::isIdleWalk)
     {
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stageRect));
     }
-
 
     switch (currStage)
     {
@@ -469,7 +474,11 @@ void SceneDev1::UpdateGame(float dt)
 
 void SceneDev1::UpdateGameover(float dt)
 {
-    
+    //Bgm Ãß°¡
+    gameOverTimer -= dt;
+
+
+
 }
 
 void SceneDev1::UpdatePause(float dt)
