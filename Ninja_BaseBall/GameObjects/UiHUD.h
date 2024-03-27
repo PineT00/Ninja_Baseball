@@ -32,6 +32,11 @@ public:
 
 	float player1_prevHP;
 
+	int gameOverCount = 10;
+
+	TextGo gameOver;
+	TextGo gameOverTimer;
+	TextGo insertCoin;
 
 protected:
 	UiHUD(const UiHUD&) = delete;
@@ -49,9 +54,6 @@ protected:
 	//SceneGame* sceneGame = nullptr;
 	//SceneDev1* sceneDev1 = nullptr;
 
-	TextGo gameOver;
-	TextGo gameOverTimer;
-	TextGo insertCoin;
 
 
 public:
@@ -66,4 +68,6 @@ public:
 	void LateUpdate(float dt) override;
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void GameOverCount();
 };

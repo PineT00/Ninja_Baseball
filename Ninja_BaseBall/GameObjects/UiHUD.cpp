@@ -42,11 +42,17 @@ void UiHUD::Init()
 
 	uiAnimator.SetTarget(&player1_Portrait);
 
+
+
+
+
 	//sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetScene(SceneIDs::SceneGame));
 }
 
 void UiHUD::Reset()
 {
+	sf::Vector2f winSizeF = (sf::Vector2f)windowSize;
+
 	font = *FONT_MANAGER.GetResource("fonts/retroGaming.ttf");
 
 	GameObject::Reset();
@@ -70,6 +76,16 @@ void UiHUD::Reset()
 	player1_Life.Set(font, std::to_string(life), 30, sf::Color::Yellow);
 
 	player1_prevHP = player->maxHp;
+
+	gameOver.Set(font, "GAME OVER", 40, sf::Color::Magenta);
+	gameOver.SetPosition(winSizeF.x / 2, winSizeF.y / 2);
+	gameOverTimer.Set(font, std::to_string(gameOverCount), 50, sf::Color::Magenta);
+	gameOver.SetPosition(winSizeF.x / 2, winSizeF.y / 3);
+	insertCoin;
+
+	gameOver.SetActive(false);
+	gameOverTimer.SetActive(false);
+
 }
 
 void UiHUD::Update(float dt)
@@ -124,4 +140,17 @@ void UiHUD::Draw(sf::RenderWindow& window)
 		SetFps(FRAMEWORK.GetFps());
 		textFps.Draw(window);
 	}
+
+	if (gameOver.GetActive())
+	{
+		gameOver.Draw(window);
+		gameOverTimer.Draw(window);
+	}
+}
+
+void UiHUD::GameOverCount()
+{
+	gameOver.SetActive(true);
+	gameOverTimer.SetActive(true);
+
 }

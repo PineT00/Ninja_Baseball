@@ -146,7 +146,11 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    if (!player->GetActive() && player->life == 0)
+    //if (!player->GetActive() && player->life == 0)
+    //{
+    //    SetStatus(GameStatus::GameOver);
+    //}
+    if (InputManager::GetKeyDown(sf::Keyboard::Num9))
     {
         SetStatus(GameStatus::GameOver);
     }
@@ -477,8 +481,28 @@ void SceneDev1::UpdateGameover(float dt)
 {
     //Bgm Ãß°¡
     gameOverTimer -= dt;
+    hud->GameOverCount();
 
-
+    if ((gameOverTimer / 3) == 9)
+    {
+        hud->gameOverCount = 9;
+    }
+    if ((gameOverTimer / 3) == 8)
+    {
+        hud->gameOverCount = 8;
+    }
+    if ((gameOverTimer / 3) == 7)
+    {
+        hud->gameOverCount = 7;
+    }
+    if ((gameOverTimer / 3) == 6)
+    {
+        hud->gameOverCount = 6;
+    }
+    hud->gameOverTimer.SetText(std::to_string(gameOverTimer));
+        
+        
+        //Set(font, std::to_string(gameOverCount), 50, sf::Color::Magenta);
 
 }
 

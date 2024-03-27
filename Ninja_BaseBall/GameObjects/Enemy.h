@@ -19,6 +19,7 @@ public:
         CATCHED,
     };
     EnemyState Enemystate=EnemyState::MOVE;
+    bool isDead = false;
 
 protected:
     SceneDev1* Scene;
@@ -53,7 +54,7 @@ protected:
     sf::Vector2f dashEndPosition;
     
     bool isAttackPlay = false;
-    bool isDead = false;
+
 
     int damageCount;
 

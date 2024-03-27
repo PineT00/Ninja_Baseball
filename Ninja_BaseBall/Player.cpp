@@ -200,6 +200,8 @@ void Player::Update(float dt)
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
+	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
+
 	if (getHit)
 	{
 		hitTimeOn = true;
@@ -221,7 +223,12 @@ void Player::Update(float dt)
 	if (!isGrip)
 	{
 		catchedEnemy = nullptr;
+		if (gripCoolTime > 0.f)
+		{
+			gripCoolTime -= dt;
+		}
 	}
+
 
 	switch (currStatus)
 	{
@@ -387,7 +394,9 @@ void Player::UpdateIdle(float dt)
 
 		if (isGrip) continue;
 
-		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && enemy->GetActive())
+		if (gripCoolTime > 0.f) continue;
+
+		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
 			animator.Play("Animations/player/player_Grip.csv");
 			isGrip = true;
@@ -655,6 +664,7 @@ void Player::UpdateGrip(float dt)
 
 	if (gripTime <= 0.f)
 	{
+		gripCoolTime = 1.f;
 		isGrip = false;
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
@@ -665,6 +675,7 @@ void Player::UpdateGrip(float dt)
 
 	else if (gripAttackCount == 3)
 	{
+		gripCoolTime = 1.f;
 		isGrip = false;
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
@@ -678,6 +689,7 @@ void Player::UpdateGrip(float dt)
 
 void Player::UpdateGetHit(float dt)
 {
+	gripCoolTime = 1.f;
 	isGrip = false;
 	if (getHit)
 	{
