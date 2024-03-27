@@ -142,9 +142,7 @@ public:
 
 	void SetBox();
 	void SetGripBox();
-
-
-
+	
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
 	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
 	sf::FloatRect GetGrapBox() { return grapBox.getGlobalBounds(); }

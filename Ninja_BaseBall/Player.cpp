@@ -174,9 +174,7 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
-
-
-
+	
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");

@@ -69,14 +69,14 @@ void SceneDev1::Init()
     // enemy2->SetPosition({ 1000.f, 500.f });
     // AddGameObject(enemy2, World);
 
-    SpawnEnemy("Stage1", { 1400.f, 400.f });
+    SpawnEnemy("Stage1", { 1250.f, 500.f });
 
-    SpawnEnemy("Stage2", { 1400.f, 500.f });
-    SpawnEnemy("Stage3", { 1400.f, 600.f });
-    SpawnEnemy("Stage4", { 1400.f, 700.f });
-    SpawnEnemy("Stage5", { 1400.f, 800.f });
-    SpawnEnemy("Stage6", { 1400.f, 900.f });
-    SpawnEnemy("Stage7", { 1400.f, 1000.f });
+    SpawnEnemy("Stage2", { 1413.f, 500.f});
+    SpawnEnemy("Stage3", { 2332.f, 500.f });
+    SpawnEnemy("Stage4", { 3230.f, 500.f });
+    SpawnEnemy("Stage5", { 3230.f, 500.f });
+    SpawnEnemy("Stage6", { 3230.f, 500.f });
+    SpawnEnemy("Stage7", { 3538.f, -1020.f });
     
     
     // Boss
@@ -205,14 +205,7 @@ void SceneDev1::UpdateGame(float dt)
     {
         currStage = 1;
         FightOn();
-
-        // std::list <GameObject*> BaseBallList;
-        // FindAll("Stage1", BaseBallList);
-        // for (auto& BaseBall : BaseBallList)
-        // {
-        //     BaseBall->SetActive(true);
-        // }
-
+        
         std::list <GameObject*> BaseBallList2;
         FindAll("BaseBallStage1", BaseBallList2);
         for (auto& BaseBall : BaseBallList2)
@@ -224,11 +217,26 @@ void SceneDev1::UpdateGame(float dt)
     {
         currStage = 2;
         FightOn();
+
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage2", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
     }
     if (!(stage->clearStage1_3) && xMax > camCenter3)
     {
         currStage = 3;
         FightOn();
+
+        std::list <GameObject*> BaseBallList2;
+        FindAll("BaseBallStage3", BaseBallList2);
+        for (auto& BaseBall : BaseBallList2)
+        {
+            BaseBall->SetActive(true);
+        }
+        
     }
     if (!(stage->clearStage1_4) && xMax > camCenter4)
     {
