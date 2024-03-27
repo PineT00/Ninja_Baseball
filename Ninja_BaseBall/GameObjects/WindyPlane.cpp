@@ -15,21 +15,13 @@ void WindyPlane::Init()
 {
 	SpriteGo::Init();
 
-	// FindGo
-	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
+
 
 	animator.SetTarget(&sprite);
 
 	windEffects.resize(EFFECTS_COUNT);
 
-	for (int i = 0; i < EFFECTS_COUNT; ++i)
-	{
-		windEffects[i] = new WindEffect();
-		windEffects[i]->Init();
-
-		sceneDev1->AddGameObject(windEffects[i]);
-	}
+	
 
 	// Hit, Attack Box
 	hitBox.setFillColor(sf::Color::Yellow);
@@ -82,6 +74,18 @@ void WindyPlane::Reset()
 		windEffects[i]->SetSortLayer(1);
 		sceneDev1->ResortGameObject(windEffects[i]);
 		std::cout << windEffects[i]->GetPosition().x << ", " << windEffects[i]->GetPosition().y << std::endl;
+	}
+
+	// FindGo
+	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
+
+	for (int i = 0; i < EFFECTS_COUNT; ++i)
+	{
+		windEffects[i] = new WindEffect();
+		windEffects[i]->Init();
+
+		sceneDev1->AddGameObject(windEffects[i]);
 	}
 }
 
