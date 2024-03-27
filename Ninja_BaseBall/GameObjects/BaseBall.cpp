@@ -1,9 +1,6 @@
 ﻿#include "pch.h"
 #include "BaseBall.h"
 
-#include "SceneDev1.h"
-
-
 void BaseBall::SetState(EnemyState Enemystate, int damageCount)
 {
     Enemy::SetState(Enemystate, damageCount);
@@ -17,6 +14,7 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
             break;
         case EnemyState::ATTACK:
             enemyAnimator.Play(animationClipNames[1]);
+        
             break;
         case EnemyState::DASH:
             enemyAnimator.Play(animationClipNames[2]);
@@ -46,8 +44,6 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
             break;
         case EnemyState::CATCHED:
             enemyAnimator.Play(animationClipNames[8]);
-            break;
-        default:
             break;
     }
 }

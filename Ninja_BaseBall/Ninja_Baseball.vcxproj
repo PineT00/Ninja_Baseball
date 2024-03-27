@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="BossTable.cpp" />
     <ClCompile Include="ComboCommands.cpp" />
+    <ClCompile Include="GameObjects\Bat.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
     <ClCompile Include="GameObjects\Animator.cpp" />
     <ClCompile Include="DataTables\DataTable.cpp" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="BossTable.h" />
     <ClInclude Include="ComboCommands.h" />
+    <ClInclude Include="GameObjects\Bat.h" />
     <ClInclude Include="GameObjects\Button.h" />
     <ClInclude Include="GameObjects\Animator.h" />
     <ClInclude Include="DataTables\DataTable.h" />

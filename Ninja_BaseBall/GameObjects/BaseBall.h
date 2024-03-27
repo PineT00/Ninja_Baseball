@@ -23,7 +23,7 @@ protected:
    SceneDev1* Scenedev1;
 
    std::vector<std::string >animationClipNames;
-   std::string animationClipPath;
+
 private:
    BaseBallColor color;
     
