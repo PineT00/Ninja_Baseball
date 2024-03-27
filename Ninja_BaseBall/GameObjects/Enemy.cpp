@@ -237,7 +237,7 @@ void Enemy::Release()
 void Enemy::Reset()
 {
     //SpriteGo::Reset();
-    Scene=dynamic_cast<SceneDev1*> (SCENE_MANAGER.GetCurrentScene());
+    scene=dynamic_cast<SceneDev1*> (SCENE_MANAGER.GetCurrentScene());
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
     sf::Vector2f targetPosition = player->GetPosition();
     playerPos = targetPosition;
@@ -248,9 +248,9 @@ void Enemy::Reset()
     attackBox.setFillColor(sf::Color::Red);
     damageBox.setFillColor(sf::Color::Blue);
     SetState(EnemyState::MOVE);
-    if (Scene != nullptr)
+    if (scene != nullptr)
     {
-        SetPosition(Scene->ClampByTileMap(position));
+        SetPosition(scene->ClampByTileMap(position));
     }
     SetOrigin(Origins::BC);
     SetFlipX(false);
@@ -300,7 +300,7 @@ sf::FloatRect Enemy::GetDamageBox() const
 
 void Enemy::OnDamage(int damage,int count)
 {
-    damageCount=Scene->GetNormalAttack();
+    damageCount=scene->GetNormalAttack();
     //damageCount=count;
     if(!isDead)
     {
