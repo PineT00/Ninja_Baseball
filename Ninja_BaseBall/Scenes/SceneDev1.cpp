@@ -75,10 +75,17 @@ void SceneDev1::Init()
     SpawnEnemy("Stage4", { 1400.f, 700.f });
     
     // Boss
+
     // windyPlane = new WindyPlane();
     // enemies.push_back(windyPlane);
     // AddGameObject(windyPlane);
     // windyPlane->SetActive(false);
+
+    windyPlane = new WindyPlane();
+    enemies.push_back(windyPlane);
+    windyPlane->SetActive(false);
+    AddGameObject(windyPlane);
+
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -93,7 +100,11 @@ void SceneDev1::Release()
 
 void SceneDev1::Reset()
 {
+
     //windyPlane->SetPosition({ 1000, 360 });
+
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
+
 }
 
 void SceneDev1::Enter()
@@ -105,6 +116,7 @@ void SceneDev1::Enter()
     xMax = 500.f; //카메라 시작 지점
 
     stageRect = stage->groundBound.getGlobalBounds(); //시작시 이동가능바닥
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
     player->SetActive(false);
 
@@ -461,6 +473,7 @@ void SceneDev1::ClearStage()
         case 7:
             isFighting = false;
             stage->clearStage1_7 = true;
+            windyPlane->SetActive(true);
             break;
         case 8:
             isFighting = false;

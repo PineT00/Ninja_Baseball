@@ -175,7 +175,8 @@ void Enemy::UpdateDead(float dt)
 
 void Enemy::UpdateCatched(float dt)
 {
-    SetPosition(player->GetPosition());
+    SetPosition(player->GetAttackBox().getPosition());
+    SetState(EnemyState::CATCHED);
     if(!player->isGrip)
     {
         SetState(EnemyState::MOVE);
@@ -314,7 +315,6 @@ void Enemy::OnDamage(int damage, int count)
 
 void Enemy::HoldAction()
 {
-    
     SetState(EnemyState::CATCHED);
 }
 

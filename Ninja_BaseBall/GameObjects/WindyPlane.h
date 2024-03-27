@@ -70,6 +70,7 @@ protected:
 	
 	sf::Vector2f windowSize;
 	sf::Vector2f direction = { 1.f, 0.f };
+	sf::Vector2f cryingDirection = { 1.f, -1.f };
 	sf::Vector2f windDirection;
 	sf::Vector2f up = { 0, -1.f };
 	
@@ -116,6 +117,7 @@ public:
 	void AttackWind(float dt);
 	void AttackGun(); // NoWing은 AttackGunReady -> AttackGun
 	void AttackGunReady();
+	void Crying(float dt);
 	
 	// 보스 공격 패턴 이벤트들
 	void AttackOneTwoEvent();
