@@ -46,6 +46,8 @@ public :
 	const int PARTS_STATUS_COUNT = 5;
 	const int EFFECTS_COUNT = 30;
 
+	sf::Sprite enemyOnHit;
+
 protected:
 	WindyPlane(const WindyPlane&) = delete;
 	WindyPlane(WindyPlane&&) = delete;

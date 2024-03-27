@@ -22,6 +22,11 @@ public:
     bool isDead = false;
 
 protected:
+    //맞는 이펙트 추가
+    Animator enemyEffectAnimator;
+    sf::Sprite enemyOnHit;
+
+
     SceneDev1* Scene;
     Player* player;
     Animator enemyAnimator;

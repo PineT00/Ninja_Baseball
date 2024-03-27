@@ -30,9 +30,7 @@ protected:
 	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
 
 	//SceneIDs startScene = SceneIDs::SceneDevBoss;
-
-	//SceneIDs startScene = SceneIDs::SceneTitle;
-
+	
 	SceneIDs startScene = SceneIDs::SceneTitle;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
