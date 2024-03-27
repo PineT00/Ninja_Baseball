@@ -6,12 +6,14 @@
 //#include "TextGo.h"
 //#include "InputField.h"
 #include "Enemy.h"
-#include "..\GameObjects\BaseBall.h"
+#include "BaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
 #include "WindyPlane.h"
 #include "Bat.h"
+#include "Item.h"
+#include "PickupItem.h"
 
 
 
@@ -59,6 +61,16 @@ void SceneDev1::Init()
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
+
+    goldBatItem = new PickupItem(Item::Types::GoldBat, "goldbat");
+    goldBatItem->Init();
+    goldBatItem->SetTexture("graphics/5_Item/goldbat.bmp");
+    goldBatItem->SetOrigin(Origins::MC);
+    goldBatItem->SetActive(false);
+
+    std::function<void(const std::string&)> pickupBatAction = std::bind(&Player::ItemPickup, player, std::placeholders::_1);
+    goldBatItem->SetPickUpAction(pickupBatAction);
+    AddGameObject(goldBatItem);
 
     Scene::Init();
 }
@@ -432,6 +444,8 @@ void SceneDev1::UpdateGame(float dt)
         {
             currStage = 8;
             windyPlane->SetActive(true);
+            goldBatItem->SetPosition(windyPlane->GetPosition());
+            goldBatItem->SetActive(true);
             FightOn();
         }
     }

@@ -154,6 +154,8 @@
     <ClCompile Include="GameObjects\InputField.cpp" />
     <ClCompile Include="GameObjects\PreviewCharacter.cpp" />
     <ClCompile Include="GameObjects\BaseBall.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="PickupItem.cpp" />
     <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="Utils\MyString.cpp" />
     <ClCompile Include="Scenes\SceneAnimationTool.cpp" />
@@ -204,6 +206,8 @@
     <ClInclude Include="GameObjects\InputField.h" />
     <ClInclude Include="GameObjects\PreviewCharacter.h" />
     <ClInclude Include="GameObjects\BaseBall.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="PickupItem.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="rapidjson\document.h" />

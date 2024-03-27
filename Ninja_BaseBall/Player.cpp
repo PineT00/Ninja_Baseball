@@ -3,6 +3,7 @@
 #include "ComboCommands.h"
 #include "SceneDev1.h"
 #include "WindyPlane.h"
+#include "PickupItem.h"
 
 Player::Player(const std::string& name)
 	: SpriteGo(name), combo(nullptr)
@@ -53,6 +54,14 @@ void Player::SetGripBox()
 	{
 		attackBox.setOrigin({ -90.f, 100.f });
 	}
+}
+
+void Player::ItemPickup(const std::string& itemName)
+{
+	pickupItem = dynamic_cast<PickupItem*>(sceneDev1->FindGameObject(itemName));
+
+	pickupItem->SetActive(false);
+	animator.PlayQueue("Animations/player/player_GetGoldBat.csv");
 }
 
 void Player::Bitted()
@@ -126,7 +135,6 @@ void Player::Init()
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
 
-
 }
 
 void Player::Reset()
@@ -170,6 +178,7 @@ void Player::Reset()
 	SetOrigin(Origins::BC);
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	pickupItem = dynamic_cast<PickupItem*>(sceneDev1->FindGameObject("goldbat"));
 
 	if (life == 0)
 	{
@@ -225,39 +234,39 @@ void Player::Update(float dt)
 
 	switch (currStatus)
 	{
-		case Status::isIdleWalk:
-			UpdateIdle(dt);
-			break;
-		case Status::isJumping:
-			UpdateJumping(dt);
-			break;
-		case Status::isDash:
-			UpdateDash(dt);
-			break;
-		case Status::isDashAttack:
-			UpdateDashAttack(dt);
-			break;
-		case Status::isAttack:
-			UpdateAttack(dt);
-			break;
-		case Status::isKick:
-			UpdateKick(dt);
-			break;
-		case Status::isGrip:
-			UpdateGrip(dt);
-			break;
-		case Status::isHitted:
-			UpdateGetHit(dt);
-			break;
-		case Status::isDead:
-			UpdateDead(dt);
-			break;
-		case Status::isPickUp:
-			UpdateDead(dt);
-			break;
+	case Status::isIdleWalk:
+		UpdateIdle(dt);
+		break;
+	case Status::isJumping:
+		UpdateJumping(dt);
+		break;
+	case Status::isDash:
+		UpdateDash(dt);
+		break;
+	case Status::isDashAttack:
+		UpdateDashAttack(dt);
+		break;
+	case Status::isAttack:
+		UpdateAttack(dt);
+		break;
+	case Status::isKick:
+		UpdateKick(dt);
+		break;
+	case Status::isGrip:
+		UpdateGrip(dt);
+		break;
+	case Status::isHitted:
+		UpdateGetHit(dt);
+		break;
+	case Status::isDead:
+		UpdateDead(dt);
+		break;
+	case Status::isPickUp:
+		UpdatePickUp(dt);
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 
 
@@ -432,23 +441,17 @@ void Player::UpdateIdle(float dt)
 	if (InputManager::GetKeyDown(sf::Keyboard::Q))
 	{
 		{
-			//if (/*아이템 감지, 아이템과의 거리 조건*/)
-			//{
-				//SetStatus(Status::isPickUp);
-			//}
-			//else
+			if (Utils::MyMath::Distance(pickupItem->GetPosition(), position) < 50)
+			{
+				pickupItem->GetPickUpAction()("goldbat");
+				SetStatus(Status::isPickUp);
+			}
+			else
 			{
 				SetStatus(Status::isAttack);
 			}
 		}
 	}
-		
-
-	if (InputManager::GetKeyDown(sf::Keyboard::Q))
-	{
-		
-	}
-
 }
 
 void Player::UpdateJumping(float dt)
@@ -576,26 +579,26 @@ void Player::UpdateAttack(float dt)
 
 	switch (normalAttack)
 	{
-		case 1:
-			animator.Play("Animations/player/player_Attack1.csv");
-			attackTime = 0.5f;
-			break;
-		case 2:
-			animator.Play("Animations/player/player_Attack2.csv");
-			attackTime = 0.5f;
-			break;
-		case 3:
-			animator.Play("Animations/player/player_Attack3.csv");
-			attackTime = 0.5f;
-			break;
-		case 4:
-			animator.Play("Animations/player/player_Attack4.csv");
-			attackTime = 0.5f;
-			normalAttack = 0;
-			break;
-		default:
-			animator.Play("Animations/player/player_Attack1.csv");
-			break;
+	case 1:
+		animator.Play("Animations/player/player_Attack1.csv");
+		attackTime = 0.5f;
+		break;
+	case 2:
+		animator.Play("Animations/player/player_Attack2.csv");
+		attackTime = 0.5f;
+		break;
+	case 3:
+		animator.Play("Animations/player/player_Attack3.csv");
+		attackTime = 0.5f;
+		break;
+	case 4:
+		animator.Play("Animations/player/player_Attack4.csv");
+		attackTime = 0.5f;
+		normalAttack = 0;
+		break;
+	default:
+		animator.Play("Animations/player/player_Attack1.csv");
+		break;
 	}
 
 	attackTimeOn = true;
@@ -750,6 +753,15 @@ void Player::UpdateDead(float dt)
 
 void Player::UpdatePickUp(float dt)
 {
+	if (animator.GetCurrentClipId() != "Animations/player/player_GetGoldBat.csv")
+	{
+		animator.Play("Animations/player/player_GetGoldBat.csv");
+	}
+
+	if (animator.GetCurrentClipFrame() == animator.GetCurrentClip()->GetTotalFrame() - 1)
+	{
+		SetStatus(Status::isIdleWalk);
+	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -794,22 +806,22 @@ void Player::SetStatus(Status newStatus)
 
 	switch (currStatus)
 	{
-		case Status::isIdleWalk:
-			//mainScreen->SetActive(true);
-			//selectScreen->SetActive(false);
-			break;
-		case Status::isJumping:
-			//mainScreen->SetActive(false);
-			//selectScreen->SetActive(true);
-			break;
-		case Status::isDash:
-			//mainScreen->SetActive(false);
-			//selectScreen->SetActive(false);
-			break;
-		case Status::isDashAttack:
-			break;
-		case Status::isAttack:
-			break;
+	case Status::isIdleWalk:
+		//mainScreen->SetActive(true);
+		//selectScreen->SetActive(false);
+		break;
+	case Status::isJumping:
+		//mainScreen->SetActive(false);
+		//selectScreen->SetActive(true);
+		break;
+	case Status::isDash:
+		//mainScreen->SetActive(false);
+		//selectScreen->SetActive(false);
+		break;
+	case Status::isDashAttack:
+		break;
+	case Status::isAttack:
+		break;
 
 	}
 
