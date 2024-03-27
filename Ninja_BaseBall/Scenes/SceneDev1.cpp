@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Player2.h"
 #include "WindyPlane.h"
+#include "Bat.h"
 
 
 
@@ -647,6 +648,30 @@ void SceneDev1::SpawnEnemy(const std::string& type, const sf::Vector2f& position
         AddGameObject(BaseBall, World);
         enemies.push_back(BaseBall);
         BaseBall->SetActive(false);
+    }
+    if(type == "Stage7")
+    {
+       Bat* Bat = Bat::Create(Bat::BatColor::YELLOW,type);
+       Bat->SetPosition(position);
+       AddGameObject(Bat, World);
+       enemies.push_back(Bat);
+       Bat->SetActive(false);
+    }
+    if(type == "Stage7")
+    {
+        Bat* Bat = Bat::Create(Bat::BatColor::YELLOW,type);
+        Bat->SetPosition(position);
+        AddGameObject(Bat, World);
+        enemies.push_back(Bat);
+        Bat->SetActive(false);
+    }
+    if(type == "Stage7")
+    {
+        Bat* Bat = Bat::Create(Bat::BatColor::YELLOW,type);
+        Bat->SetPosition(position);
+        AddGameObject(Bat, World);
+        enemies.push_back(Bat);
+        Bat->SetActive(false);
     }
 }
 
