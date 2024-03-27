@@ -165,6 +165,7 @@ public:
 	void UpdateKick(float dt);
 	void UpdateGetHit(float dt);
 	void UpdateGrip(float dt);
+	void UpdateDead(float dt);
 
 	void Draw(sf::RenderWindow& window) override;
 

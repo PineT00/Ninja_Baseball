@@ -225,6 +225,10 @@ void Player::Update(float dt)
 		case Status::isHitted:
 			UpdateGetHit(dt);
 			break;
+
+		case Status::isDead:
+			UpdateDead(dt);
+			break;
 			//case Status::isKnockBack:
 				//UpdateIdle(dt);
 				//break;
@@ -356,6 +360,8 @@ void Player::UpdateIdle(float dt)
 	for (auto& enemy : enemyList)
 	{
 		if (enemy == nullptr) continue;
+
+		if (isGrip) continue;
 
 		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && enemy->GetActive())
 		{
@@ -608,6 +614,7 @@ void Player::UpdateGrip(float dt)
 		isGrip = false;
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
+		gripTime = 2.f;
 		SetStatus(Status::isIdleWalk);
 	}
 
@@ -616,12 +623,14 @@ void Player::UpdateGrip(float dt)
 		isGrip = false;
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
+		gripTime = 2.f;
 		SetStatus(Status::isIdleWalk);
 	}
 }
 
 void Player::UpdateGetHit(float dt)
 {
+	isGrip = false;
 	if (getHit)
 	{
 		velocity.x = hitWay * 800.f;
@@ -676,6 +685,10 @@ void Player::Draw(sf::RenderWindow& window)
 		hitBox.setFillColor(sf::Color::Transparent);
 		attackBox.setFillColor(sf::Color::Transparent);
 	}
+}
+
+void Player::UpdateDead(float dt)
+{
 }
 
 void Player::SetStatus(Status newStatus)
