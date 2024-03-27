@@ -60,6 +60,8 @@ void WindyPlane::Init()
 	// clipInfos[parts] : 상태별 모음
 	// clipInfos[parts].clips : 상태별 클립 모음
 	// clipInfos[parts].clipStatus : 상태별 클립 사용 여부
+	enemyEffectAnimator.SetTarget(&enemyOnHit);
+	enemyOnHit.setScale(2.5f,2.5f);
 
 	LoadAllEvents();
 }
@@ -90,11 +92,14 @@ void WindyPlane::Update(float dt)
 {
 	SpriteGo::Update(dt);
 	animator.Update(dt);
+	enemyEffectAnimator.Update(dt);
 
 	closeAttackBox.setPosition(position);
 	rangedAttackBox.setPosition(position);
 	hitBox.setPosition(position);
 	uppercutAttackBox.setPosition(position);
+	enemyOnHit.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 100.f); // 히트 이펙트용 스프라이트
+
 	float dist = Utils::MyMath::Distance(player->GetPosition(), position);
 	// HP 마다 상태가 바뀐다.
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
@@ -197,12 +202,7 @@ void WindyPlane::Update(float dt)
 		break;
 	}
 
-	// 변경 필요
-	if (player->isGrip)
-	{
-		HoldAction();
-	}
-	else if(!player->isGrip && currentStatus == WindyPlaneStatus::HOLD)
+	if(!player->isGrip && currentStatus == WindyPlaneStatus::HOLD)
 	{
 		currentSpeed = speed;
 	}
@@ -241,6 +241,7 @@ void WindyPlane::Draw(sf::RenderWindow& window)
 	window.draw(rangedAttackBox);
 	window.draw(hitBox); 
 	window.draw(uppercutAttackBox);
+	window.draw(enemyOnHit);
 
 	if (SCENE_MANAGER.GetDeveloperMode())
 	{
@@ -469,6 +470,7 @@ void WindyPlane::OnDamage(int damage, int count)
 	direction.x /= 10.f;
 	direction.y = 0.f;
 	currentStatus = WindyPlaneStatus::DAMAGED;
+	enemyEffectAnimator.Play("animations/Enemy/enemy_OnHit.csv");
 }
 
 void WindyPlane::OnDamagedEvent()
@@ -485,6 +487,7 @@ void WindyPlane::OnDie()
 void WindyPlane::OnDieEvent()
 {
 	isAlive = false;
+	isDead = true;
 	SetActive(false);
 }
 

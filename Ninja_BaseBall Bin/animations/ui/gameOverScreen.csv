@@ -1,0 +1,10 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,6,1,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/6_UI/gameOver/gameOver.png,0,0,960,720,4,0,0
+graphics/6_UI/gameOver/gameOver.png,0,720,960,720,4,0,0
+graphics/6_UI/gameOver/gameOver.png,0,1440,960,720,4,0,0
+graphics/6_UI/gameOver/gameOver.png,0,2160,960,720,4,0,0
+graphics/6_UI/gameOver/gameOver.png,0,2880,960,720,4,0,0
+graphics/6_UI/gameOver/gameOver.png,0,3600,960,720,4,0,0

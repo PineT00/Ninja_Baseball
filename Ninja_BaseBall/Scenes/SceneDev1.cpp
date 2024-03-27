@@ -164,6 +164,7 @@ void SceneDev1::UpdateGame(float dt)
     //}
     if (InputManager::GetKeyDown(sf::Keyboard::Num9))
     {
+        hud->GameOverCount();
         SetStatus(GameStatus::GameOver);
     }
 
@@ -421,21 +422,21 @@ void SceneDev1::UpdateGame(float dt)
             currStage = 7;
             FightOn();
 
-            /*std::list <GameObject*> BaseBallList7;
-            FindAll("BaseBallStage7", BaseBallList7);
-            for (auto& BaseBall : BaseBallList7)
+            std::list <GameObject*> BatList;
+            FindAll("BaseBallStage7", BatList);
+            for (auto& Bat : BatList)
             {
-                BaseBall->SetActive(true);
+                Bat->SetActive(true);
             }
         }
         else
         {
             int monsterNum = 3;
-            std::list <GameObject*> BaseBallList7;
-            FindAll("BaseBallStage7", BaseBallList7);
-            for (auto& BaseBall : BaseBallList7)
+            std::list <GameObject*> BatList;
+            FindAll("BaseBallStage7", BatList);
+            for (auto& Bat : BatList)
             {
-                if (BaseBall->GetActive() == 0)
+                if (Bat->GetActive() == 0)
                 {
                     monsterNum -= 1;
                 }
@@ -443,7 +444,7 @@ void SceneDev1::UpdateGame(float dt)
             if (monsterNum == 0)
             {
                 ClearStage();
-            }*/
+            }
         }
 
     }
@@ -485,9 +486,6 @@ void SceneDev1::UpdateGame(float dt)
         player->SetActive(true);
     }
 
-
-
-
     if (InputManager::GetKeyDown(sf::Keyboard::Num0))
     {
         ClearStage();
@@ -497,29 +495,8 @@ void SceneDev1::UpdateGame(float dt)
 void SceneDev1::UpdateGameover(float dt)
 {
     //Bgm Ãß°¡
-    gameOverTimer -= dt;
-    hud->GameOverCount();
 
-    if ((gameOverTimer / 3) == 9)
-    {
-        hud->gameOverCount = 9;
-    }
-    if ((gameOverTimer / 3) == 8)
-    {
-        hud->gameOverCount = 8;
-    }
-    if ((gameOverTimer / 3) == 7)
-    {
-        hud->gameOverCount = 7;
-    }
-    if ((gameOverTimer / 3) == 6)
-    {
-        hud->gameOverCount = 6;
-    }
-    hud->gameOverTimer.SetText(std::to_string(gameOverTimer));
         
-        
-        //Set(font, std::to_string(gameOverCount), 50, sf::Color::Magenta);
 
 }
 
@@ -548,7 +525,7 @@ void SceneDev1::SetStatus(GameStatus newStatus)
         FRAMEWORK.SetTimeScale(1.f);
         break;
     case GameStatus::GameOver:
-        FRAMEWORK.SetTimeScale(0.f);
+        FRAMEWORK.SetTimeScale(1.f);
         break;
     case GameStatus::Pause:
         FRAMEWORK.SetTimeScale(0.f);

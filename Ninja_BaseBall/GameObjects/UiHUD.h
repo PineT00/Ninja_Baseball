@@ -34,9 +34,16 @@ public:
 
 	int gameOverCount = 10;
 
-	TextGo gameOver;
+
+	bool gameOver = false;
+	float countTextSize = 200.f;
+	float timer = 3.f;
+	int gameOverTime = 10;
+	sf::Sprite gameOverScreen;
+	Animator gameOverAnimator;
 	TextGo gameOverTimer;
-	TextGo insertCoin;
+
+
 
 protected:
 	UiHUD(const UiHUD&) = delete;

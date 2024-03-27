@@ -41,7 +41,7 @@ void UiHUD::Init()
 	player1_Name->Init();
 
 	uiAnimator.SetTarget(&player1_Portrait);
-
+	gameOverAnimator.SetTarget(&gameOverScreen);
 
 
 
@@ -67,6 +67,7 @@ void UiHUD::Reset()
 
 	uiAnimator.Play("animations/ui/player1_Portrait.csv");
 
+
 	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
 
 	score = player->score;
@@ -77,21 +78,40 @@ void UiHUD::Reset()
 
 	player1_prevHP = player->maxHp;
 
-	gameOver.Set(font, "GAME OVER", 40, sf::Color::Magenta);
-	gameOver.SetPosition(winSizeF.x / 2, winSizeF.y / 2);
-	gameOverTimer.Set(font, std::to_string(gameOverCount), 50, sf::Color::Magenta);
-	gameOver.SetPosition(winSizeF.x / 2, winSizeF.y / 3);
-	insertCoin;
+	gameOverScreen.setPosition(winSizeF/2.f);
 
-	gameOver.SetActive(false);
+	gameOverTimer.Set(font, std::to_string(gameOverCount), countTextSize, sf::Color::Red);
+	gameOverTimer.SetOrigin(Origins::MC);
+	gameOverTimer.SetPosition(winSizeF / 2.f);
 	gameOverTimer.SetActive(false);
-
 }
 
 void UiHUD::Update(float dt)
 {
 	GameObject::Update(dt);
 	uiAnimator.Update(dt);
+
+	if (gameOver)
+	{
+		gameOverAnimator.Update(dt);
+
+		if (countTextSize < 300.f)
+		{
+			countTextSize += 5.f * dt;
+		}
+
+		gameOverTimer.SetTextSize(countTextSize);
+
+		timer -= dt;
+		if (timer <= 0.f)
+		{
+			timer = 3.f;
+			gameOverCount -= 1;
+		}
+
+		gameOverTimer.SetText(std::to_string(gameOverCount));
+	}
+
 
 	if (player->currStatus == Player::Status::isHitted)
 	{
@@ -141,16 +161,19 @@ void UiHUD::Draw(sf::RenderWindow& window)
 		textFps.Draw(window);
 	}
 
-	if (gameOver.GetActive())
+	if (gameOver)
 	{
-		gameOver.Draw(window);
+		window.draw(gameOverScreen);
 		gameOverTimer.Draw(window);
 	}
+
+
 }
 
 void UiHUD::GameOverCount()
 {
-	gameOver.SetActive(true);
+	timer = 3.f;
+	gameOver = true;
 	gameOverTimer.SetActive(true);
-
+	gameOverAnimator.Play("animations/ui/gameOverScreen.csv");
 }

@@ -45,7 +45,8 @@ void Enemy::Init()
 {
     SpriteGo::Init();
     enemyAnimator.SetTarget(&sprite);
-
+    enemyEffectAnimator.SetTarget(&enemyOnHit);
+    enemyOnHit.setScale(2.f, 2.f);
     
     // enemyAnimator.AddEvent("animations/Enemy/YellowBaseBall/BaseballYellow_Attack.csv",
     //     2,[this]()
@@ -183,6 +184,9 @@ void Enemy::Update(float dt)
 {
     SpriteGo::Update(dt);
     enemyAnimator.Update(dt);
+    enemyEffectAnimator.Update(dt);
+    enemyOnHit.setPosition(damageBox.getPosition().x, damageBox.getPosition().y - 100.f);
+
     attackTimer += dt;
     dashTimer += dt;
     
@@ -257,6 +261,8 @@ void Enemy::Draw(sf::RenderWindow& window)
 {
     SpriteGo::Draw(window);
 
+    window.draw(enemyOnHit);
+
     if (SCENE_MANAGER.GetDeveloperMode())
     {
         window.draw(damageBox);
@@ -310,14 +316,17 @@ void Enemy::OnDamage(int damage,int count)
             SetState(EnemyState::HURT, damageCount);
         }
     }
+    enemyEffectAnimator.Play("animations/Enemy/enemy_OnHit.csv");
 }
 
 void Enemy::HoldAction()
 {
+    SetState(EnemyState::CATCHED);
+    isCatch = true;
+
     if(player->isGrip && !isCatch && !isDead)
     {
-        SetState(EnemyState::CATCHED);
-        isCatch=true;
+
     }
     else
     {

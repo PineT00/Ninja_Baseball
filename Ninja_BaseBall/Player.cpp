@@ -182,7 +182,7 @@ void Player::Reset()
 
 	if (life == 0)
 	{
-		SetPosition(sceneDev1->worldViewCenter);
+		SetPosition({ sceneDev1->worldViewCenter.x, sceneDev1->worldViewCenter.y + 100.f });
 	}
 
 	attackBox.setPosition({ GetPosition() });
@@ -190,7 +190,7 @@ void Player::Reset()
 	hitBox.setPosition({ GetPosition() });
 
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
-	OnHitEffect.setScale({ 1.5f, 1.5f });
+	OnHitEffect.setScale({ 2.f, 2.f });
 
 	combo = new ComboCommands();
 
@@ -209,7 +209,7 @@ void Player::Update(float dt)
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
-	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
+	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 180.f);
 
 	if (getHit)
 	{
@@ -411,6 +411,7 @@ void Player::UpdateIdle(float dt)
 			isGrip = true;
 			enemy->HoldAction();
 			catchedEnemy = enemy;
+			gripTime = 2.f;
 			SetStatus(Status::isGrip);
 		}
 	}
@@ -661,14 +662,15 @@ void Player::UpdateKick(float dt)
 
 void Player::UpdateGrip(float dt)
 {
-	if (InputManager::GetKeyDown(sf::Keyboard::Q))
+	if (animator.GetCurrentClipId() != "Animations/player/player_GripAttack1.csv"
+		&& InputManager::GetKeyDown(sf::Keyboard::Q))
 	{
 		SetGripBox();
 		animator.Play("Animations/player/player_GripAttack1.csv");
+		animator.PlayQueue("Animations/player/player_Grip.csv");
 		catchedEnemy->OnDamage(20, 0);
 		gripAttackCount += 1;
 		gripTime = 2.f;
-		gripAttackCount += 1;
 	}
 	gripTime -= dt;
 
@@ -683,7 +685,7 @@ void Player::UpdateGrip(float dt)
 		SetStatus(Status::isIdleWalk);
 	}
 
-	else if (gripAttackCount == 3)
+	if (gripAttackCount >= 3)
 	{
 		gripCoolTime = 1.f;
 		isGrip = false;
@@ -694,6 +696,7 @@ void Player::UpdateGrip(float dt)
 		SetStatus(Status::isIdleWalk);
 	}
 
+	std::cout << gripAttackCount << std::endl;
 
 }
 

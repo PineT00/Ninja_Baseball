@@ -69,7 +69,6 @@ protected :
 	UiHUD* hud = nullptr;
 	sf::Vector2f windowSize;
 
-	float gameOverTimer = 30.f;
 
 private:
 	struct MonsterInfo
