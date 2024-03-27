@@ -163,6 +163,11 @@ void SceneDev1::UpdateGame(float dt)
         SetStatus(GameStatus::GameOver);
     }
 
+    if (!windyPlane->GetAlive() && !goldBatItem->IsPicked())
+    {
+        goldBatItem->SetActive(true);
+        goldBatItem->SetPosition(windyPlane->GetPosition());
+    }
 
     if (!enterToBossFloor && player->currStatus == Player::Status::isIdleWalk)
     {
@@ -444,8 +449,6 @@ void SceneDev1::UpdateGame(float dt)
         {
             currStage = 8;
             windyPlane->SetActive(true);
-            goldBatItem->SetPosition(windyPlane->GetPosition());
-            goldBatItem->SetActive(true);
             FightOn();
         }
     }

@@ -479,12 +479,12 @@ void WindyPlane::OnDamagedEvent()
 
 void WindyPlane::OnDie()
 {
-	isAlive = false;
 	currentStatus = WindyPlaneStatus::DEATH;
 }
 
 void WindyPlane::OnDieEvent()
 {
+	isAlive = false;
 	SetActive(false);
 }
 

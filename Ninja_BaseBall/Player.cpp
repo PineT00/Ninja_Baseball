@@ -444,6 +444,7 @@ void Player::UpdateIdle(float dt)
 			if (Utils::MyMath::Distance(pickupItem->GetPosition(), position) < 50)
 			{
 				pickupItem->GetPickUpAction()("goldbat");
+				pickupItem->SetIsPicked(true);
 				SetStatus(Status::isPickUp);
 			}
 			else

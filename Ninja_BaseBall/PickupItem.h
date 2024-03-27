@@ -9,6 +9,7 @@ protected:
 	PickupItem& operator=(PickupItem&&) = delete;
 
 	std::function<void(const std::string&)> pickupAction;
+	bool isPicked;
 
 public:
 	Item::Types type = Item::Types::None;
@@ -22,6 +23,8 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetPickUpAction(std::function<void(const std::string&)> action);
+	bool IsPicked() { return isPicked; }
+	void SetIsPicked(bool isPicked) { this->isPicked = isPicked; }
 	const std::function<void(const std::string&)>& GetPickUpAction() const { return pickupAction; }
 };
 
