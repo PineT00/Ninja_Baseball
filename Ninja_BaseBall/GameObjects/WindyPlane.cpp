@@ -64,26 +64,21 @@ void WindyPlane::Init()
 
 void WindyPlane::Reset()
 {
+	// FindGo
+	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
+
 	SetOrigin(Origins::BC);
 	SetPosition({ sceneDev1->stage->groundBoundBoss.getGlobalBounds().left + sceneDev1->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, sceneDev1->stage->groundBoundBoss.getGlobalBounds().top + sceneDev1->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
 	for (int i = 0; i < EFFECTS_COUNT; ++i)
 	{
+		windEffects[i] = new WindEffect();
+		windEffects[i]->Init();
 		windEffects[i]->Reset();
 		windEffects[i]->SetPosition({position.x, Utils::Random::RandomRange(position.y - 120, position.y) });
 		windEffects[i]->SetSortLayer(1);
 		sceneDev1->ResortGameObject(windEffects[i]);
-		std::cout << windEffects[i]->GetPosition().x << ", " << windEffects[i]->GetPosition().y << std::endl;
-	}
-
-	// FindGo
-	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
-	player = dynamic_cast<Player*>(sceneDev1->FindGameObject("Player"));
-
-	for (int i = 0; i < EFFECTS_COUNT; ++i)
-	{
-		windEffects[i] = new WindEffect();
-		windEffects[i]->Init();
 
 		sceneDev1->AddGameObject(windEffects[i]);
 	}
