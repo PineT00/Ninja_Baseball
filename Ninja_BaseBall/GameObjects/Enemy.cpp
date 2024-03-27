@@ -112,7 +112,7 @@ void Enemy::UpdateMove(float dt)
     }
     else if(player->isGrip)
     {
-        SetState(EnemyState::CATCHED);
+        //SetState(EnemyState::CATCHED);
     }
 }
 

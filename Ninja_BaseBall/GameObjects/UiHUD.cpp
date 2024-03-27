@@ -77,12 +77,25 @@ void UiHUD::Update(float dt)
 	GameObject::Update(dt);
 	uiAnimator.Update(dt);
 
-	if (player1_prevHP < player->hp)
+	if (player->currStatus == Player::Status::isHitted)
 	{
+		float currentHp = std::max(0, player->hp);
+		float maxHp = player->maxHp;
+		sf::Vector2u rectSize = player1_hpBar.GetTexture()->getSize();
+
 		uiAnimator.Play("animations/ui/player1_PortraitHurt.csv");
-		player1_hpBar.SetScale({ player1_hpBar.GetScale().x - 50.f, player1_hpBar.GetScale().y });
-		player1_prevHP = player->hp;
+		player1_hpBar.SetTextureRect({ 0,0,(int)((currentHp / maxHp) * rectSize.x), (int)rectSize.y });
 	}
+	else
+	{
+		uiAnimator.PlayQueue("animations/ui/player1_Portrait.csv");
+	}
+
+	// 스코어 들어오면 변경 필요
+	score = player->score;
+	life = player->life;
+	player1_Score.Set(font, std::to_string(score), 30, sf::Color::Yellow);
+	player1_Life.Set(font, std::to_string(life), 30, sf::Color::Yellow);
 }
 
 void UiHUD::LateUpdate(float dt)
@@ -93,13 +106,6 @@ void UiHUD::LateUpdate(float dt)
 void UiHUD::FixedUpdate(float dt)
 {
 	GameObject::FixedUpdate(dt);
-
-	score = player->score;
-	life = player->life;
-
-	player1_Score.Set(font, std::to_string(score), 30, sf::Color::Yellow);
-	player1_Life.Set(font, std::to_string(life), 30, sf::Color::Yellow);
-
 }
 
 void UiHUD::Draw(sf::RenderWindow& window)

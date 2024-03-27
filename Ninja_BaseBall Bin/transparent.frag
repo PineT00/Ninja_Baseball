@@ -18,7 +18,7 @@ void main()
     float magenta_diff = distance(pixelColor.rgb, vec3(1.0, 0.0, 1.0)); // RGB에서 마젠타는 (1.0, 0.0, 1.0)
 
     // 마젠타 또는 녹색과의 차이가 매우 작으면(즉, 거의 같은 색상이면) 알파 값을 0으로 설정
-    if(magenta_diff < 0.5) // 색상 차이 임계값은 상황에 따라 조절할 수 있음
+    if(magenta_diff < 0.1) // 색상 차이 임계값은 상황에 따라 조절할 수 있음
     {
         gl_FragColor = vec4(pixelColor.rgb, 0.0);
     }

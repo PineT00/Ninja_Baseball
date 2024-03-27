@@ -100,7 +100,6 @@ void WindyPlane::Update(float dt)
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
 	{
 		hp = hp - maxHp * 0.2f;
-		std::cout << hp << std::endl;
 	}
 
 	//상태마다 재생 애니메이션이 바뀐다.
@@ -189,6 +188,10 @@ void WindyPlane::Update(float dt)
 
 		break;
 	case BossPartsStatus::NoArm:
+		if (!player->isGrip)
+		{
+			currentSpeed = speed * 3;
+		}
 		Crying(dt);
 
 		break;
@@ -374,7 +377,7 @@ void WindyPlane::Crying(float dt)
 		cryingDirection.y = -1.f;
 	}
 
-	Translate(cryingDirection * currentSpeed * 3.f * dt);
+	Translate(cryingDirection * currentSpeed * dt);
 }
 
 void WindyPlane::AttackOneTwoEvent()
