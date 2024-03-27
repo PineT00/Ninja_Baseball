@@ -3,6 +3,7 @@
 #include "ComboCommands.h"
 #include "SceneDev1.h"
 #include "WindyPlane.h"
+#include "PickupItem.h"
 
 Player::Player(const std::string& name)
 	: SpriteGo(name), combo(nullptr)
@@ -55,6 +56,14 @@ void Player::SetGripBox()
 	}
 }
 
+void Player::ItemPickup(const std::string& itemName)
+{
+	pickupItem = dynamic_cast<PickupItem*>(sceneDev1->FindGameObject(itemName));
+
+	pickupItem->SetActive(false);
+	animator.PlayQueue("Animations/player/player_GetGoldBat.csv");
+}
+
 void Player::Bitted()
 {
 	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
@@ -66,29 +75,30 @@ void Player::Death()
 {
 	animatorEffect.Play("Animations/player/effect/player_OnHit.csv");
 	animator.Play("Animations/player/player_Damage3.csv");
-	inputOn = false;
 }
 
 void Player::DashAttack()
 {
 	dashAttackTimeOn = true;
 	animator.Play("Animations/player/player_DashAttack.csv");
-	inputOn = false;
 }
 
 
 void Player::OnDamage(int damage, int type, float positionX)
 {
-	getHit = true;
-	hp -= damage;
+	if (!hitTimeOn)
+	{
+		getHit = true;
+		hp -= damage;
 
-	if (positionX > GetPosition().x)
-	{
-		hitWay = -1;
-	}
-	else
-	{
-		hitWay = 1;
+		if (positionX > GetPosition().x)
+		{
+			hitWay = -1;
+		}
+		else
+		{
+			hitWay = 1;
+		}
 	}
 }
 
@@ -125,13 +135,11 @@ void Player::Init()
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
 
-	float hp = maxHp;
-
-	currStatus = Status::isIdleWalk;
 }
 
 void Player::Reset()
 {
+	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
@@ -162,12 +170,20 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
 
+	hp = maxHp;
+
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
 	SetOrigin(Origins::BC);
 
 	sceneDev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
+	pickupItem = dynamic_cast<PickupItem*>(sceneDev1->FindGameObject("goldbat"));
+
+	if (life == 0)
+	{
+		SetPosition(sceneDev1->worldViewCenter);
+	}
 
 	attackBox.setPosition({ GetPosition() });
 	grapBox.setPosition({ GetPosition() });
@@ -193,51 +209,71 @@ void Player::Update(float dt)
 	grapBox.setPosition({ GetPosition() });
 	hitBox.setPosition({ GetPosition() });
 
+	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
+
 	if (getHit)
 	{
-		hitTime = 0.2f;
-		SetStatus(Status::isHitted);
+		hitTimeOn = true;
+		if (hp > 0.f)
+		{
+			hitTime = 0.2f;
+			SetStatus(Status::isHitted);
+		}
+		else
+		{
+			hitTime = 2.5f;
+			jumpY = GetPosition().y;
+			velocity.y = -800.f;
+			Death();
+			SetStatus(Status::isDead);
+		}
+
 	}
 	if (!isGrip)
 	{
 		catchedEnemy = nullptr;
+		if (gripCoolTime > 0.f)
+		{
+			gripCoolTime -= dt;
+		}
 	}
+
 
 	switch (currStatus)
 	{
-		case Status::isIdleWalk:
-			UpdateIdle(dt);
-			break;
-		case Status::isJumping:
-			UpdateJumping(dt);
-			break;
-		case Status::isDash:
-			UpdateDash(dt);
-			break;
-		case Status::isDashAttack:
-			UpdateDashAttack(dt);
-			break;
-		case Status::isAttack:
-			UpdateAttack(dt);
-			break;
-		case Status::isKick:
-			UpdateKick(dt);
-			break;
-		case Status::isGrip:
-			UpdateGrip(dt);
-			break;
-		case Status::isHitted:
-			UpdateGetHit(dt);
-			break;
+	case Status::isIdleWalk:
+		UpdateIdle(dt);
+		break;
+	case Status::isJumping:
+		UpdateJumping(dt);
+		break;
+	case Status::isDash:
+		UpdateDash(dt);
+		break;
+	case Status::isDashAttack:
+		UpdateDashAttack(dt);
+		break;
+	case Status::isAttack:
+		UpdateAttack(dt);
+		break;
+	case Status::isKick:
+		UpdateKick(dt);
+		break;
+	case Status::isGrip:
+		UpdateGrip(dt);
+		break;
+	case Status::isHitted:
+		UpdateGetHit(dt);
+		break;
+	case Status::isDead:
+		UpdateDead(dt);
+		break;
+	case Status::isPickUp:
+		UpdatePickUp(dt);
+		break;
 
-		case Status::isDead:
-			UpdateDead(dt);
-			break;
-			//case Status::isKnockBack:
-				//UpdateIdle(dt);
-				//break;
-		default:
-			break;
+	default:
+		break;
 	}
 
 
@@ -367,7 +403,9 @@ void Player::UpdateIdle(float dt)
 
 		if (isGrip) continue;
 
-		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && enemy->GetActive())
+		if (gripCoolTime > 0.f) continue;
+
+		if (grapBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
 			animator.Play("Animations/player/player_Grip.csv");
 			isGrip = true;
@@ -408,11 +446,22 @@ void Player::UpdateIdle(float dt)
 		}
 	}
 
+
 	if (InputManager::GetKeyDown(sf::Keyboard::Q))
 	{
-		SetStatus(Status::isAttack);
+		{
+			if (Utils::MyMath::Distance(pickupItem->GetPosition(), position) < 50)
+			{
+				pickupItem->GetPickUpAction()("goldbat");
+				pickupItem->SetIsPicked(true);
+				SetStatus(Status::isPickUp);
+			}
+			else
+			{
+				SetStatus(Status::isAttack);
+			}
+		}
 	}
-
 }
 
 void Player::UpdateJumping(float dt)
@@ -426,6 +475,7 @@ void Player::UpdateJumping(float dt)
 	{
 		velocity.y += gravity * dt;
 	}
+
 	if (jumpDirection != 0.f)
 	{
 		velocity.x = jumpDirection * speed;
@@ -539,26 +589,26 @@ void Player::UpdateAttack(float dt)
 
 	switch (normalAttack)
 	{
-		case 1:
-			animator.Play("Animations/player/player_Attack1.csv");
-			attackTime = 0.5f;
-			break;
-		case 2:
-			animator.Play("Animations/player/player_Attack2.csv");
-			attackTime = 0.5f;
-			break;
-		case 3:
-			animator.Play("Animations/player/player_Attack3.csv");
-			attackTime = 0.5f;
-			break;
-		case 4:
-			animator.Play("Animations/player/player_Attack4.csv");
-			attackTime = 0.5f;
-			normalAttack = 0;
-			break;
-		default:
-			animator.Play("Animations/player/player_Attack1.csv");
-			break;
+	case 1:
+		animator.Play("Animations/player/player_Attack1.csv");
+		attackTime = 0.5f;
+		break;
+	case 2:
+		animator.Play("Animations/player/player_Attack2.csv");
+		attackTime = 0.5f;
+		break;
+	case 3:
+		animator.Play("Animations/player/player_Attack3.csv");
+		attackTime = 0.5f;
+		break;
+	case 4:
+		animator.Play("Animations/player/player_Attack4.csv");
+		attackTime = 0.5f;
+		normalAttack = 0;
+		break;
+	default:
+		animator.Play("Animations/player/player_Attack1.csv");
+		break;
 	}
 
 	attackTimeOn = true;
@@ -618,6 +668,7 @@ void Player::UpdateGrip(float dt)
 
 	if (gripTime <= 0.f)
 	{
+		gripCoolTime = 1.f;
 		isGrip = false;
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
@@ -628,6 +679,7 @@ void Player::UpdateGrip(float dt)
 
 	else if (gripAttackCount == 3)
 	{
+		gripCoolTime = 1.f;
 		isGrip = false;
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
@@ -641,6 +693,7 @@ void Player::UpdateGrip(float dt)
 
 void Player::UpdateGetHit(float dt)
 {
+	gripCoolTime = 1.f;
 	isGrip = false;
 	if (getHit)
 	{
@@ -661,6 +714,65 @@ void Player::UpdateGetHit(float dt)
 		hitTimeOn = false;
 		hitTime = 0.2f;
 		animator.Play("Animations/player/player_Idle.csv");
+		SetStatus(Status::isIdleWalk);
+	}
+}
+
+void Player::UpdateDead(float dt)
+{
+	isGrip = false;
+	if (getHit)
+	{
+		Death();
+	}
+	else
+	{
+		hitTime -= dt;
+	}
+	getHit = false;
+
+	if (position.y > jumpY)
+	{
+		animator.Play("Animations/player/player_Death2.csv");
+		velocity.x = 0.f;
+		velocity.y = 0.f;
+		SetPosition({ position.x, jumpY });
+	}
+
+	if (animator.GetCurrentClipId() == "Animations/player/player_Damage3.csv")
+	{
+		velocity.x = hitWay * speed;
+		velocity.y += gravity * dt;
+	}
+
+	if (hitTime <= 0.f)
+	{
+		hitTimeOn = false;
+		hitTime = 0.2f;
+		if (life == 1)
+		{
+			life = 0;
+			Reset();
+		}
+		else
+		{
+			SetActive(false);
+		}
+	}
+	position += velocity * dt;
+	SetPosition(position);
+	/////
+}
+
+void Player::UpdatePickUp(float dt)
+{
+	if (animator.GetCurrentClipId() != "Animations/player/player_GetGoldBat.csv")
+	{
+		animator.Play("Animations/player/player_GetGoldBat.csv");
+	}
+
+	if (animator.GetCurrentClipFrame() == animator.GetCurrentClip()->GetTotalFrame() - 1)
+	{
 		SetStatus(Status::isIdleWalk);
 	}
 }
@@ -698,9 +810,7 @@ void Player::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Player::UpdateDead(float dt)
-{
-}
+
 
 void Player::SetStatus(Status newStatus)
 {
@@ -709,22 +819,22 @@ void Player::SetStatus(Status newStatus)
 
 	switch (currStatus)
 	{
-		case Status::isIdleWalk:
-			//mainScreen->SetActive(true);
-			//selectScreen->SetActive(false);
-			break;
-		case Status::isJumping:
-			//mainScreen->SetActive(false);
-			//selectScreen->SetActive(true);
-			break;
-		case Status::isDash:
-			//mainScreen->SetActive(false);
-			//selectScreen->SetActive(false);
-			break;
-		case Status::isDashAttack:
-			break;
-		case Status::isAttack:
-			break;
+	case Status::isIdleWalk:
+		//mainScreen->SetActive(true);
+		//selectScreen->SetActive(false);
+		break;
+	case Status::isJumping:
+		//mainScreen->SetActive(false);
+		//selectScreen->SetActive(true);
+		break;
+	case Status::isDash:
+		//mainScreen->SetActive(false);
+		//selectScreen->SetActive(false);
+		break;
+	case Status::isDashAttack:
+		break;
+	case Status::isAttack:
+		break;
 
 	}
 

@@ -33,7 +33,7 @@ protected:
 
 	//SceneIDs startScene = SceneIDs::SceneTitle;
 
-	SceneIDs startScene = SceneIDs::SceneDev1;
+	SceneIDs startScene = SceneIDs::SceneTitle;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 

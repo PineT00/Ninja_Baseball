@@ -19,6 +19,7 @@ public:
         CATCHED,
     };
     EnemyState Enemystate=EnemyState::MOVE;
+    bool isDead = false;
 
 protected:
     SceneDev1* Scene;

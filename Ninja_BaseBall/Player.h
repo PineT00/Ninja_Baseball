@@ -5,6 +5,7 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
+class PickupItem;
 
 class Player :
 	public SpriteGo
@@ -25,6 +26,8 @@ public:
 		isHitted,
 		isKnockBack,
 		isDead,
+
+		isPickUp,
 	};
 
 	Status currStatus;
@@ -60,6 +63,7 @@ protected:
 	Enemy* catchedEnemy = nullptr;
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
+	PickupItem* pickupItem = nullptr;
 
 	Animator animator;
 	Animator animatorEffect;
@@ -141,6 +145,7 @@ public:
 	sf::FloatRect GetHitBox() { return hitBox.getGlobalBounds(); }
 	sf::FloatRect GetAttackBox() { return attackBox.getGlobalBounds(); }
 	sf::FloatRect GetGrapBox() { return grapBox.getGlobalBounds(); }
+	void ItemPickup(const std::string& itemName);
 
 	void Bitted();
 	void Death();
@@ -165,6 +170,7 @@ public:
 	void UpdateGetHit(float dt);
 	void UpdateGrip(float dt);
 	void UpdateDead(float dt);
+	void UpdatePickUp(float dt);
 
 	void Draw(sf::RenderWindow& window) override;
 

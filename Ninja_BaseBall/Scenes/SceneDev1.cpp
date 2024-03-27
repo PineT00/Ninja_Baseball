@@ -6,12 +6,14 @@
 //#include "TextGo.h"
 //#include "InputField.h"
 #include "Enemy.h"
-#include "..\GameObjects\BaseBall.h"
+#include "BaseBall.h"
 #include "Stage1.h"
 #include "Player.h"
 #include "Player2.h"
 #include "WindyPlane.h"
 #include "Bat.h"
+#include "Item.h"
+#include "PickupItem.h"
 
 
 
@@ -59,6 +61,16 @@ void SceneDev1::Init()
 
     hud = new UiHUD();
     AddGameObject(hud, Ui);
+
+    goldBatItem = new PickupItem(Item::Types::GoldBat, "goldbat");
+    goldBatItem->Init();
+    goldBatItem->SetTexture("graphics/5_Item/goldbat.bmp");
+    goldBatItem->SetOrigin(Origins::MC);
+    goldBatItem->SetActive(false);
+
+    std::function<void(const std::string&)> pickupBatAction = std::bind(&Player::ItemPickup, player, std::placeholders::_1);
+    goldBatItem->SetPickUpAction(pickupBatAction);
+    AddGameObject(goldBatItem);
 
     Scene::Init();
 }
@@ -146,11 +158,25 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+    //if (!player->GetActive() && player->life == 0)
+    //{
+    //    SetStatus(GameStatus::GameOver);
+    //}
+    if (InputManager::GetKeyDown(sf::Keyboard::Num9))
+    {
+        SetStatus(GameStatus::GameOver);
+    }
+
+    if (!windyPlane->GetAlive() && !goldBatItem->IsPicked())
+    {
+        goldBatItem->SetActive(true);
+        goldBatItem->SetPosition(windyPlane->GetPosition());
+    }
+
     if (!enterToBossFloor && player->currStatus == Player::Status::isIdleWalk)
     {
         player->SetPosition(Utils::MyMath::Clamp(player->GetPosition(), stageRect));
     }
-
 
     switch (currStage)
     {
@@ -470,7 +496,31 @@ void SceneDev1::UpdateGame(float dt)
 
 void SceneDev1::UpdateGameover(float dt)
 {
-    
+    //Bgm Ãß°¡
+    gameOverTimer -= dt;
+    hud->GameOverCount();
+
+    if ((gameOverTimer / 3) == 9)
+    {
+        hud->gameOverCount = 9;
+    }
+    if ((gameOverTimer / 3) == 8)
+    {
+        hud->gameOverCount = 8;
+    }
+    if ((gameOverTimer / 3) == 7)
+    {
+        hud->gameOverCount = 7;
+    }
+    if ((gameOverTimer / 3) == 6)
+    {
+        hud->gameOverCount = 6;
+    }
+    hud->gameOverTimer.SetText(std::to_string(gameOverTimer));
+        
+        
+        //Set(font, std::to_string(gameOverCount), 50, sf::Color::Magenta);
+
 }
 
 void SceneDev1::UpdatePause(float dt)

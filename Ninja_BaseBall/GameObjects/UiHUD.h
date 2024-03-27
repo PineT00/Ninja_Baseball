@@ -32,6 +32,11 @@ public:
 
 	float player1_prevHP;
 
+	int gameOverCount = 10;
+
+	TextGo gameOver;
+	TextGo gameOverTimer;
+	TextGo insertCoin;
 
 protected:
 	UiHUD(const UiHUD&) = delete;
@@ -51,7 +56,6 @@ protected:
 
 
 
-
 public:
 	UiHUD(const std::string& name = "hud");
 	~UiHUD() override = default;
@@ -64,4 +68,6 @@ public:
 	void LateUpdate(float dt) override;
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void GameOverCount();
 };
