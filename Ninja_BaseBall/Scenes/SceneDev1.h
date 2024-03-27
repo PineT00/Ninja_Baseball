@@ -14,6 +14,8 @@ class Player;
 class Player2;
 class Enemy;
 class WindyPlane;
+class Item;
+class PickupItem;
 
 class SceneDev1 : public Scene
 {
@@ -63,10 +65,8 @@ protected :
 	float xMax = 0.f;
 
 	WindyPlane* windyPlane = nullptr;
-	
+	PickupItem* goldBatItem = nullptr;
 	UiHUD* hud = nullptr;
-	// YellowBaseBall* yellowEnemy;
-	// YellowBaseBall* yellowEnemy2;
 	sf::Vector2f windowSize;
 
 	float gameOverTimer = 30.f;

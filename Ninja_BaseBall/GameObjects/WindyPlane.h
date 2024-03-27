@@ -145,6 +145,7 @@ public:
 	void PlayAnimation(BossPartsStatus status, WindyPlaneStatus planeStatus);
 	void SetCurrentStatus(WindyPlaneStatus status) { currentStatus = status; }
 	void HoldAction();
+	bool GetAlive() const { return isAlive; }
 
 	sf::FloatRect GetDamageBox()  const override { return hitBox.getGlobalBounds(); }
 };

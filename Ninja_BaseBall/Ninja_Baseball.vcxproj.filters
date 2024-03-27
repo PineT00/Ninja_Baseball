@@ -23,7 +23,6 @@
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\Stage1.cpp" />
-    <ClCompile Include="GameObjects\YellowBaseBall.cpp" />
     <ClCompile Include="Scenes\TestScene.cpp" />
     <ClCompile Include="Utils\MyMath.cpp" />
     <ClCompile Include="Utils\Origin.cpp" />
@@ -43,6 +42,9 @@
     <ClCompile Include="GameObjects\WindyPlane.cpp" />
     <ClCompile Include="BossTable.cpp" />
     <ClCompile Include="GameObjects\WindEffect.cpp" />
+    <ClCompile Include="GameObjects\BaseBall.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="PickupItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\Button.h" />
@@ -63,7 +65,6 @@
     <ClInclude Include="GameObjects\PreviewCharacter.h" />
     <ClInclude Include="Utils\MyString.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="GameObjects\YellowBaseBall.h" />
     <ClInclude Include="Player2.h" />
     <ClInclude Include="rapidcsv.h" />
     <ClInclude Include="Scenes\SceneAnimationTool.h" />
@@ -127,5 +128,8 @@
     <ClInclude Include="rapidjson\uri.h" />
     <ClInclude Include="rapidjson\writer.h" />
     <ClInclude Include="GameObjects\WindEffect.h" />
+    <ClInclude Include="GameObjects\BaseBall.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="PickupItem.h" />
   </ItemGroup>
 </Project>
