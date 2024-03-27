@@ -136,7 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BossTable.cpp" />
+    <ClCompile Include="DataTables\BossTable.cpp" />
     <ClCompile Include="ComboCommands.cpp" />
     <ClCompile Include="GameObjects\Bat.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
@@ -154,13 +154,13 @@
     <ClCompile Include="GameObjects\InputField.cpp" />
     <ClCompile Include="GameObjects\PreviewCharacter.cpp" />
     <ClCompile Include="GameObjects\BaseBall.cpp" />
-    <ClCompile Include="Item.cpp" />
-    <ClCompile Include="PickupItem.cpp" />
+    <ClCompile Include="GameObjects\Item.cpp" />
+    <ClCompile Include="GameObjects\PickupItem.cpp" />
     <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="Utils\MyString.cpp" />
     <ClCompile Include="Scenes\SceneAnimationTool.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Player2.cpp" />
+    <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameObjects\Player2.cpp" />
     <ClCompile Include="Scenes\SceneDev1.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\Stage1.cpp" />
@@ -186,7 +186,7 @@
     <ClCompile Include="GameObjects\WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BossTable.h" />
+    <ClInclude Include="DataTables\BossTable.h" />
     <ClInclude Include="ComboCommands.h" />
     <ClInclude Include="GameObjects\Bat.h" />
     <ClInclude Include="GameObjects\Button.h" />
@@ -206,8 +206,8 @@
     <ClInclude Include="GameObjects\InputField.h" />
     <ClInclude Include="GameObjects\PreviewCharacter.h" />
     <ClInclude Include="GameObjects\BaseBall.h" />
-    <ClInclude Include="Item.h" />
-    <ClInclude Include="PickupItem.h" />
+    <ClInclude Include="GameObjects\Item.h" />
+    <ClInclude Include="GameObjects\PickupItem.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="rapidjson\document.h" />
@@ -248,8 +248,8 @@
     <ClInclude Include="rapidjson\writer.h" />
     <ClInclude Include="Scenes\SceneDevBoss.h" />
     <ClInclude Include="Utils\MyString.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Player2.h" />
+    <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\Player2.h" />
     <ClInclude Include="rapidcsv.h" />
     <ClInclude Include="Scenes\SceneAnimationTool.h" />
     <ClInclude Include="Scenes\SceneDev1.h" />
