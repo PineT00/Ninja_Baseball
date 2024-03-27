@@ -198,6 +198,10 @@ void Player::Update(float dt)
 		hitTime = 0.2f;
 		SetStatus(Status::isHitted);
 	}
+	if (!isGrip)
+	{
+		catchedEnemy = nullptr;
+	}
 
 	switch (currStatus)
 	{
@@ -368,6 +372,7 @@ void Player::UpdateIdle(float dt)
 			animator.Play("Animations/player/player_Grip.csv");
 			isGrip = true;
 			enemy->HoldAction();
+			catchedEnemy = enemy;
 			SetStatus(Status::isGrip);
 		}
 	}
@@ -604,6 +609,8 @@ void Player::UpdateGrip(float dt)
 	{
 		SetGripBox();
 		animator.Play("Animations/player/player_GripAttack1.csv");
+		catchedEnemy->OnDamage(20, 0);
+		gripAttackCount += 1;
 		gripTime = 2.f;
 		gripAttackCount += 1;
 	}
@@ -615,6 +622,7 @@ void Player::UpdateGrip(float dt)
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
 		gripTime = 2.f;
+		catchedEnemy = nullptr;
 		SetStatus(Status::isIdleWalk);
 	}
 
@@ -624,8 +632,11 @@ void Player::UpdateGrip(float dt)
 		gripAttackCount = 0;
 		animator.Play("Animations/player/player_Idle.csv");
 		gripTime = 2.f;
+		catchedEnemy = nullptr;
 		SetStatus(Status::isIdleWalk);
 	}
+
+
 }
 
 void Player::UpdateGetHit(float dt)

@@ -5,9 +5,6 @@
 class ComboCommands;
 class SceneDev1;
 class Player2;
-class WindyPlane;
-class YellowBaseBall;
-class Enemy2;
 
 class Player :
 	public SpriteGo
@@ -59,6 +56,8 @@ public:
 	int hitWay = 0;
 
 protected:
+
+	Enemy* catchedEnemy = nullptr;
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
 
