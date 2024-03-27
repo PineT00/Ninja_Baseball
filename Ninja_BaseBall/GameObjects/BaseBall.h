@@ -13,8 +13,8 @@ public:
        BLUE,
        GREEN,
    };
-    BaseBall(BaseBallColor color);
-    static BaseBall* Create(BaseBallColor color);
+    BaseBall(BaseBallColor color,  const std::string& name);
+    static BaseBall* Create(BaseBallColor color,const std::string& stageName);
 protected:
    void Init() override; 
    void SetState(EnemyState Enemystate, int damageCount) override;

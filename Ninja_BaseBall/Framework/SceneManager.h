@@ -27,14 +27,14 @@ protected:
 
 	std::vector<Scene*> scenes; 
 
-	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
+	SceneIDs startScene = SceneIDs::SceneAnimationTool;
 
 	//SceneIDs startScene = SceneIDs::SceneDevBoss;
-	SceneIDs startScene = SceneIDs::SceneDev1;
+	//SceneIDs startScene = SceneIDs::SceneDev1;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 
-	std::vector<std::string> TextureResourceNames = { };
+	std::vector<std::string> TextureResourceNames = {};
 	std::vector<std::string> FontResourceNames = {};
 	std::vector<std::string> SoundResourceNames = {};
 
