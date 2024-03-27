@@ -202,12 +202,7 @@ void WindyPlane::Update(float dt)
 		break;
 	}
 
-	// 변경 필요
-	if (player->isGrip)
-	{
-		HoldAction();
-	}
-	else if(!player->isGrip && currentStatus == WindyPlaneStatus::HOLD)
+	if(!player->isGrip && currentStatus == WindyPlaneStatus::HOLD)
 	{
 		currentSpeed = speed;
 	}
@@ -492,6 +487,7 @@ void WindyPlane::OnDie()
 void WindyPlane::OnDieEvent()
 {
 	isAlive = false;
+	isDead = true;
 	SetActive(false);
 }
 
