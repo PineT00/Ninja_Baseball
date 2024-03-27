@@ -93,7 +93,21 @@ void Scene::UpdateEvent(const sf::Event& event)
 			{
 				if (event.text.unicode < 128)
 				{
-					dynamic_cast<InputField*>(obj)->AddText(static_cast<char>(event.text.unicode));
+					InputField* inputField = dynamic_cast<InputField*>(obj);
+
+					if (event.text.unicode == 8)
+					{
+						inputField->SetText(inputField->GetText().substr(0, inputField->GetText().size() - 1));
+					}
+					else if (event.text.unicode == 15)
+					{
+						inputField->SetFocused(false);
+						continue;
+					}
+					else
+					{
+						inputField->AddText(static_cast<char>(event.text.unicode));
+					}
 				}
 			}
 		}
@@ -104,7 +118,21 @@ void Scene::UpdateEvent(const sf::Event& event)
 			{
 				if (event.text.unicode < 128)
 				{
-					dynamic_cast<InputField*>(obj)->AddText(static_cast<char>(event.text.unicode));
+					InputField* inputField = dynamic_cast<InputField*>(obj);
+
+					if (event.text.unicode == 8)
+					{
+						inputField->SetText(inputField->GetText().substr(0, inputField->GetText().size() - 1));
+					}
+					else if (event.text.unicode == 13)
+					{
+						inputField->SetFocused(false);
+						continue;
+					}
+					else
+					{
+						inputField->AddText(static_cast<char>(event.text.unicode));
+					}
 				}
 			}
 		}
@@ -198,7 +226,7 @@ void Scene::Draw(sf::RenderWindow& window)
 
 	sf::Vector2u windowSize = window.getSize();
 	// 창의 비율을 유지하면서 크기를 조절
-	float aspectRatio = 640.f / 480.f; // 원하는 가로 세로 비율
+	float aspectRatio = 960.f / 720.f; // 원하는 가로 세로 비율
 	if (windowSize.x / static_cast<float>(windowSize.y) > aspectRatio)
 	{
 		window.setSize(sf::Vector2u(static_cast<unsigned int>(windowSize.y * aspectRatio), windowSize.y));
@@ -445,3 +473,4 @@ void Scene::SetStatus(GameStatus newStatus)
 		break;
 	}
 }
+

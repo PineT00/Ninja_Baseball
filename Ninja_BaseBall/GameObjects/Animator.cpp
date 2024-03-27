@@ -22,8 +22,15 @@ void Animator::Update(float dt)
 	accumTime = 0.f;
 	currentFrame += addFrame;
 
-	if (currentFrame == totalFrame)
+
+
+	if (currentFrame >= totalFrame)
 	{
+		currentFrame = 0; 
+		if (currentClip->OnClipEnd) {
+			currentClip->OnClipEnd(); 
+		}
+		
 		if (!queue.empty())
 		{
 			std::string id = queue.front();
@@ -36,6 +43,7 @@ void Animator::Update(float dt)
 		{
 		case AnimationLoopType::Single:
 			currentFrame = totalFrame - 1;
+
 			break;
 		case AnimationLoopType::Loop:
 			currentFrame = 0;
@@ -56,6 +64,10 @@ void Animator::Update(float dt)
 			break;
 		}
 	}
+	else
+	{
+		isCompleteClip = false;
+	}
 
 	for (auto& event : eventList)
 	{
@@ -65,14 +77,31 @@ void Animator::Update(float dt)
 			{
 				event.action();
 			}
+			else if (currentFrame == totalFrame - 1 && !isCompleteClip)
+			{
+				auto find = completeEvent.find(currentClip->id);
+				if (find == completeEvent.end())
+				{
+					// No completeEvent
+					continue;
+				}
+
+				isCompleteClip = true; 
+				find->second();
+			}
 		}
 	}
+	
 
-	SetFrame(currentClip->frames[currentFrame]);
+	if (currentClip->GetTotalFrame() >= 1)
+	{
+		SetFrame(currentClip->frames[currentFrame]);
+	}
 }
 
 void Animator::Play(const std::string& clipId, bool clearQueue)
 {
+	//std::cout << clipId << std::endl;	
 	if (clearQueue)
 	{
 		while (!queue.empty())
@@ -91,9 +120,70 @@ void Animator::Play(const std::string& clipId, bool clearQueue)
 	SetFrame(currentClip->frames[currentFrame]);
 }
 
+// TODO : 미리보기 작업중
+void Animator::Play(std::vector<sf::FloatRect>& selectedAreas, 
+	std::vector<Origins>& selectedAreasPivot, std::vector<sf::Vector2f>& customPivot, InputField* inputfieldFPS,
+	 AnimationLoopType& loopType, const std::wstring& atlasPath, bool clearQueue)
+{
+	if (clearQueue)
+	{
+		while (!queue.empty())
+		{
+			queue.pop();
+		}
+	}
+
+	addFrame = 1;
+	isPlaying = true;
+	accumTime = 0.f;
+	currentClip->fps = std::stoi(inputfieldFPS->GetText());
+
+	for (int i = 0; i < selectedAreas.size(); ++i)
+	{
+		currentClip->frames.push_back(
+			{
+			Utils::MyString::WideStringToString(atlasPath),
+			{
+				(int)selectedAreas[i].left,
+				(int)selectedAreas[i].top,
+				(int)selectedAreas[i].width,
+				(int)selectedAreas[i].height,
+			},
+			selectedAreasPivot[i],
+			customPivot[i]
+			});
+	}
+	currentClip->id = Utils::MyString::WideStringToString(atlasPath);
+	currentClip->loopType = loopType;
+	currentFrame = 0;
+	totalFrame = selectedAreas.size();
+	clipDuration = 1.f / currentClip->fps;
+	SetFrame(currentClip->frames[currentFrame]);
+}
+
 void Animator::PlayQueue(const std::string& clipId)
 {
 	queue.push(clipId);
+}
+
+void Animator::Play(const std::string& clipId, int startFrame, bool clearQueue)
+{
+	if (clearQueue)
+	{
+		while (!queue.empty())
+		{
+			queue.pop();
+		}
+	}
+
+	addFrame = 1;
+	isPlaying = true;
+	accumTime = 0.f;
+	currentClip = ANIMATION_CLIP_MANAGER.GetResource(clipId);
+	currentFrame = startFrame;
+	totalFrame = currentClip->GetTotalFrame();
+	clipDuration = 1.f / currentClip->fps;
+	SetFrame(currentClip->frames[currentFrame]);
 }
 
 void Animator::Stop()
@@ -103,9 +193,17 @@ void Animator::Stop()
 
 void Animator::SetFrame(const AnimationFrame& frame)
 {
-	Utils::Origin::SetOrigin(*target, frame.pivot);
-	target->setTexture(frame.GetTexture());
+	target->setTexture(frame.GetTexture(), true);
 	target->setTextureRect(frame.textureCoord);
+
+	if (frame.pivot == Origins::CUSTOM)
+	{
+		target->setOrigin(frame.customPivot); 
+	}
+	else
+	{
+		Utils::Origin::SetOrigin(*target, frame.pivot);
+	}
 }
 
 void Animator::AddEvent(const std::string& clipId, int frame, std::function<void()> action)
@@ -116,6 +214,46 @@ void Animator::AddEvent(const std::string& clipId, int frame, std::function<void
 void Animator::ClearEvent()
 {
 	eventList.clear();
+}
+
+void Animator::ClearFrames()
+{
+	if (currentClip->frames.empty()) return;
+	currentClip->frames.clear();
+	currentFrame = -1;
+}
+
+
+void Animator::SetClipEndEvent(const std::string& clipId, std::function<void()> event)
+{
+	auto clip = ANIMATION_CLIP_MANAGER.GetResource(clipId);
+	if (clip != nullptr)
+	{
+		clip->OnClipEnd = event;
+	}
+	eventList.push_back({ clipId, clip->GetTotalFrame() - 1, event });
+}
+void Animator::AddCompleteFrameEvent(const std::string& clipId, int frames, std::function<void()> action)
+{
+	auto find = completeEvent.find(clipId);
+	if (find != completeEvent.end())
+	{
+		// when complete Event exist replace complete Event
+		ClearCompleteEvent();
+	}
+	// when complete Event not exist
+	completeEvent[clipId] = action;
+}
+
+void Animator::ClearCompleteEvent()
+{
+	auto find = completeEvent.find(currentClip->id);
+
+	if (find != completeEvent.end())
+	{
+		completeEvent[currentClip->id] = NULL;
+	}
+
 }
 
 bool AnimationClip::loadFromFile(const std::string& filePath)
@@ -136,7 +274,8 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 				std::stoi(row[3]),
 				std::stoi(row[4]),
 			},
-			((Origins)std::stoi(row[5]))
+			((Origins)std::stoi(row[5])),
+			{std::stof(row[6]), std::stof(row[7])}
 			});
 	}
 

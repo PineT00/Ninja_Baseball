@@ -1,0 +1,17 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong)
+,5,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,0,0,501.469,429.397,9,324.046,424.643
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,515.907,0,485.149,426.642,9,309.276,424.643
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,1017.54,0,484.649,427.142,9,307.278,424.144
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,1520.18,0,483.15,428.141,9,307.278,425.143
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,2003.33,0,500.138,426.142,9,325.265,424.644
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,2503.47,0,498.639,428.641,9,327.763,425.143
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,3003.61,0,500.638,428.141,9,326.264,424.144
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,3505.24,0,499.638,426.642,9,327.024,424.61
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,4005.63,0,500.894,426.541,9,327.234,424.649
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,4507.47,0,500.848,426.277,9,328.057,425.551
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,5008.74,0,499.87,427.541,9,326.048,425.041
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,5509.19,0,500.978,427.247,9,326.535,424.457
+graphics/4_Boss/boss_gun_ready(no_wing).bmp,6010.79,0,501.118,425.96,9,325.437,425.148

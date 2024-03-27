@@ -1,0 +1,19 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,15,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/bat/tbat_attack.bmp,0,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,600,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,1200,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,1800,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,2400,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,3000,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,3600,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,4200,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,4800,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,5400,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,6000,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,6600,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,7200,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,7800,0,600,450,7,0,0
+graphics/3_Enemy/bat/tbat_attack.bmp,8400,0,600,450,7,0,0

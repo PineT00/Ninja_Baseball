@@ -1,0 +1,6 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,30,1,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/2_Player/red/red_dead.png,0,0,337.373,284.848,7,0,0
+graphics/2_Player/red/red_dead.png,0,586.227,335.707,275.44,7,0,0

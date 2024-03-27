@@ -3,6 +3,9 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
 #include "SceneDev1.h"
+#include "SceneAnimationTool.h"
+#include "TestScene.h"
+#include "SceneDevBoss.h"
 
 SceneManager::~SceneManager()
 {
@@ -17,7 +20,10 @@ void SceneManager::Init()
 
 	scenes.push_back(new SceneTitle(SceneIDs::SceneTitle));
 	scenes.push_back(new SceneGame(SceneIDs::SceneGame));
+	scenes.push_back(new SceneAnimationTool(SceneIDs::SceneAnimationTool));
 	scenes.push_back(new SceneDev1(SceneIDs::SceneDev1));
+	scenes.push_back(new TestScene(SceneIDs::TestScene));
+	scenes.push_back(new SceneDevBoss(SceneIDs::SceneDevBoss));
 
 	for (auto scene : scenes)
 	{
@@ -64,6 +70,11 @@ void SceneManager::ChangeScene(SceneIDs id)
 
 bool SceneManager::Update(float dt)
 {
+	if (InputManager::GetKeyDown(sf::Keyboard::P))
+	{
+		isDeveloperMode = !isDeveloperMode;
+	}
+
 	scenes[(int)currentScene]->Update(dt);
 
 	if (nextScene != SceneIDs::None)

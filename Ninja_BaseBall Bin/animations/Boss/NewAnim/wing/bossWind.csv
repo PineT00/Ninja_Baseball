@@ -1,0 +1,10 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,5,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/4_Boss/boss_wind.bmp,0,0,575.492,429.957,9,294.616,426.144
+graphics/4_Boss/boss_wind.bmp,575.915,0,562.6,428.686,9,294.856,426.568
+graphics/4_Boss/boss_wind.bmp,1139.36,0,589.713,429.109,9,307.989,425.297
+graphics/4_Boss/boss_wind.bmp,1729.92,0,474.905,429.533,9,294.009,427.839
+graphics/4_Boss/boss_wind.bmp,2299.3,0,477.871,429.11,9,302.058,426.568
+graphics/4_Boss/boss_wind.bmp,2883.08,0,471.516,429.11,9,295.518,426.203

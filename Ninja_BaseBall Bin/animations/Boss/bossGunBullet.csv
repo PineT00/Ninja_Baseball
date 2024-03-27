@@ -1,0 +1,11 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,5,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/monster-Boss.png,0,9103.6,36.61,43.0625,9,14.7617,38.3135
+graphics/monster-Boss.png,55.6085,9043.12,57.9454,104.491,9,29.7643,100.059
+graphics/monster-Boss.png,131.064,8948.64,55.6314,198.419,9,27.8292,194.363
+graphics/monster-Boss.png,201.155,8948.82,53.8792,197.912,9,27.628,193.788
+graphics/monster-Boss.png,271.899,8949.99,58.1744,199.881,9,29.7751,192.854
+graphics/monster-Boss.png,348.232,8958.14,51.418,190.981,9,26.4021,183.967
+graphics/monster-Boss.png,427.314,8970.7,36.8831,178.269,9,18.0644,172.555

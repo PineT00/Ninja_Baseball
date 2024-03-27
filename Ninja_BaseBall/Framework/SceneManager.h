@@ -8,7 +8,10 @@ enum class SceneIDs
 	None = -1,
 	SceneTitle,
 	SceneGame,
+	SceneAnimationTool,
 	SceneDev1,
+	TestScene,
+	SceneDevBoss,
 	COUNT,
 };
 
@@ -23,13 +26,20 @@ protected:
 	SceneManager& operator=(SceneManager&&)		 = delete;
 
 	std::vector<Scene*> scenes; 
-	SceneIDs startScene = SceneIDs::SceneDev1;
+
+	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
+
+	//SceneIDs startScene = SceneIDs::SceneDevBoss;
+	
+	SceneIDs startScene = SceneIDs::SceneTitle;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 
-	std::vector<std::string> TextureResourceNames = { };
+	std::vector<std::string> TextureResourceNames = {};
 	std::vector<std::string> FontResourceNames = {};
 	std::vector<std::string> SoundResourceNames = {};
+
+	bool isDeveloperMode = false;
 
 public:
 
@@ -42,6 +52,8 @@ public:
 	Scene* GetCurrentScene() { return scenes[(int)currentScene]; }
 	Scene* GetScene(SceneIDs id) { return scenes[(int)id]; }
 	
+	bool GetDeveloperMode() { return isDeveloperMode; }
+
 	void LoadAllResources();
 	void ChangeScene(SceneIDs id);
 	bool Update(float dt);

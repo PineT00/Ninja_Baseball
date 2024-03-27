@@ -1,0 +1,8 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,4,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/bat/tbat_damaged.bmp,119.372,250.033,206.997,198.911,9,150.396,192.443
+graphics/3_Enemy/bat/tbat_damaged.bmp,817.987,214.455,160.099,236.106,9,84.0926,231.255
+graphics/3_Enemy/bat/tbat_damaged.bmp,1476.17,254.884,236.106,195.677,9,56.6007,189.208
+graphics/3_Enemy/bat/tbat_damaged.bmp,2021.16,214.455,156.865,237.723,9,80.8582,232.872

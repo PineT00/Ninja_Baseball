@@ -1,0 +1,8 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,7,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/3_Enemy/baseball/bBaseball_kick.bmp,20,120,268.333,178.333,9,138.333,175
+graphics/3_Enemy/baseball/bBaseball_kick.bmp,378.333,73.3333,281.667,225,9,146.667,218.333
+graphics/3_Enemy/baseball/bBaseball_kick.bmp,738.333,64.9998,306.667,236.667,9,165,231.667
+graphics/3_Enemy/baseball/bBaseball_kick.bmp,1086.67,98.3333,281.667,201.667,9,150,196.667

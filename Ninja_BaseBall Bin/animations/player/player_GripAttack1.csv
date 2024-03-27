@@ -1,0 +1,7 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,6,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/2_Player/red/red_gripAttack.bmp,501.082,0,221.434,229.14,9,85.9309,221.576
+graphics/2_Player/red/red_gripAttack.bmp,501.082,0,221.434,229.14,9,85.9309,221.576
+graphics/2_Player/red/red_gripAttack.bmp,501.082,0,221.434,229.14,9,85.9309,221.576

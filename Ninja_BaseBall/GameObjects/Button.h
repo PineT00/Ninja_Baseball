@@ -1,19 +1,27 @@
 #pragma once
 #include "SpriteGo.h"
+#include "Animator.h"
 
 class TextGo;
-class SceneUpgrade;
+class SceneAnimationTool;
+class PreviewCharacter;
 
 class Button : public SpriteGo
 {
 public :
 	enum class ButtonIdentifier
 	{
-		StartGame,
-		PowerUp,
-		ExtraLife,
-		Bomb,
+		loadAtlas,
+		play,
+		stop,
+		save,
+		loop,
+		pivot,
+		preload,
+		autoslice,
+		loadcsv,
 	};
+	static std::wstring emptyWstring;
 
 protected:
 	Button(const Button&) = delete;
@@ -21,9 +29,14 @@ protected:
 	Button& operator=(const Button&) = delete;
 	Button& operator=(Button&&) = delete;
 
+	SceneAnimationTool* sceneAnimationTool = nullptr;
 	ButtonIdentifier buttonIdentifier;
+	PreviewCharacter* obj = nullptr;
 
-	SceneUpgrade* sceneUpgrade = nullptr;
+	std::vector<int> intValues;
+	std::wstring stringValue;
+	std::wstring pathFormat = L"D:/Kyungil/SFML/Ninja_Baseball/Ninja_BaseBall Bin/";
+
 	sf::Text buttonText;
 	sf::RectangleShape shape;
 
@@ -46,6 +59,8 @@ public:
 	void SetOrigin(Origins preset)			  override;
 	void SetOrigin(const sf::Vector2f& origin)override;
 
+	void SetText(const std::string& label);
+
 	void SetButton(sf::Vector2f size, sf::Vector2f position, sf::Color color, Origins origin);
 	void SetButtonText(const sf::Font& font, const std::string& label, size_t labelSize, sf::Color labelColor, sf::Vector2f position, Origins origin);
 
@@ -54,12 +69,19 @@ public:
 	void SetButtonColorFocused(sf::Color color);
 	void SetButtonColorPressed(sf::Color color);
 
-	//void ExecuteButtonAction();
+	void ExecuteButtonAction(ButtonIdentifier id);
 
-	//void UpgradePowerLevel();
-	//void UpgradeExtraLifes();
-	//void UpgradeExtraBombs();
-	//void SaveGold();
+	std::wstring OpenFileDialog(std::wstring& filePath);
+	void SetStringValue(std::wstring& wstr) { stringValue = wstr; }
+	void SetIntValues(const std::vector<int>& intValues) { this->intValues = intValues; }
+
+	void SaveSelectedAreasWithDialog();
+	void SetFramePivot();
+	void SetLoopType();
+	void PlayPreView(PreviewCharacter* obj);
+	void StopPreView(PreviewCharacter* obj);
+	void AutoSlice(const std::vector<int> intValues);
+	void LoadCsv();
 
 	sf::FloatRect GetLocalBounds() override;
 	sf::FloatRect GetGlobalBounds() override;

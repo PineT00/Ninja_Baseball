@@ -51,8 +51,30 @@ enum class Languages
 	English,
 };
 
-enum class PlayerType
+enum class BossType
 {
-	F_4,
-	F_117
+	WINDYPLANE,
+};
+
+enum class BossPartsStatus 
+{
+	Wing, 
+	NoWing, 
+	NoProp, 
+	OneArm, 
+	NoArm, 
+	UNDEFINED
+};
+
+enum class EnemyAttackType
+{
+	Normal,
+	ThrowBack,
+	Homerun
+};
+
+enum class EnemyType
+{
+	Normal,
+	Boss
 };
