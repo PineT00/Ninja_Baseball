@@ -14,7 +14,7 @@
 #include "Bat.h"
 #include "Item.h"
 #include "PickupItem.h"
-
+#include <functional>
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -37,6 +37,7 @@ void SceneDev1::Init()
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
     stage = new Stage1();
+    stage->SetSortLayer(-1);
     AddGameObject(stage);
 
     // Player
@@ -49,8 +50,8 @@ void SceneDev1::Init()
     SpawnEnemy("Stage2", { 1413.f, 500.f});
     SpawnEnemy("Stage3", { 2332.f, 500.f });
     SpawnEnemy("Stage4", { 3230.f, 500.f });
-    SpawnEnemy("Stage5", { 3230.f, 500.f });
-    SpawnEnemy("Stage6", { 3230.f, 500.f });
+    SpawnEnemy("Stage5", { 3330.f, 500.f });
+    SpawnEnemy("Stage6", { 3330.f, 500.f });
     SpawnEnemy("Stage7", { 3538.f, -1020.f });
     
     
@@ -506,6 +507,10 @@ void SceneDev1::UpdatePause(float dt)
 
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
+    gameObjects.sort([](GameObject* lhs, GameObject* rhs){
+        return GameObject::CompareDrawOrder(lhs, rhs);
+        });
+    
 	Scene::Draw(window);
 }
 
