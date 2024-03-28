@@ -32,19 +32,8 @@ protected:
     Animator enemyAnimator;
 
     bool isCatch=false;
-    bool flicker=false;
+
     sf::Vector2f playerPos;
-
-    float flickerIntensity=(std::sin(deadTimer * 20 )+1 )/2;
-    float baseIntensity=0.5f;
-    float intensity=baseIntensity + flickerIntensity * (1-baseIntensity);
-
-    sf::Color flickerColor=sf::Color(
-        255 * intensity,
-        255 * intensity,
-        255 * intensity,
-        255
-    );
 
     sf::RectangleShape damageBox;
     sf::RectangleShape attackBox;
@@ -55,13 +44,13 @@ protected:
     float dashSpeed = 400.f;
 
     float attackTimer = 0.f;
-    float attackCooldown = 4.f;
+    float attackCooldown = 2.f;
     float dashTimer = 0.f;
     float dashCooldown = 3.f;
     float hurtTimer=0.f;
-    float hurtDuration=1.5f;
+    float hurtDuration=1.f;
     float deadTimer=0.f;
-    float deadDuration=2.5f;
+    float deadDuration=2.f;
 
     float normalAttackDistance = 175.f;
     float dashMaxDistance=300.f;
@@ -73,6 +62,7 @@ protected:
     
     bool isAttackPlay = false;
 
+    int randX = 0;
 
     int damageCount;
 
