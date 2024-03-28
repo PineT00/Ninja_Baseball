@@ -91,7 +91,8 @@ void Player::OnDamage(int damage, int type, float positionX)
 	{
 		getHit = true;
 		hp -= damage;
-
+		SOUND_MANAGER.PlaySfx("soundEffect/weakHit.mp3");
+		
 		if (positionX > GetPosition().x)
 		{
 			hitWay = -1;
@@ -513,6 +514,7 @@ void Player::UpdateJumping(float dt)
 			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 			{
 				enemy->OnDamage(20, normalAttack);
+				SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
 			}
 		}
 		animator.Play("Animations/player/player_JumpAttackSK.csv"); //Á¡ÇÁ¿·Â÷±â
@@ -563,13 +565,19 @@ void Player::UpdateDash(float dt)
 void Player::UpdateDashAttack(float dt)
 {
 	enemyList = sceneDev1->GetEnemyList();
-
+	bool demageDealt = false;
 	for (auto& enemy : enemyList)
 	{
 		if (enemy == nullptr) continue;
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
-			enemy->OnDamage(20, normalAttack);
+			if (!demageDealt)
+			{
+				enemy->OnDamage(20, normalAttack);
+				SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
+				bool demageDealt = true;
+			}
+
 		}
 	}
 
@@ -600,6 +608,8 @@ void Player::UpdateAttack(float dt)
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
 			enemy->OnDamage(20, normalAttack);
+			SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
+
 			score += 10;
 
 			if (!demageDealt)
@@ -635,8 +645,7 @@ void Player::UpdateAttack(float dt)
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");
-		SOUND_MANAGER.PlaySfx("soundEffect/playback.mp3");
-		//SOUND_MANAGER.PlaySfx("soundEffect/shortHit4.mp3");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortWind.mp3");
 		normalAttack = 0;
 		break;
 	}
@@ -660,7 +669,9 @@ void Player::UpdateKick(float dt)
 		//isAttack&&
 		if (isAttack && attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
+
 			enemy->OnDamage(20, 5);
+			SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
 			isAttack = false;
 		}
 	}
