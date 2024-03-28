@@ -308,7 +308,7 @@ void Enemy::OnDamage(int damage,int count)
         if(health<=0)
         {
             SetState(EnemyState::DEAD);
-            //isDead = true;
+            isDead = true;
         }
         else
         {
