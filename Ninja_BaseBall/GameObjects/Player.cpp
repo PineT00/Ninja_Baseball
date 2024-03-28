@@ -580,7 +580,7 @@ void Player::UpdateAttack(float dt)
 	{
 		if (enemy == nullptr) continue;
 		//isAttack&&
-		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
+		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
 			enemy->OnDamage(20,-1);
 			score += 10;
@@ -591,7 +591,7 @@ void Player::UpdateAttack(float dt)
 	if(demageDealt)
 	{
 		normalAttack += sceneDev1->GetNormalAttack()+1;
-		sceneDev1->SetNormalAttack(normalAttack);	
+		sceneDev1->SetNormalAttack(normalAttack);
 	}
 	
 	switch (normalAttack)
