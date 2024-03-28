@@ -89,7 +89,6 @@ public:
 
 	void Init() override;
 	void Release() override;
-	virtual void Reset();
 	void Enter() override;
 	void Exit() override;
 	void Update(float dt) override;

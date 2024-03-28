@@ -43,9 +43,6 @@ void UiHUD::Init()
 	uiAnimator.SetTarget(&player1_Portrait);
 	gameOverAnimator.SetTarget(&gameOverScreen);
 
-
-
-
 	//sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetScene(SceneIDs::SceneGame));
 }
 
@@ -79,7 +76,8 @@ void UiHUD::Reset()
 	player1_prevHP = player->maxHp;
 
 	gameOverScreen.setPosition(winSizeF/2.f);
-
+	gameOverCount = 10;
+	gameOver = false;
 	gameOverTimer.Set(font, std::to_string(gameOverCount), countTextSize, sf::Color::Red);
 	gameOverTimer.SetOrigin(Origins::MC);
 	gameOverTimer.SetPosition(winSizeF / 2.f);
@@ -105,29 +103,29 @@ void UiHUD::Update(float dt)
 		timer -= dt;
 		if (timer <= 0.f)
 		{
-			timer = 3.f;
+			timer = 0.5f;
 			gameOverCount -= 1;
 		}
 
-		gameOverTimer.SetText(std::to_string(gameOverCount));
+		gameOverTimer.SetText(std::to_string(std::max(0, gameOverCount)));
 	}
 
 
+	float currentHp = player->hp;
+	if (currentHp < 0) currentHp = 0;
+	float maxHp = player->maxHp;
+	sf::Vector2u rectSize = player1_hpBar.GetTexture()->getSize();
+
 	if (player->currStatus == Player::Status::isHitted)
 	{
-		float currentHp = std::max(0, player->hp);
-		float maxHp = player->maxHp;
-		sf::Vector2u rectSize = player1_hpBar.GetTexture()->getSize();
-
 		uiAnimator.Play("animations/ui/player1_PortraitHurt.csv");
-		player1_hpBar.SetTextureRect({ 0,0,(int)((currentHp / maxHp) * rectSize.x), (int)rectSize.y });
 	}
 	else
 	{
 		uiAnimator.PlayQueue("animations/ui/player1_Portrait.csv");
 	}
+	player1_hpBar.SetTextureRect({ 0,0,(int)((currentHp / maxHp) * rectSize.x), (int)rectSize.y });
 
-	// 스코어 들어오면 변경 필요
 	score = player->score;
 	life = player->life;
 	player1_Score.Set(font, std::to_string(score), 30, sf::Color::Yellow);
@@ -166,14 +164,19 @@ void UiHUD::Draw(sf::RenderWindow& window)
 		window.draw(gameOverScreen);
 		gameOverTimer.Draw(window);
 	}
-
-
 }
 
 void UiHUD::GameOverCount()
 {
-	timer = 3.f;
+	// 원래 3초
+	timer = 0.5f;
 	gameOver = true;
 	gameOverTimer.SetActive(true);
 	gameOverAnimator.Play("animations/ui/gameOverScreen.csv");
+}
+
+void UiHUD::ResetGameOver()
+{
+	gameOver = false;
+	gameOverCount = 10;
 }

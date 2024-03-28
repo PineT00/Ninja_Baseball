@@ -25,7 +25,7 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
-sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½!
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿?
 {
     stageRect = stage->groundBound.getGlobalBounds();
     return Utils::MyMath::Clamp(point, stageRect);
@@ -50,25 +50,7 @@ void SceneDev1::Init()
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
-
     
-    
-
-    SpawnEnemy("Stage1", { 1250.f, 500.f });
-    SpawnEnemy("Stage2", { 1413.f, 500.f});
-    SpawnEnemy("Stage3", { 2332.f, 500.f });
-    SpawnEnemy("Stage4", { 3230.f, 500.f });
-    SpawnEnemy("Stage5", { 3330.f, 500.f });
-    SpawnEnemy("Stage6", { 3330.f, 500.f });
-    SpawnEnemy("Stage7", { 3538.f, -1020.f });
-    
-    
-    // Boss
-    windyPlane = new WindyPlane();
-    enemies.push_back(windyPlane);
-    windyPlane->SetActive(false);
-    AddGameObject(windyPlane);
-
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
@@ -90,23 +72,20 @@ void SceneDev1::Release()
     Scene::Release();
 }
 
-void SceneDev1::Reset()
-{
-    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
-}
-
 void SceneDev1::Enter()
 {
-	Scene::Enter();
     status = GameStatus::Game;
-    Reset();
+    xMax = 500.f; //Ä«¸Þ¶ó ½ÃÀÛ ÁöÁ¡
+    worldView.setCenter(0, 360);
 
+    currStage = 0;
+    stageRect = stage->groundBound.getGlobalBounds(); //½ÃÀÛ½Ã ÀÌµ¿°¡´É¹Ù´Ú
     xMax = 500.f; //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     stageRect = stage->groundBound.getGlobalBounds(); //ï¿½ï¿½ï¿½Û½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½É¹Ù´ï¿½
-    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
     player->SetActive(false);
+    isFighting = false;
 
     camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
     camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);
@@ -114,11 +93,51 @@ void SceneDev1::Enter()
     camCenter4 = stage->stageBound1_4.getGlobalBounds().left + (stage->stageBound1_4.getGlobalBounds().width / 2);
     camCenter7 = stage->stageBound1_7.getGlobalBounds().left + (stage->stageBound1_7.getGlobalBounds().width / 2);
     camCenter8 = stage->stageBound1_8.getGlobalBounds().left + (stage->stageBound1_8.getGlobalBounds().width / 2);
+
+
+    SpawnEnemy("Stage1", { 1250.f, 500.f });
+    SpawnEnemy("Stage2", { 1413.f, 500.f });
+    SpawnEnemy("Stage3", { 2332.f, 500.f });
+    SpawnEnemy("Stage4", { 3230.f, 500.f });
+    SpawnEnemy("Stage5", { 3330.f, 500.f });
+    SpawnEnemy("Stage6", { 3330.f, 500.f });
+    SpawnEnemy("Stage7", { 3538.f, -1020.f });
+    windyPlane = new WindyPlane();
+    windyPlane->SetActive(false);
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
+    enemies.push_back(windyPlane);
+    for (auto enemy : enemies)
+    {
+        enemy->Init();
+    }
+    goldBatItem->SetIsPicked(false);
+    goldBatItem->SetActive(false);
+
+    AddGameObject(windyPlane);
+    Scene::Enter();
 }
 
 void SceneDev1::Exit()
 {
 	FRAMEWORK.SetTimeScale(1.f);
+
+    //for (auto& enemy : enemies)
+    //{
+    //    RemoveGameObject(enemy);
+    //}
+    player->Reset();
+    player->life = 1;
+    player->isAlive = true;
+    player->SetPosition({ 350.f, 500.f });
+    hud->Reset();
+    stage->Reset();
+
+
+    for (auto enemy : enemies)
+    {
+		RemoveGameObject(enemy);
+    }
+    enemies.clear();
 
     Scene::Exit();
 }
@@ -168,6 +187,11 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
+	if (!player->GetActive() && player->life == 0)
+	{
+		hud->GameOverCount();
+		SetStatus(GameStatus::GameOver);
+	}
     //if (!player->GetActive() && player->life == 0)
     //{
     //    SetStatus(GameStatus::GameOver);
@@ -240,6 +264,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage1", BaseBallList2);
             for (auto& BaseBall : BaseBallList2)
             {
+                BaseBall->SetPosition({ 1250.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -273,6 +299,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage2", BaseBallList2);
             for (auto& BaseBall : BaseBallList2)
             {
+                BaseBall->SetPosition({ 1413.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -307,6 +335,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage3", BaseBallList3);
             for (auto& BaseBall : BaseBallList3)
             {
+                BaseBall->SetPosition({ 2332.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -339,6 +369,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage4", BaseBallList4);
             for (auto& BaseBall : BaseBallList4)
             {
+                BaseBall->SetPosition({ 3230.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -373,6 +405,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage5", BaseBallList5);
             for (auto& BaseBall : BaseBallList5)
             {
+                BaseBall->SetPosition({ 3330.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -406,6 +440,10 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage6", BaseBallList6);
             for (auto& BaseBall : BaseBallList6)
             {
+
+
+                BaseBall->SetPosition({ 3330.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -438,7 +476,8 @@ void SceneDev1::UpdateGame(float dt)
             std::list <GameObject*> BatList;
             FindAll("BaseBallStage7", BatList);
             for (auto& Bat : BatList)
-            {
+			{
+                Bat->SetPosition({ 3538.f, -1020.f });
                 Bat->SetActive(true);
             }
         }
@@ -507,8 +546,24 @@ void SceneDev1::UpdateGame(float dt)
 
 void SceneDev1::UpdateGameover(float dt)
 {
+    //Bgm Ãß°¡
+    if (player->life <= 0 && !player->GetActive())
+    {
+        if (InputManager::GetKeyDown(sf::Keyboard::Insert))
+        {
+            player->life = 1;
+            player->Reset();
+            hud->ResetGameOver();
+            SetStatus(GameStatus::Game);
+        }
+
+        if (hud->gameOverCount <= 0)
+        {
+            hud->Reset();
+            SCENE_MANAGER.ChangeScene(SceneIDs::SceneTitle);
+        }
+    }
     //Bgm ï¿½ß°ï¿½
-    
 }
 
 void SceneDev1::UpdatePause(float dt)
@@ -722,7 +777,7 @@ void SceneDev1::CameraShake(float dt)
     cameraShakeTime -= dt;
 
     int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
-    if (shakeTimeScaled % 2 == 0) // shakeTimeScaledï¿½ï¿½ Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    if (shakeTimeScaled % 2 == 0) // shakeTimeScaledï¿½ï¿½ Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?
     {
         // Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         worldViewCenter.y -= 0.4;
