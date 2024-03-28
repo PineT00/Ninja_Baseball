@@ -135,11 +135,6 @@ void Player::Init()
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
 
-}
-
-void Player::Reset()
-{
-	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
@@ -169,9 +164,12 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
+}
 
+void Player::Reset()
+{
+	SetActive(true);
 	hp = maxHp;
-
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
@@ -192,9 +190,13 @@ void Player::Reset()
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
 	OnHitEffect.setScale({ 2.f, 2.f });
 
+	isAlive = true;
+
 	combo = new ComboCommands();
 
 	combo->SetCombo();
+
+	getHit = false;
 
 	SetStatus(Status::isIdleWalk);
 }
@@ -770,6 +772,9 @@ void Player::UpdateDead(float dt)
 			SetActive(false);
 		}
 	}
+
+
+
 	position += velocity * dt;
 	SetPosition(position);
 	/////

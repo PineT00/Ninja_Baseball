@@ -70,7 +70,6 @@ void WindyPlane::Reset()
 	health = maxHealth;
 
 	SetOrigin(Origins::BC);
-	SetPosition({ scene->stage->groundBoundBoss.getGlobalBounds().left + scene->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, scene->stage->groundBoundBoss.getGlobalBounds().top + scene->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
 	for (int i = 0; i < EFFECTS_COUNT; ++i)
 	{
@@ -166,10 +165,7 @@ void WindyPlane::Update(float dt)
 				}
 			}
 		}
-		else
-		{
-			statusTimer = 0.f;
-		}
+
 	}
 		break;
 	case BossPartsStatus::OneArm:
@@ -212,6 +208,11 @@ void WindyPlane::Update(float dt)
 	{
 		findTimer = 0.f;
 	}
+
+	// Clamp ºÎºÐ
+	SetPosition(Utils::MyMath::Clamp(position, scene->stage->groundBoundBoss.getGlobalBounds()));
+
+
 	PlayAnimation(currentPartsStatus, currentStatus);
 }
 
