@@ -48,7 +48,7 @@ protected:
     float dashTimer = 0.f;
     float dashCooldown = 3.f;
     float hurtTimer=0.f;
-    float hurtDuration=1.5f;
+    float hurtDuration=1.f;
     float deadTimer=0.f;
     float deadDuration=2.f;
 

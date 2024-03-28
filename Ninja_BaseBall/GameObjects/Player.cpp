@@ -586,18 +586,17 @@ void Player::UpdateAttack(float dt)
 		//isAttack&&
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
-			enemy->OnDamage(20,-1);
+			enemy->OnDamage(20, normalAttack);
 			score += 10;
-			demageDealt = true;
-			if (demageDealt)
+
+			if (!demageDealt)
 			{
 				normalAttack += 1;
 			}
+			demageDealt = true;
 		}
 	}
 
-
-	
 	switch (normalAttack)
 	{
 	case 1:
@@ -619,12 +618,14 @@ void Player::UpdateAttack(float dt)
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");
+		normalAttack = 0;
 		break;
 	}
 
 	attackTimeOn = true;
 	attackTime = 0.3f;
 
+	std::cout << normalAttack << std::endl;
 
 	SetStatus(Status::isIdleWalk);
 }

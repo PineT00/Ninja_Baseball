@@ -300,7 +300,6 @@ sf::FloatRect Enemy::GetDamageBox() const
 void Enemy::OnDamage(int damage,int count)
 {
     damageCount = count;
-    //damageCount=count;
     if(!isDead)
     {
         health-=damage;

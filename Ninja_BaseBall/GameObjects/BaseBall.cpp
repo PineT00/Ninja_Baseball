@@ -39,10 +39,10 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
             break;
         case 5:
             enemyAnimator.Play(animationClipNames[9]);
-            scene->SetNormalAttack(0);
+            player->normalAttack = 0;
         default:
             enemyAnimator.Play(animationClipNames[10]);
-            scene->SetNormalAttack(0);
+            player->normalAttack = 0;
             break;
         }
         break;

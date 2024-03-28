@@ -37,6 +37,7 @@ void SceneDev1::Init()
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
     stage = new Stage1();
+    stage->SetSortLayer(-1);
     AddGameObject(stage);
 
     // Player
