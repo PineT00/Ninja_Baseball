@@ -188,7 +188,7 @@ void WindyPlane::Update(float dt)
 
 		break;
 	case BossPartsStatus::NoArm:
-		if (!player->isGrip)
+		if (!player->isGrip && !isDead)
 		{
 			currentSpeed = speed * 3;
 		}
