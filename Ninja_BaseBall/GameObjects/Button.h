@@ -18,7 +18,6 @@ public :
 		loop,
 		pivot,
 		preload,
-		autoslice,
 		loadcsv,
 	};
 	static std::wstring emptyWstring;
@@ -80,7 +79,6 @@ public:
 	void SetLoopType();
 	void PlayPreView(PreviewCharacter* obj);
 	void StopPreView(PreviewCharacter* obj);
-	void AutoSlice(const std::vector<int> intValues);
 	void LoadCsv();
 
 	sf::FloatRect GetLocalBounds() override;

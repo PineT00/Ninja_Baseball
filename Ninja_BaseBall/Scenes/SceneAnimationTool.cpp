@@ -51,17 +51,6 @@ void SceneAnimationTool::Init()
 	inputfieldFPS->SetOrigin(Origins::ML);
 	AddGameObject(inputfieldFPS, Layers::Ui);
 
-	// TODO : Auto Slice ±â´É
-	inputfieldRow = new InputField("inputfieldfps");
-	inputfieldRow->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
-	inputfieldRow->SetOrigin(Origins::ML);
-	AddGameObject(inputfieldRow, Layers::Ui);
-
-	inputfieldCol = new InputField("inputfieldfps");
-	inputfieldCol->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
-	inputfieldCol->SetOrigin(Origins::ML);
-	AddGameObject(inputfieldFPS, Layers::Ui);
-
 	buttonStop = new Button(Button::ButtonIdentifier::stop, "buttonstop");
 	buttonStop->SetButton({ 30.f,30.f }, { windowSize.x * 0.1f, windowSize.y * 0.5f }, sf::Color::White, Origins::MC);
 	buttonStop->SetButtonText(font, "Stop", 12.f, sf::Color::Black, { windowSize.x * 0.1f, windowSize.y * 0.5f }, Origins::MC);
@@ -77,17 +66,10 @@ void SceneAnimationTool::Init()
 	buttonSaveAnimation->SetButtonText(font, "Save\nAnimation", 15.f, sf::Color::Black, { windowSize.x * 0.75f, windowSize.y * 0.85f }, Origins::MC);
 	AddGameObject(buttonSaveAnimation, Layers::Ui);
 
-	buttonAutoSlice = new Button(Button::ButtonIdentifier::autoslice, "buttonautoslice");
-	buttonAutoSlice->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.35f }, sf::Color::White, Origins::MC);
-	buttonAutoSlice->SetButtonText(font, "Auto Slice", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.35f }, Origins::MC);
-	AddGameObject(buttonAutoSlice, Layers::Ui);
-
-
 	buttonLoadCsv = new Button(Button::ButtonIdentifier::loadcsv, "buttonloadcsv");
 	buttonLoadCsv->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.1f }, sf::Color::White, Origins::MC);
 	buttonLoadCsv->SetButtonText(font, "Load CSV", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.1f }, Origins::MC);
 	AddGameObject(buttonLoadCsv, Layers::Ui);
-
 
 	editorBorder.setOutlineColor(sf::Color::Red);
 	editorBorder.setFillColor(sf::Color::Transparent);
