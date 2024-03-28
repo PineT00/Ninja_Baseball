@@ -77,4 +77,5 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void GameOverCount();
+	void ResetGameOver();
 };

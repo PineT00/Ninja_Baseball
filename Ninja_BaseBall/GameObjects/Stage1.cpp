@@ -20,10 +20,7 @@ void Stage1::Init()
 	stageBack2.SetTexture("graphics/background1-2.png");
 	stageBack3.SetTexture("graphics/background1-3.png");
 
-}
 
-void Stage1::Reset()
-{
 	//스테이지 스프라이트
 	{
 		SetPosition({ 0,0 });
@@ -39,6 +36,7 @@ void Stage1::Reset()
 		stagePlane.SetPosition({ 2400,-1520 });
 		stagePlane.SetOrigin(Origins::TL);
 	}
+
 
 	//충돌영역
 	{
@@ -93,11 +91,21 @@ void Stage1::Reset()
 		stageBound1_8.setFillColor(sf::Color::Transparent);
 
 	}
+}
 
+void Stage1::Reset()
+{
 	stageBack1.SetPosition({ 0.f, 0.f });
 	stageBack2.SetPosition({ 1566.f, 0.f });
 
-
+	clearStage1_1 = false;
+	clearStage1_2 = false;
+	clearStage1_3 = false;
+	clearStage1_4 = false;
+	clearStage1_5 = false;
+	clearStage1_6 = false;
+	clearStage1_7 = false;
+	clearStage1_8 = false;
 
 }
 
