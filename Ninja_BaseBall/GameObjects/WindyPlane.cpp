@@ -70,6 +70,7 @@ void WindyPlane::Reset()
 	maxHealth = 2000;
 	health = maxHealth;
 	isDead = false;
+	damage = 10;
 
 	SetOrigin(Origins::BC);
 
@@ -432,7 +433,7 @@ void WindyPlane::ApplyAttackEvent(bool isClosed, bool isRanged)
 {
 	if ((isRanged ? rangedAttackBox : isClosed ? closeAttackBox : uppercutAttackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible())
 	{
-		player->OnDamage(0,1,GetPosition().x);
+		player->OnDamage(damage,1,GetPosition().x);
 	}
 
 	CheckEndFrame();
@@ -599,6 +600,9 @@ void WindyPlane::LoadAllEvents()
 
 void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus planeStatus)
 {
+	if (clipInfos[(int)currentPartsStatus].clips.size() < (int)currentStatus) return;
+	if (clipInfos[(int)currentPartsStatus].clips[(int)currentStatus] == "") return;
+
 	if (animator.GetCurrentClipId() != clipInfos[(int)currentPartsStatus].clips[(int)currentStatus])
 	{
 		currentClipId = clipInfos[(int)currentPartsStatus].clips[(int)currentStatus];
