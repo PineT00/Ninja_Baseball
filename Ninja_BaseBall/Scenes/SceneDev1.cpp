@@ -50,23 +50,7 @@ void SceneDev1::Init()
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
     AddGameObject(player, World);
-
-
-    SpawnEnemy("Stage1", { 1250.f, 500.f });
-    SpawnEnemy("Stage2", { 1413.f, 500.f});
-    SpawnEnemy("Stage3", { 2332.f, 500.f });
-    SpawnEnemy("Stage4", { 3230.f, 500.f });
-    SpawnEnemy("Stage5", { 3330.f, 500.f });
-    SpawnEnemy("Stage6", { 3330.f, 500.f });
-    SpawnEnemy("Stage7", { 3538.f, -1020.f });
     
-    
-    // Boss
-    windyPlane = new WindyPlane();
-    enemies.push_back(windyPlane);
-    windyPlane->SetActive(false);
-    AddGameObject(windyPlane);
-
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
@@ -99,7 +83,6 @@ void SceneDev1::Enter()
     xMax = 500.f; //ī�޶� ���� ����
 
     stageRect = stage->groundBound.getGlobalBounds(); //���۽� �̵����ɹٴ�
-    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
     player->SetActive(false);
     isFighting = false;
