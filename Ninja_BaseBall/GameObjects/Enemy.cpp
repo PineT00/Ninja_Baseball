@@ -30,7 +30,6 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             break;
         case EnemyState::DEAD:
             deadTimer=0.f;
-            flicker = true;
             break;
         case EnemyState::CATCHED:
             catchedPosition=position;
@@ -153,14 +152,9 @@ void Enemy::UpdateHurt(float dt)
 
 void Enemy::UpdateDead(float dt)
 {
-    if(flicker)
-    {
-        sprite.setColor(flickerColor);
-    }
     deadTimer += dt;
     if(deadTimer>=deadDuration)
     {
-        flicker = false;
         SetActive(false);
         isCatch=false;
     }
@@ -175,6 +169,7 @@ void Enemy::UpdateCatched(float dt)
     }
     else
     {
+        isCatch = false;
         SetState(EnemyState::MOVE);
         SetPosition(catchedPosition);
     }
@@ -323,15 +318,6 @@ void Enemy::HoldAction()
 {
     SetState(EnemyState::CATCHED);
     isCatch = true;
-
-    if(player->isGrip && !isCatch && !isDead)
-    {
-
-    }
-    else
-    {
-        return;
-    }
 }
 
 
