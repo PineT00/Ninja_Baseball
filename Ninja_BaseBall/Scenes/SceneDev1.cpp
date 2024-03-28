@@ -45,10 +45,6 @@ void SceneDev1::Init()
     
     AddGameObject(player, World);
 
-
-
-
-
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
@@ -106,6 +102,8 @@ void SceneDev1::Enter()
     {
         enemy->Init();
     }
+    goldBatItem->SetIsPicked(false);
+    goldBatItem->SetActive(false);
 
     AddGameObject(windyPlane);
     Scene::Enter();

@@ -62,6 +62,7 @@ void Player::ItemPickup(const std::string& itemName)
 
 	pickupItem->SetActive(false);
 	animator.PlayQueue("Animations/player/player_GetGoldBat.csv");
+	stageClear = true;
 }
 
 void Player::Bitted()
@@ -197,7 +198,8 @@ void Player::Reset()
 	combo->SetCombo();
 
 	getHit = false;
-
+	stageClear = false;
+	stageClearTimer = 0.f;
 	SetStatus(Status::isIdleWalk);
 }
 
@@ -212,6 +214,15 @@ void Player::Update(float dt)
 	hitBox.setPosition({ GetPosition() });
 
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 180.f);
+
+	if (stageClear)
+	{
+		stageClearTimer += dt;
+		if (stageClearTimer > stageClearInterval)
+		{
+			SCENE_MANAGER.ChangeScene(SceneIDs::SceneTitle);
+		}
+	}
 
 	if (getHit)
 	{

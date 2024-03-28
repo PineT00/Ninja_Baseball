@@ -68,6 +68,7 @@ void WindyPlane::Reset()
 
 	maxHealth = 2000;
 	health = maxHealth;
+	isDead = false;
 
 	SetOrigin(Origins::BC);
 
