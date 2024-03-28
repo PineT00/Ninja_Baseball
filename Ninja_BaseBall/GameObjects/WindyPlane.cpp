@@ -66,6 +66,9 @@ void WindyPlane::Reset()
 	scene = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	player = dynamic_cast<Player*>(scene->FindGameObject("Player"));
 
+	maxHealth = 2000;
+	health = maxHealth;
+
 	SetOrigin(Origins::BC);
 	SetPosition({ scene->stage->groundBoundBoss.getGlobalBounds().left + scene->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, scene->stage->groundBoundBoss.getGlobalBounds().top + scene->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
@@ -98,29 +101,29 @@ void WindyPlane::Update(float dt)
 	// HP 마다 상태가 바뀐다.
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
 	{
-		hp = hp - maxHp * 0.2f;
+		health = health - maxHealth * 0.2f;
 	}
 
 	//상태마다 재생 애니메이션이 바뀐다.
-	if (hp <= 0)
+	if (health <= 0)
 	{
 		currentStatus = WindyPlaneStatus::DEATH;
 		currentSpeed = 0.f;
 	}
-	else if (hp <= maxHp * 0.2f)
+	else if (health <= maxHealth * 0.2f)
 	{
 		currentPartsStatus = BossPartsStatus::NoArm;
 		currentStatus = WindyPlaneStatus::FINAL;
 	}
-	else if (hp <= maxHp * 0.4f)
+	else if (health <= maxHealth * 0.4f)
 	{
 		currentPartsStatus = BossPartsStatus::OneArm;
 	}
-	else if (hp <= maxHp * 0.6f)
+	else if (health <= maxHealth * 0.6f)
 	{
 		currentPartsStatus = BossPartsStatus::NoProp;
 	}
-	else if (hp <= maxHp * 0.8f)
+	else if (health <= maxHealth * 0.8f)
 	{
 		currentPartsStatus = BossPartsStatus::NoWing;
 	}
@@ -452,8 +455,7 @@ void WindyPlane::OnDamage(int damage, int count)
 {
 	Enemy::OnDamage(damage, count);
 
-	hp -= damage;
-	if (hp <= 0)
+	if (health <= 0)
 	{
 		OnDie();
 		return;
@@ -473,6 +475,7 @@ void WindyPlane::OnDamagedEvent()
 
 void WindyPlane::OnDie()
 {
+	currentSpeed = 0.f;
 	currentStatus = WindyPlaneStatus::DEATH;
 }
 
