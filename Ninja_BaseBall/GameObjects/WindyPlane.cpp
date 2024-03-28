@@ -453,6 +453,7 @@ void WindyPlane::OnDamage(int damage, int count)
 		OnDie();
 		return;
 	}
+	statusTimer = statusInterval;
 
 	direction.x /= 10.f;
 	direction.y = 0.f;
@@ -481,6 +482,7 @@ void WindyPlane::OnDieEvent()
 void WindyPlane::HoldEvent()
 {
 	currentStatus = WindyPlaneStatus::IDLE;
+	statusTimer = statusInterval;
 }
 
 void WindyPlane::LoadAllEvents()
@@ -580,7 +582,7 @@ void WindyPlane::LoadAllEvents()
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
 
-	for (int i = 11; i <= 13; ++i)
+	for (int i = 11; i <= 15; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
