@@ -14,8 +14,13 @@ public:
 
 	SpriteGo stageBack1;
 	SpriteGo stageBack2;
-	SpriteGo stageBack3;
+	SpriteGo stageBack3_1;
+	SpriteGo stageBack3_2;
+	SpriteGo stageBack3_3;
 
+	sf::Vector2f backPosition3_1;
+	sf::Vector2f backPosition3_2;
+	sf::Vector2f backPosition3_3;
 
 	sf::RectangleShape groundBound;
 	sf::RectangleShape groundBoundBoss;
@@ -36,6 +41,8 @@ public:
 	bool clearStage1_6 = false; // 부서진 스테이지2
 	bool clearStage1_7 = false; // 비행기 스테이지
 	bool clearStage1_8 = false; // 비행기 보스 스테이지
+
+	float backSpeed = 350.f;
 
 private:
 

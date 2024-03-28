@@ -18,8 +18,10 @@ void Stage1::Init()
 	stagePlane.SetTexture("graphics/stage_airplain.png");
 	stageBack1.SetTexture("graphics/background1-1.png");
 	stageBack2.SetTexture("graphics/background1-2.png");
-	stageBack3.SetTexture("graphics/background1-3.png");
 
+	stageBack3_1.SetTexture("graphics/background1-3.png"); //비행기
+	stageBack3_2.SetTexture("graphics/background1-3.png"); //비행기
+	stageBack3_3.SetTexture("graphics/background1-3.png"); //비행기
 
 	//스테이지 스프라이트
 	{
@@ -35,6 +37,8 @@ void Stage1::Init()
 		transition.SetOrigin(Origins::TL);
 		stagePlane.SetPosition({ 2400,-1520 });
 		stagePlane.SetOrigin(Origins::TL);
+
+
 	}
 
 
@@ -95,8 +99,17 @@ void Stage1::Init()
 
 void Stage1::Reset()
 {
-	stageBack1.SetPosition({ 0.f, 0.f });
-	stageBack2.SetPosition({ 1566.f, 0.f });
+	backPosition3_1 = { 2400.f,-1520.f };
+	backPosition3_2 = { 3900.f,-1520.f };
+	backPosition3_3 = { 5400.f,-1520.f };
+
+	stageBack3_1.SetPosition(backPosition3_1);
+	stageBack3_1.SetOrigin(Origins::TL);
+	stageBack3_2.SetPosition(backPosition3_2); 
+	stageBack3_2.SetOrigin(Origins::TL);
+	stageBack3_2.SetPosition(backPosition3_3);
+	stageBack3_2.SetOrigin(Origins::TL);
+
 
 	clearStage1_1 = false;
 	clearStage1_2 = false;
@@ -107,17 +120,42 @@ void Stage1::Reset()
 	clearStage1_7 = false;
 	clearStage1_8 = false;
 
+
 }
 
 void Stage1::Update(float dt)
 {
 	SpriteGo::Update(dt);
+
+	backPosition3_1.x -= backSpeed * dt;
+	backPosition3_2.x -= backSpeed * dt;
+	backPosition3_3.x -= backSpeed * dt;
+
+	if (backPosition3_1.x < 900.f)
+	{
+		backPosition3_1.x = 5400.f;
+	}
+	if (backPosition3_2.x < 900.f)
+	{
+		backPosition3_2.x = 5400.f;
+	}
+	if (backPosition3_3.x < 900.f)
+	{
+		backPosition3_3.x = 5400.f;
+	}
+
+	stageBack3_1.SetPosition(backPosition3_1);
+	stageBack3_2.SetPosition(backPosition3_2);
+	stageBack3_3.SetPosition(backPosition3_3);
 }
 
 void Stage1::Draw(sf::RenderWindow& window)
 {
 	stageBack1.Draw(window);
 	stageBack2.Draw(window);
+	stageBack3_1.Draw(window);
+	stageBack3_2.Draw(window);
+	stageBack3_3.Draw(window);
 
 	SpriteGo::Draw(window);
 

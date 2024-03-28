@@ -850,16 +850,10 @@ void Player::SetStatus(Status newStatus)
 	switch (currStatus)
 	{
 	case Status::isIdleWalk:
-		//mainScreen->SetActive(true);
-		//selectScreen->SetActive(false);
 		break;
 	case Status::isJumping:
-		//mainScreen->SetActive(false);
-		//selectScreen->SetActive(true);
 		break;
 	case Status::isDash:
-		//mainScreen->SetActive(false);
-		//selectScreen->SetActive(false);
 		break;
 	case Status::isDashAttack:
 		break;
