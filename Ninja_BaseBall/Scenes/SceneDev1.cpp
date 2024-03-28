@@ -521,7 +521,18 @@ void SceneDev1::UpdateGame(float dt)
 
     if (currStage == 8)
     {
-        worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, player->GetPosition().x, dt * 4.5f);
+        if (player->GetPosition().x < 2800.f)
+        {
+            worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, 2900.f, dt * 4.5f);
+        }
+        else if (player->GetPosition().x > 3900.f)
+        {
+            worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, 3800.f, dt * 4.5f);
+        }
+        else
+        {
+            worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, player->GetPosition().x, dt * 4.5f);
+        }
     }
     else
     {

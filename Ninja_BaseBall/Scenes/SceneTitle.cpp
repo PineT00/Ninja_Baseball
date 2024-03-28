@@ -61,6 +61,7 @@ void SceneTitle::Release()
 
 void SceneTitle::Enter()
 {
+	SOUND_MANAGER.StopBgm();
 	SOUND_MANAGER.PlayBgm("music/01_Player_Select.mp3", false);
 	Scene::Enter();
 }
@@ -68,7 +69,6 @@ void SceneTitle::Enter()
 void SceneTitle::Exit()
 {
 	FRAMEWORK.SetTimeScale(1.f);
-
 	Scene::Exit();
 }
 
