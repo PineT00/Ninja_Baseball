@@ -61,6 +61,7 @@ protected:
     
     bool isAttackPlay = false;
 
+    int randX = 0;
 
     int damageCount;
 

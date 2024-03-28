@@ -97,7 +97,7 @@ public:
 	void UpdateGame(float dt);
 	void UpdateGameover(float dt);
 	void UpdatePause(float dt);
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window) override;
 
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);

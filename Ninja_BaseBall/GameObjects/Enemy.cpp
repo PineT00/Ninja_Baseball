@@ -14,6 +14,7 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
         //     
         //     break;
         case EnemyState::MOVE:
+            randX = Utils::Random::RandomRange(-1, 2);
             break;
         case EnemyState::ATTACK:
             attackDirection = playerPos.x;
@@ -89,6 +90,7 @@ void Enemy::UpdateMove(float dt)
         
         if (yDistance > acceptableYDistance) {
             moveDirection.y = (playerPos.y > currentPosition.y) ? 1.0f : -1.0f;
+            moveDirection.x = randX;
         }else if(xDistance > acceptableXDistance)
         {
             moveDirection.x = (playerPos.x > currentPosition.x) ? 1.0f : -1.0f;
@@ -231,6 +233,7 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
+    SetSortLayer(0);
     //SpriteGo::Reset();
     scene=dynamic_cast<SceneDev1*> (SCENE_MANAGER.GetCurrentScene());
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
@@ -254,6 +257,7 @@ void Enemy::Reset()
 
 void Enemy::Draw(sf::RenderWindow& window)
 {
+
     SpriteGo::Draw(window);
 
     window.draw(enemyOnHit);
@@ -295,7 +299,7 @@ sf::FloatRect Enemy::GetDamageBox() const
 
 void Enemy::OnDamage(int damage,int count)
 {
-    damageCount=scene->GetNormalAttack();
+    damageCount = count;
     //damageCount=count;
     if(!isDead)
     {

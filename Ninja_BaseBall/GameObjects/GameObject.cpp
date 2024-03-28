@@ -7,16 +7,24 @@ bool GameObject::CompareDrawOrder(const GameObject& lhs, const GameObject& rhs)
 	{
 		return lhs.sortLayer < rhs.sortLayer;
 	}
-	return lhs.sortOrder < rhs.sortOrder;
+	if (lhs.sortOrder != rhs.sortOrder)
+	{
+		return lhs.sortOrder < rhs.sortOrder;
+	}
+	return lhs.GetPosition().y < rhs.GetPosition().y;
 }
 
 bool GameObject::CompareDrawOrder(const GameObject* lhs, const GameObject* rhs)
 {
 	if (lhs->sortLayer != rhs->sortLayer)
-	{
+	{ 
 		return lhs->sortLayer < rhs->sortLayer;
 	}
-	return lhs->sortOrder < rhs->sortOrder;
+	if (lhs->sortOrder != rhs->sortOrder)
+	{
+		return lhs->sortOrder < rhs->sortOrder;
+	}
+	return lhs->GetPosition().y < rhs->GetPosition().y;
 }
 
 GameObject::GameObject(const std::string& name)

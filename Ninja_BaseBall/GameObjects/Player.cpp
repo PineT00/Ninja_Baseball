@@ -139,6 +139,8 @@ void Player::Init()
 
 void Player::Reset()
 {
+	SetSortLayer(0);
+
 	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
@@ -587,14 +589,14 @@ void Player::UpdateAttack(float dt)
 			enemy->OnDamage(20,-1);
 			score += 10;
 			demageDealt = true;
+			if (demageDealt)
+			{
+				normalAttack += 1;
+			}
 		}
 	}
 
-	if(demageDealt)
-	{
-		normalAttack += sceneDev1->GetNormalAttack()+1;
-		sceneDev1->SetNormalAttack(normalAttack);
-	}
+
 	
 	switch (normalAttack)
 	{
@@ -613,7 +615,7 @@ void Player::UpdateAttack(float dt)
 	case 4:
 		animator.Play("Animations/player/player_Attack4.csv");
 		attackTime = 0.5f;
-		sceneDev1->SetNormalAttack(0);
+		normalAttack = 0;
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");
@@ -638,7 +640,7 @@ void Player::UpdateKick(float dt)
 		//isAttack&&
 		if (isAttack && attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
-			enemy->OnDamage(20, normalAttack);
+			enemy->OnDamage(20, 5);
 			isAttack = false;
 		}
 	}

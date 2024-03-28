@@ -62,6 +62,7 @@ void WindyPlane::Init()
 
 void WindyPlane::Reset()
 {
+	SetSortLayer(0);
 	// FindGo
 	scene = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	player = dynamic_cast<Player*>(scene->FindGameObject("Player"));
@@ -217,17 +218,6 @@ void WindyPlane::Update(float dt)
 
 void WindyPlane::Draw(sf::RenderWindow& window)
 {
-	if (player->GetPosition().y < position.y)
-	{
-		SetSortLayer(1);
-		player->SetSortLayer(0);
-
-	}
-	else
-	{
-		SetSortLayer(0);
-		player->SetSortLayer(1);
-	}
 	
 	scene->ResortGameObject(player);
 	scene->ResortGameObject(this);

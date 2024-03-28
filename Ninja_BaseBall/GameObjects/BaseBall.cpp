@@ -120,7 +120,7 @@ BaseBall* BaseBall::Create(BaseBallColor color, const std::string& stageName)
         baseBall->animationClipNames.emplace_back("animations/Enemy/WhiteBaseBall/BaseballWhite_Catch.csv");
         break;
     }
-    baseBall->speed = (Utils::Random::RandomRange(75.f, 150.f));
+    baseBall->speed = (Utils::Random::RandomRange(70.f, 120.f));
     return baseBall;
 }
 

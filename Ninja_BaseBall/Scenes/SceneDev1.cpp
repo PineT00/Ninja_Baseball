@@ -14,7 +14,7 @@
 #include "Bat.h"
 #include "Item.h"
 #include "PickupItem.h"
-
+#include <functional>
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -506,6 +506,10 @@ void SceneDev1::UpdatePause(float dt)
 
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
+    gameObjects.sort([](GameObject* lhs, GameObject* rhs){
+        return GameObject::CompareDrawOrder(lhs, rhs);
+        });
+    
 	Scene::Draw(window);
 }
 
