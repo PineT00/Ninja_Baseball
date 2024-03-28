@@ -66,6 +66,7 @@ protected:
     float normalAttackDistance = 175.f;
     float dashMaxDistance=300.f;
     sf::Vector2f dashDirection;
+    float attackDirection;
     int damage=10;
     sf::Vector2f dashEndPosition;
     

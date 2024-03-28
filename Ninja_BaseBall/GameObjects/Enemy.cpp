@@ -16,6 +16,7 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
         case EnemyState::MOVE:
             break;
         case EnemyState::ATTACK:
+            attackDirection = playerPos.x;
             attackTimer = 0.f;
             isAttackPlay = false;
             break;
@@ -26,7 +27,6 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             break;
         case EnemyState::HURT:
             hurtTimer=0.f;
-            
             break;
         case EnemyState::DEAD:
             deadTimer=0.f;
@@ -312,7 +312,7 @@ void Enemy::OnDamage(int damage,int count)
         }
         else
         {
-            std::cout<<"OnDamage"<<std::endl;
+
             SetState(EnemyState::HURT, damageCount);
         }
     }

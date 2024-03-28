@@ -53,6 +53,8 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
     }
 }
 
+
+
 BaseBall::BaseBall(BaseBallColor color, const std::string& name): Enemy(name)
 {
 }
@@ -134,12 +136,15 @@ void BaseBall::Init()
     else if (color == BaseBallColor::BLUE)
     {
         enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
-                               1, [this]()
+                               2, [this]()
                                {
-                                   //여기서 플레이어 방향쪽으로 좀 전진하고
-                                   sf::Vector2f direction = Utils::MyMath::GetNormal(playerPos - this->GetPosition());
-                                   float move = 10.0f;
-                                   this->SetPosition(this->position + direction * move);
+                                   float distance=Utils::MyMath::Distance(this->position,playerPos);
+                                    
+                                   if(distance>normalAttackDistance)
+                                   {
+                                       SetPosition(position + Utils::MyMath::GetNormal(playerPos - position) * speed * 2.f);
+                                   }
+                                 
                                });
         enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
                                4, [this]()
