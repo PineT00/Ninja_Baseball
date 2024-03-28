@@ -91,7 +91,7 @@ void SoundManager::PlayBgm(const std::string& id, bool crossFade)
 	backBgmIndex = (frontBgmIndex == 1) ? 0 : 1;
 	
 	bgm[frontBgmIndex].setBuffer(*SOUND_BUFFER_MANAGER.GetResource(id));
-	bgm[frontBgmIndex].setVolume(0.f);
+	bgm[frontBgmIndex].setVolume(100.f);
 	bgm[frontBgmIndex].setLoop(true);
 	bgm[frontBgmIndex].play();
 

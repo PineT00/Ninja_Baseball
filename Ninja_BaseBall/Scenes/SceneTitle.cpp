@@ -61,6 +61,7 @@ void SceneTitle::Release()
 
 void SceneTitle::Enter()
 {
+	SOUND_MANAGER.PlayBgm("music/01_Player_Select.mp3", false);
 	Scene::Enter();
 }
 
@@ -81,6 +82,7 @@ void SceneTitle::Update(float dt)
 
 	if (InputManager::GetKeyDown(sf::Keyboard::Enter))
 	{
+		SOUND_MANAGER.StopBgm();
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneDev1);
 	}
 }

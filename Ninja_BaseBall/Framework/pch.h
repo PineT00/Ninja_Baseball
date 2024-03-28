@@ -37,6 +37,7 @@
 #include "GameObject.h"
 #include "DataTableManager.h"
 #include "Framework.h"
+#include "SoundManager.h"
 
 // Utils
 #include "MyMath.h"

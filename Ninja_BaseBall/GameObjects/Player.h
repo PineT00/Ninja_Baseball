@@ -59,7 +59,7 @@ public:
 	int hitWay = 0;
 	bool stageClear = false;
 	float stageClearTimer = 0.f;
-	float stageClearInterval = 5.f;
+	float stageClearInterval = 4.f;
 
 protected:
 	Enemy* catchedEnemy = nullptr;
