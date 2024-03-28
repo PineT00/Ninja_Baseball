@@ -16,6 +16,7 @@ class Enemy;
 class WindyPlane;
 class Item;
 class PickupItem;
+class Shutter;
 
 class SceneDev1 : public Scene
 {
@@ -28,6 +29,7 @@ public:
 	BaseBall* baseBall = nullptr;
 	Bat* bat = nullptr;
 	Enemy* enemy = nullptr;
+	Shutter* shutter = nullptr;
 
 	bool cameraShakeOn = false;
 	float cameraShakeTime = 1.f;

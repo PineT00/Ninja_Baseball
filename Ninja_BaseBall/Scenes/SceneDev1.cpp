@@ -14,7 +14,9 @@
 #include "Bat.h"
 #include "Item.h"
 #include "PickupItem.h"
+#include "Shutter.h"
 #include <functional>
+
 
 
 SceneDev1::SceneDev1(SceneIDs id)
@@ -23,7 +25,7 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
-sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //ÇöÀç ¹Ì»ç¿ë!
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½!
 {
     stageRect = stage->groundBound.getGlobalBounds();
     return Utils::MyMath::Clamp(point, stageRect);
@@ -39,11 +41,14 @@ void SceneDev1::Init()
     stage = new Stage1();
     stage->SetSortLayer(-1);
     AddGameObject(stage);
-
+    
+    shutter = new Shutter("Shutter");
+    shutter->SetPosition({2160.f,400.f});
+    AddGameObject(shutter,World);
+    
     // Player
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
-    
     AddGameObject(player, World);
 
     hud = new UiHUD();
@@ -71,11 +76,10 @@ void SceneDev1::Enter()
 {
     status = GameStatus::Game;
 
-    xMax = 500.f; //Ä«¸Þ¶ó ½ÃÀÛ ÁöÁ¡
-    worldView.setCenter(0, 360);
+    xMax = 500.f; //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    currStage = 0;
-    stageRect = stage->groundBound.getGlobalBounds(); //½ÃÀÛ½Ã ÀÌµ¿°¡´É¹Ù´Ú
+    stageRect = stage->groundBound.getGlobalBounds(); //ï¿½ï¿½ï¿½Û½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½É¹Ù´ï¿½
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
     player->SetActive(false);
     isFighting = false;
@@ -180,11 +184,6 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-	if (!player->GetActive() && player->life == 0)
-	{
-		hud->GameOverCount();
-		SetStatus(GameStatus::GameOver);
-	}
 
     if (!windyPlane->GetAlive() && !goldBatItem->IsPicked())
     {
@@ -339,7 +338,7 @@ void SceneDev1::UpdateGame(float dt)
             }
         } 
     }
-    else if (!(stage->clearStage1_4) )
+    else if (!(stage->clearStage1_4))
     {
         if (xMax > camCenter4)
         {
@@ -527,7 +526,7 @@ void SceneDev1::UpdateGame(float dt)
 
 void SceneDev1::UpdateGameover(float dt)
 {
-    //Bgm Ãß°¡
+    //Bgm ì¶”ê°€
     if (player->life <= 0 && !player->GetActive())
     {
         if (InputManager::GetKeyDown(sf::Keyboard::Insert))
@@ -757,14 +756,14 @@ void SceneDev1::CameraShake(float dt)
     cameraShakeTime -= dt;
 
     int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
-    if (shakeTimeScaled % 2 == 0) // shakeTimeScaled°¡ Â¦¼öÀÎ °æ¿ì
+    if (shakeTimeScaled % 2 == 0) // shakeTimeScaledï¿½ï¿½ Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     {
-        // Ä«¸Þ¶ó¸¦ À§·Î Èçµé±â
+        // Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         worldViewCenter.y -= 0.4;
     }
     else
     {
-        // Ä«¸Þ¶ó¸¦ ¾Æ·¡·Î Èçµé±â
+        // Ä«ï¿½Þ¶ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         worldViewCenter.y += 0.4;
     }
 

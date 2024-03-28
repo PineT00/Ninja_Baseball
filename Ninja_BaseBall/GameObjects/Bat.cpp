@@ -36,6 +36,8 @@ Bat* Bat::Create(BatColor color, const std::string& stageName)
         bat->animationClipNames.emplace_back("animations/Enemy/Bat/BaseballBat_Catch3.csv");
         break;
     }
+    bat ->speed = (Utils::Random::RandomRange(75.f,150.f));
+    bat ->dashSpeed = 150.f;
     return bat;
 }
 
