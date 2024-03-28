@@ -26,7 +26,7 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
-sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿?
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //???? ?????
 {
     stageRect = stage->groundBound.getGlobalBounds();
     return Utils::MyMath::Clamp(point, stageRect);
@@ -77,16 +77,16 @@ void SceneDev1::Release()
 void SceneDev1::Enter()
 {
     status = GameStatus::Game;
-    xMax = 500.f; //Ä«¸Þ¶ó ½ÃÀÛ ÁöÁ¡
+    xMax = 500.f; //???? ???? ????
     worldView.setCenter(0, 360);
 
     shutter->SetPosition({ 2160.f,400.f });
 
     currStage = 0;
-    stageRect = stage->groundBound.getGlobalBounds(); //½ÃÀÛ½Ã ÀÌµ¿°¡´É¹Ù´Ú
-    xMax = 500.f; //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    stageRect = stage->groundBound.getGlobalBounds(); //????? ?????????
+    xMax = 500.f; //???? ???? ????
 
-    stageRect = stage->groundBound.getGlobalBounds(); //ï¿½ï¿½ï¿½Û½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½É¹Ù´ï¿½
+    stageRect = stage->groundBound.getGlobalBounds(); //????? ?????????
 
     player->SetActive(false);
     isFighting = false;
@@ -119,7 +119,7 @@ void SceneDev1::Enter()
 
     AddGameObject(windyPlane);
 
-
+    
     SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
 
 
@@ -138,10 +138,12 @@ void SceneDev1::Exit()
     player->Reset();
     player->life = 1;
     player->isAlive = true;
+    
     player->SetPosition({ 350.f, 500.f });
     hud->Reset();
     stage->Reset();
-
+    
+    SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
 
     for (auto enemy : enemies)
     {
@@ -169,7 +171,6 @@ void SceneDev1::Update(float dt)
             UpdateGame(dt);
             break;
         case GameStatus::GameOver:
-
             UpdateGameover(dt);
             break;
         case GameStatus::Pause:
@@ -205,6 +206,8 @@ void SceneDev1::UpdateGame(float dt)
 		hud->GameOverCount();
 		SetStatus(GameStatus::GameOver);
 	}
+	
+    
     
     if (InputManager::GetKeyDown(sf::Keyboard::Num9))
     {
@@ -219,6 +222,7 @@ void SceneDev1::UpdateGame(float dt)
         goldBatItem->SetActive(true);
         goldBatItem->SetPosition(windyPlane->GetPosition());
     }
+   
 
     if (!enterToBossFloor && player->currStatus == Player::Status::isIdleWalk)
     {
@@ -566,7 +570,7 @@ void SceneDev1::UpdateGame(float dt)
 
 void SceneDev1::UpdateGameover(float dt)
 {
-    //Bgm Ãß°¡
+    //Bgm ???
 
 
     if (player->life <= 0 && !player->GetActive())
@@ -577,6 +581,14 @@ void SceneDev1::UpdateGameover(float dt)
             player->Reset();
             hud->ResetGameOver();
             SetStatus(GameStatus::Game);
+            
+            if (currStage == 8) { 
+                SOUND_MANAGER.StopBgm(); 
+                SOUND_MANAGER.PlayBgm("music/03_Boss_Theme.mp3", false); 
+            } else {
+                SOUND_MANAGER.StopBgm();
+                SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
+            }
         }
 
         if (hud->gameOverCount <= 0)
@@ -798,14 +810,14 @@ void SceneDev1::CameraShake(float dt)
     cameraShakeTime -= dt;
 
     int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
-    if (shakeTimeScaled % 2 == 0) // shakeTimeScaledï¿½ï¿½ Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿?
+    if (shakeTimeScaled % 2 == 0) // shakeTimeScaled?? ????? ????
     {
-        // Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ???? ???? ????
         worldViewCenter.y -= 0.4;
     }
     else
     {
-        // Ä«ï¿½Þ¶ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ???? ????? ????
         worldViewCenter.y += 0.4;
     }
 
