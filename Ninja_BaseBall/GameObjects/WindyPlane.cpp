@@ -373,7 +373,7 @@ void WindyPlane::AttackOneTwoEvent()
 {
 	currentSpeed = speed;
 
-	if (hitCount <= 2)
+	if (hitCount >= 2)
 	{
 		currentStatus = WindyPlaneStatus::IDLE;
 	}
@@ -500,18 +500,18 @@ void WindyPlane::LoadAllEvents()
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::DAMAGED], 3, onDamagedEvent);
 
 	std::function<void()> attackOneTwo = std::bind(&WindyPlane::AttackOneTwoEvent, this);
-	for (int i = 7; i <= 9; ++i)
+	for (int i = 8; i <= 9; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
 
-	for (int i = 11; i <= 13; ++i)
+	for (int i = 13; i <= 15; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
 
 	std::function<void()> attackStraight = std::bind(&WindyPlane::AttackStraightEvent, this);
-	for (int i = 19; i <= 30; ++i)
+	for (int i = 23; i <= 30; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
@@ -587,7 +587,6 @@ void WindyPlane::LoadAllEvents()
 
 	for (int i = 8; i <= 12; ++i)
 	{
-
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
 
