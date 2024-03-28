@@ -614,23 +614,29 @@ void Player::UpdateAttack(float dt)
 	{
 	case 1:
 		animator.Play("Animations/player/player_Attack1.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
 		attackTime = 0.5f;
 		break;
 	case 2:
 		animator.Play("Animations/player/player_Attack2.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit2.mp3");
 		attackTime = 0.5f;
 		break;
 	case 3:
 		animator.Play("Animations/player/player_Attack3.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit3.mp3");
 		attackTime = 0.5f;
 		break;
 	case 4:
 		animator.Play("Animations/player/player_Attack4.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit4.mp3");
 		attackTime = 0.5f;
 		normalAttack = 0;
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/playback.mp3");
+		//SOUND_MANAGER.PlaySfx("soundEffect/shortHit4.mp3");
 		normalAttack = 0;
 		break;
 	}
@@ -720,6 +726,7 @@ void Player::UpdateGrip(float dt)
 		animator.Play("Animations/player/player_GripAttack1.csv");
 		animator.PlayQueue("Animations/player/player_Grip.csv");
 		catchedEnemy->OnDamage(20, 0);
+		SOUND_MANAGER.PlaySfx("soundEffect/gripAttack1.mp3");
 		gripAttackCount += 1;
 		gripTime = 2.f;
 	}

@@ -214,6 +214,8 @@ void SceneDev1::UpdateGame(float dt)
 
     if (!windyPlane->GetAlive() && !goldBatItem->IsPicked())
     {
+        SOUND_MANAGER.StopBgm();
+        SOUND_MANAGER.PlayBgm("music/04_Stage_Clear.mp3", false);
         goldBatItem->SetActive(true);
         goldBatItem->SetPosition(windyPlane->GetPosition());
     }
@@ -844,6 +846,8 @@ void SceneDev1::FightOn()
             xMax = camCenter7;
             break;
         case 8:
+            SOUND_MANAGER.StopBgm();
+            SOUND_MANAGER.PlayBgm("music/03_Boss_Theme.mp3", false); 
             xMax = camCenter8;
             break;
     }
@@ -891,7 +895,6 @@ void SceneDev1::ClearStage()
             isFighting = false;
             stage->clearStage1_7 = true;
             currStage = 0;
-
             break;
         case 8:
             isFighting = false;
@@ -908,7 +911,7 @@ void SceneDev1::MoveToBoss()
     enterToBossFloor = true;
     stageRect = stage->groundBoundBoss.getGlobalBounds();
     player->SetPosition({ player->GetPosition().x, -1090.f });
-    worldViewCenter.y -= 1500.f;
+    worldViewCenter.y -= 1550.f;
     worldView.setCenter(worldViewCenter);
     enterToBossFloor = false;
 }
