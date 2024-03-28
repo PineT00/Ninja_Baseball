@@ -1,0 +1,12 @@
+ID,FPS,LOOPTYPE(0 : Single, 1: Loop, 2 : PingPong),,,
+,12,0,,,,,
+,,,,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,ORIGIN,CUSTOMX,CUSTOMY
+graphics/9_Object/shutter.bmp,0,0,326.715,769.391,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,0,0,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,326.715,769.391,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,0,0,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,326.715,769.391,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,0,0,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,326.715,769.391,9,159.359,759.238
+graphics/9_Object/shutter.bmp,0,0,0,0,9,159.359,759.238

@@ -11,11 +11,11 @@ public:
     enum class ShutterStatus
     {
         OPEN,
-        CLOSE,
-        MOVE,
+        CLOSED,
+        DOWN,
         BREAK
     };
-    ShutterStatus shutterStatus= ShutterStatus::OPEN;
+    ShutterStatus currStatus = ShutterStatus::OPEN;
     
     sf::FloatRect shutterRect;
     sf::RectangleShape shutterRectShape;
@@ -40,8 +40,8 @@ public:
     void Draw(sf::RenderWindow& window) override;
     void SetState(ShutterStatus state);
     void UpdateOpen(float dt);
-    void UpdateClose(float dt);
-    void UpdateMove(float dt);
+    void UpdateClosed(float dt);
+    void UpdateDown(float dt);
     void UpdateBreak(float dt);
 };
 

@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "Enemy.h"
 
-Shutter::Shutter(const std::string& name): SpriteGo(name), Scenedev1(nullptr), player(nullptr)
+Shutter::Shutter(const std::string& name) : SpriteGo(name), Scenedev1(nullptr), player(nullptr)
 {
 }
 
@@ -12,26 +12,27 @@ void Shutter::Init()
 {
     SpriteGo::Init();
     animator.SetTarget(&sprite);
-    shutterRect=GetGlobalBounds();
-    
+    shutterRect = GetGlobalBounds();
+
 }
 
 void Shutter::Reset()
 {
     //SpriteGo::Reset();
+    isBroken = false;
+    WaitTimer = 0;
 
     Scenedev1 = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
-    //enemy = dynamic_cast<Enemy*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject(""));
 
-    shutterRectShape.setSize(sf::Vector2f(shutterRect.width,shutterRect.height));
+    shutterRectShape.setSize(sf::Vector2f(shutterRect.width, shutterRect.height));
     shutterRectShape.setFillColor(sf::Color::Transparent);
     shutterRectShape.setOutlineColor(sf::Color::Red);
 
-    
+
     SetState(ShutterStatus::OPEN);
     SetOrigin(Origins::BC);
-    
+
 }
 
 void Shutter::Update(float dt)
@@ -39,25 +40,31 @@ void Shutter::Update(float dt)
     SpriteGo::Update(dt);
     animator.Update(dt);
 
-    switch (shutterStatus)
+    switch (currStatus)
     {
         case ShutterStatus::OPEN:
             UpdateOpen(dt);
             break;
-        case ShutterStatus::CLOSE:
-            UpdateClose(dt);
+        case ShutterStatus::CLOSED:
+            UpdateClosed(dt);
             break;
-        case ShutterStatus::MOVE:
-            UpdateMove(dt);
+        case ShutterStatus::DOWN:
+            UpdateDown(dt);
+            break;
+        case ShutterStatus::BREAK:
+            UpdateBreak(dt);
             break;
     }
 }
 
 void Shutter::Draw(sf::RenderWindow& window)
 {
-    SpriteGo::Draw(window);
+    if (GetActive())
+    {
+        SpriteGo::Draw(window);
+    }
 
-    if(SCENE_MANAGER.GetDeveloperMode())
+    if (SCENE_MANAGER.GetDeveloperMode())
     {
         window.draw(shutterRectShape);
     }
@@ -65,19 +72,20 @@ void Shutter::Draw(sf::RenderWindow& window)
 
 void Shutter::SetState(ShutterStatus state)
 {
-    switch (state)
+    currStatus = state;
+    switch (currStatus)
     {
         case ShutterStatus::OPEN:
             animator.Play("animations/Object/Shutter.csv");
             break;
-        case ShutterStatus::CLOSE:
+        case ShutterStatus::CLOSED:
             animator.Play("animations/Object/Shutter.csv");
             break;
-        case ShutterStatus::MOVE:
+        case ShutterStatus::DOWN:
             animator.Play("animations/Object/Shutter.csv");
             break;
         case ShutterStatus::BREAK:
-            animator.Play("animations/Object/Shutter.csv");
+            animator.Play("animations/Object/ShutterBreak.csv");
             break;
         default: break;
     }
@@ -85,39 +93,46 @@ void Shutter::SetState(ShutterStatus state)
 
 void Shutter::UpdateOpen(float dt)
 {
-    if(Scenedev1->currStage==3)
+    if (Scenedev1->currStage == 3)
     {
-        shutterStatus = ShutterStatus::MOVE;
+        currStatus = ShutterStatus::DOWN;
     }
 }
 
-void Shutter::UpdateClose(float dt)
+void Shutter::UpdateClosed(float dt)
 {
-   
+    if (player->GetPosition().x > 2000.f && player->GetPosition().y > 0.f)
+    {
+        if (InputManager::GetKeyDown(sf::Keyboard::Q))
+        {
+            SetState(ShutterStatus::BREAK);
+        }
+    }
+    
 }
 
-void Shutter::UpdateMove(float dt)
+void Shutter::UpdateDown(float dt)
 {
     WaitTimer += dt;
-    
-    if (WaitTimer >= 5.f && this->GetPosition().y < 730)
+
+    if (WaitTimer >= 3.f && this->GetPosition().y < 730)
     {
         sf::Vector2f currentPosition = this->GetPosition();
-        currentPosition.y += 100 * dt;
+        currentPosition.y += 150 * dt;
         if (currentPosition.y > 730)
         {
             currentPosition.y = 730;
         }
         this->SetPosition(currentPosition);
-        
+
         if (currentPosition.y == 730)
         {
-            shutterStatus = ShutterStatus::CLOSE;
+            SetState(ShutterStatus::CLOSED);
         }
     }
 }
 
 void Shutter::UpdateBreak(float dt)
 {
-    
+    isBroken = true;
 }

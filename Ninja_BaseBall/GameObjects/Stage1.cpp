@@ -62,7 +62,7 @@ void Stage1::Init()
 		stageBound1_2.setFillColor(sf::Color::Transparent);
 
 		stageBound1_3.setFillColor(sf::Color::Red);
-		stageBound1_3.setSize({ 960.f,720.f });
+		stageBound1_3.setSize({ 700.f,720.f });
 		stageBound1_3.setPosition({ 1380.f, 0.f });
 		stageBound1_3.setOutlineColor(sf::Color::Red);
 		stageBound1_3.setOutlineThickness(1.f);

@@ -57,7 +57,7 @@ protected:
     sf::Vector2f dashDirection;
     float attackDirection;
     // 원래 데미지 10
-    int damage=100;
+    int damage=10;
     sf::Vector2f dashEndPosition;
     
     bool isAttackPlay = false;

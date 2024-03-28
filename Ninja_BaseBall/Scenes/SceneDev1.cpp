@@ -44,12 +44,13 @@ void SceneDev1::Init()
     
     shutter = new Shutter("Shutter");
     shutter->SetPosition({2160.f,400.f});
-    AddGameObject(shutter,World);
+    shutter->SetSortLayer(-1);
+    AddGameObject(shutter);
     
     // Player
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
-    AddGameObject(player, World);
+    AddGameObject(player);
     
     hud = new UiHUD();
     AddGameObject(hud, Ui);
@@ -77,6 +78,8 @@ void SceneDev1::Enter()
     status = GameStatus::Game;
     xMax = 500.f; //카메라 시작 지점
     worldView.setCenter(0, 360);
+
+    shutter->SetPosition({ 2160.f,400.f });
 
     currStage = 0;
     stageRect = stage->groundBound.getGlobalBounds(); //시작시 이동가능바닥
@@ -352,7 +355,7 @@ void SceneDev1::UpdateGame(float dt)
                     monsterNum -= 1;
                 }
             }
-            if (monsterNum == 0)
+            if (monsterNum == 0 && shutter->isBroken)
             {
                 ClearStage();
             }
