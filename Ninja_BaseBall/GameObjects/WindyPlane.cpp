@@ -599,6 +599,9 @@ void WindyPlane::LoadAllEvents()
 
 void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus planeStatus)
 {
+	if (clipInfos[(int)currentPartsStatus].clips.size() < (int)currentStatus) return;
+	if (clipInfos[(int)currentPartsStatus].clips[(int)currentStatus] == "") return;
+
 	if (animator.GetCurrentClipId() != clipInfos[(int)currentPartsStatus].clips[(int)currentStatus])
 	{
 		currentClipId = clipInfos[(int)currentPartsStatus].clips[(int)currentStatus];
