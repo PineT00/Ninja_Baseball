@@ -19,6 +19,7 @@
 
 
 
+
 SceneDev1::SceneDev1(SceneIDs id)
     : Scene(id)
 {
@@ -117,7 +118,13 @@ void SceneDev1::Enter()
     goldBatItem->SetActive(false);
 
     AddGameObject(windyPlane);
+
+
+    SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
+
+
     Scene::Enter();
+
 }
 
 void SceneDev1::Exit()
@@ -162,6 +169,7 @@ void SceneDev1::Update(float dt)
             UpdateGame(dt);
             break;
         case GameStatus::GameOver:
+
             UpdateGameover(dt);
             break;
         case GameStatus::Pause:
@@ -192,6 +200,8 @@ void SceneDev1::UpdateGame(float dt)
 {
 	if (!player->GetActive() && player->life == 0)
 	{
+        SOUND_MANAGER.StopBgm();
+        SOUND_MANAGER.PlayBgm("music/19_Continue.mp3", false);
 		hud->GameOverCount();
 		SetStatus(GameStatus::GameOver);
 	}
@@ -544,6 +554,8 @@ void SceneDev1::UpdateGame(float dt)
 void SceneDev1::UpdateGameover(float dt)
 {
     //Bgm Ãß°¡
+
+
     if (player->life <= 0 && !player->GetActive())
     {
         if (InputManager::GetKeyDown(sf::Keyboard::Insert))
@@ -560,7 +572,6 @@ void SceneDev1::UpdateGameover(float dt)
             SCENE_MANAGER.ChangeScene(SceneIDs::SceneTitle);
         }
     }
-    //Bgm ï¿½ß°ï¿½
 }
 
 void SceneDev1::UpdatePause(float dt)
