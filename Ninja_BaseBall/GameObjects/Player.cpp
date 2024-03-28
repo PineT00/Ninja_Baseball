@@ -401,6 +401,8 @@ void Player::UpdateIdle(float dt)
 	{
 		if (enemy == nullptr) continue;
 
+		if (!enemy->GetActive()) continue;
+
 		if (isGrip) continue;
 
 		if (gripCoolTime > 0.f) continue;

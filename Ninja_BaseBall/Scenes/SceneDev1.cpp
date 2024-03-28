@@ -49,8 +49,8 @@ void SceneDev1::Init()
     SpawnEnemy("Stage2", { 1413.f, 500.f});
     SpawnEnemy("Stage3", { 2332.f, 500.f });
     SpawnEnemy("Stage4", { 3230.f, 500.f });
-    SpawnEnemy("Stage5", { 3230.f, 500.f });
-    SpawnEnemy("Stage6", { 3230.f, 500.f });
+    SpawnEnemy("Stage5", { 3330.f, 500.f });
+    SpawnEnemy("Stage6", { 3330.f, 500.f });
     SpawnEnemy("Stage7", { 3538.f, -1020.f });
     
     
