@@ -139,6 +139,8 @@ void Player::Init()
 
 void Player::Reset()
 {
+	SetSortLayer(0);
+
 	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
@@ -401,6 +403,8 @@ void Player::UpdateIdle(float dt)
 	{
 		if (enemy == nullptr) continue;
 
+		if (!enemy->GetActive()) continue;
+
 		if (isGrip) continue;
 
 		if (gripCoolTime > 0.f) continue;
@@ -582,18 +586,17 @@ void Player::UpdateAttack(float dt)
 		//isAttack&&
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
-			enemy->OnDamage(20,-1);
+			enemy->OnDamage(20, normalAttack);
 			score += 10;
+
+			if (!demageDealt)
+			{
+				normalAttack += 1;
+			}
 			demageDealt = true;
 		}
 	}
 
-	if(demageDealt)
-	{
-		normalAttack += sceneDev1->GetNormalAttack()+1;
-		sceneDev1->SetNormalAttack(normalAttack);
-	}
-	
 	switch (normalAttack)
 	{
 	case 1:
@@ -611,16 +614,18 @@ void Player::UpdateAttack(float dt)
 	case 4:
 		animator.Play("Animations/player/player_Attack4.csv");
 		attackTime = 0.5f;
-		sceneDev1->SetNormalAttack(0);
+		normalAttack = 0;
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");
+		normalAttack = 0;
 		break;
 	}
 
 	attackTimeOn = true;
 	attackTime = 0.3f;
 
+	std::cout << normalAttack << std::endl;
 
 	SetStatus(Status::isIdleWalk);
 }
@@ -636,7 +641,7 @@ void Player::UpdateKick(float dt)
 		//isAttack&&
 		if (isAttack && attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
-			enemy->OnDamage(20, normalAttack);
+			enemy->OnDamage(20, 5);
 			isAttack = false;
 		}
 	}

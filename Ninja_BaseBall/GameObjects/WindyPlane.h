@@ -87,9 +87,6 @@ protected:
 	float statusTimer = 0.f;
 	float statusInterval = 1.f;
 
-	float maxHp = 2000.f;
-	float hp = maxHp;
-
 	int hitCount = 0;
 
 	bool isAscending = false; // 현재 상승 중인지 여부
