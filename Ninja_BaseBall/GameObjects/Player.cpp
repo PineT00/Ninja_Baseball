@@ -136,13 +136,6 @@ void Player::Init()
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
 
-}
-
-void Player::Reset()
-{
-	SetSortLayer(0);
-
-	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
@@ -176,6 +169,8 @@ void Player::Reset()
 
 void Player::Reset()
 {
+	SetSortLayer(0);
+
 	SetActive(true);
 	hp = maxHp;
 	//등장애니메이션
