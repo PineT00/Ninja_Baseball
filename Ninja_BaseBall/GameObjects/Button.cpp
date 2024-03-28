@@ -83,9 +83,6 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::stop :
 		StopPreView(obj);
 		break;
-	case ButtonIdentifier::autoslice :
-		AutoSlice(intValues);
-		break;
 	case ButtonIdentifier::loadcsv :
 		LoadCsv();
 		break;
@@ -314,12 +311,6 @@ void Button::PlayPreView(PreviewCharacter* obj)
 void Button::StopPreView(PreviewCharacter* obj)
 {
 	obj->GetAnimator().Stop();
-}
-
-void Button::AutoSlice(const std::vector<int> intValues)
-{
-	// 슬라이스 후 저장 준비
-	
 }
 
 void Button::LoadCsv()
