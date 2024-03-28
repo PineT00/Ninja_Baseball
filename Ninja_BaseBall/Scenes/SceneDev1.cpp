@@ -195,12 +195,6 @@ void SceneDev1::UpdateGame(float dt)
 		hud->GameOverCount();
 		SetStatus(GameStatus::GameOver);
 	}
-    //if (!player->GetActive() && player->life == 0)
-    //{
-    //    SetStatus(GameStatus::GameOver);
-    //}
-
-    std::cout<< player->GetPosition().x << ","<< player->GetPosition().y << std::endl;
     
     if (InputManager::GetKeyDown(sf::Keyboard::Num9))
     {

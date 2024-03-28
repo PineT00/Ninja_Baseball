@@ -638,7 +638,7 @@ void Player::UpdateAttack(float dt)
 	attackTimeOn = true;
 	attackTime = 0.3f;
 
-	std::cout << normalAttack << std::endl;
+	//std::cout << normalAttack << std::endl;
 
 	SetStatus(Status::isIdleWalk);
 }
@@ -675,6 +675,39 @@ void Player::UpdateKick(float dt)
 	}
 	position += velocity * dt;
 	SetPosition(position);
+
+
+	trailDuration -= dt;
+
+	if (trailDuration <= 0)
+	{
+		if (trails.size() < 3)
+		{
+			sf::Sprite trail;
+			Animator trailAnimator;
+
+			trailAnimator.SetTarget(&trail);
+			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 250.f);
+			trail.setColor(sf::Color(0, 0, 0, 100));
+			trail.setPosition(GetPosition());
+
+			if (sprite.getScale().x < 0)
+			{
+				trail.setScale(-1, 1);
+			}
+			else
+			{
+				trail.setScale(1, 1);
+			}
+			trails.push_back(trail);
+		}
+		else
+		{
+			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
+		}
+		trailDuration = 0.05f; // 잔상 유지 시간 초기화
+	}
 
 }
 
@@ -714,7 +747,7 @@ void Player::UpdateGrip(float dt)
 		SetStatus(Status::isIdleWalk);
 	}
 
-	std::cout << gripAttackCount << std::endl;
+	//std::cout << gripAttackCount << std::endl;
 
 }
 

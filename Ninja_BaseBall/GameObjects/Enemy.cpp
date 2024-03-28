@@ -122,7 +122,7 @@ void Enemy::UpdateAttack(float dt)
         if(std::abs(playerPos.y-position.y)<20)
         {
             player->OnDamage(damage,1,position.x);
-            std::cout<<"attack"<<std::endl;
+            //std::cout<<"attack"<<std::endl;
            
         }
         isAttackPlay = true;
