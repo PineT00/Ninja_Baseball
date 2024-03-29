@@ -40,11 +40,11 @@ void SceneAnimationTool::Init()
 	textFPS->SetOrigin(Origins::MR);
 	AddGameObject(textFPS, Layers::Ui);
 
-	textGuidline = new TextGo("textguidline");
-	textGuidline->Set(font, "Select Frame Bound", 20, sf::Color::White);
-	textGuidline->SetPosition(windowSize.x * 0.2f, windowSize.y * 0.18f);
-	textGuidline->SetOrigin(Origins::BL);
-	AddGameObject(textGuidline, Layers::Ui);
+	//textGuidline = new TextGo("textguidline");
+	//textGuidline->Set(font, "Select Frame Bound", 20, sf::Color::White);
+	//textGuidline->SetPosition(windowSize.x * 0.2f, windowSize.y * 0.18f);
+	//textGuidline->SetOrigin(Origins::BL);
+	//AddGameObject(textGuidline, Layers::Ui);
 
 	inputfieldFPS = new InputField("inputfieldfps");
 	inputfieldFPS->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
@@ -215,7 +215,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 
 			if (isCustomPivot)
 			{
-				textGuidline->SetText(guidlines[0]);
+				//textGuidline->SetText(guidlines[0]);
 				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top };
 				sf::Vector2f customPivot = (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect);
 
@@ -231,7 +231,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 			}
 			else
 			{
-				textGuidline->SetText(guidlines[1]);
+				//textGuidline->SetText(guidlines[1]);
 			}
 		}
 			

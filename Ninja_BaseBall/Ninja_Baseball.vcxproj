@@ -157,7 +157,6 @@
     <ClCompile Include="GameObjects\BaseBall.cpp" />
     <ClCompile Include="GameObjects\Item.cpp" />
     <ClCompile Include="GameObjects\PickupItem.cpp" />
-    <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="Utils\MyString.cpp" />
     <ClCompile Include="Scenes\SceneAnimationTool.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
@@ -248,7 +247,6 @@
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\uri.h" />
     <ClInclude Include="rapidjson\writer.h" />
-    <ClInclude Include="Scenes\SceneDevBoss.h" />
     <ClInclude Include="Utils\MyString.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\Player2.h" />

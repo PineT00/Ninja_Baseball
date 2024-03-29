@@ -38,7 +38,6 @@
     <ClCompile Include="Utils\Sort.cpp" />
     <ClCompile Include="Utils\Vector2.cpp" />
     <ClCompile Include="ComboCommands.cpp" />
-    <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="GameObjects\WindyPlane.cpp" />
     <ClCompile Include="BossTable.cpp" />
     <ClCompile Include="GameObjects\WindEffect.cpp" />
@@ -86,7 +85,6 @@
     <ClInclude Include="Utils\Sort.h" />
     <ClInclude Include="Utils\Vector2.h" />
     <ClInclude Include="ComboCommands.h" />
-    <ClInclude Include="Scenes\SceneDevBoss.h" />
     <ClInclude Include="GameObjects\WindyPlane.h" />
     <ClInclude Include="BossTable.h" />
     <ClInclude Include="rapidjson\allocators.h" />

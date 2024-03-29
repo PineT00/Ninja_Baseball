@@ -32,11 +32,11 @@ protected:
 	std::vector<sf::Vector2f> customPivots;
 	std::wstring atlasPath;
 
-	std::vector<std::string> guidlines = { "Select Frame Bound", "Select Pivot"};
+	//std::vector<std::string> guidlines = { "Select Frame Bound", "Select Pivot"};
 
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
-	TextGo* textGuidline;
+	//TextGo* textGuidline;
 	InputField* inputfieldFPS = nullptr;
 	PreviewCharacter* previewCharacter = nullptr;
 	AnimationLoopType selectedLoopType = AnimationLoopType::Single;

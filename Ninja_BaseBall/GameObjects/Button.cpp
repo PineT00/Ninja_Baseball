@@ -166,6 +166,9 @@ void Button::SetButtonColorPressed(sf::Color color)
 
 std::wstring Button::OpenFileDialog(std::wstring& filePath)
 {
+	wchar_t currentPath[1024];
+	GetCurrentDirectory(1024, currentPath);
+
 	wchar_t filename[MAX_PATH] = L"";
 
 	OPENFILENAMEW ofn;
@@ -193,8 +196,12 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 
 		sceneAnimationTool->SetIsAtlasPath(false);
 		sceneAnimationTool->SetAtlasPath(filePath);
+
+		SetCurrentDirectory(currentPath);
 		return filePath;
 	}
+
+	SetCurrentDirectory(currentPath);
 	return L"";
 }
 
