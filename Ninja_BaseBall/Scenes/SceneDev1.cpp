@@ -14,6 +14,9 @@
 #include "Bat.h"
 #include "Item.h"
 #include "PickupItem.h"
+#include "Shutter.h"
+#include <functional>
+
 
 
 
@@ -23,7 +26,7 @@ SceneDev1::SceneDev1(SceneIDs id)
     windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 }
 
-sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //현재 미사용!
+sf::Vector2f SceneDev1::ClampByTileMap(const sf::Vector2f point) //???? ?????
 {
     stageRect = stage->groundBound.getGlobalBounds();
     return Utils::MyMath::Clamp(point, stageRect);
@@ -37,28 +40,19 @@ void SceneDev1::Init()
     uiView.setCenter(windowSize.x * 0.5f, windowSize.y * 0.5f);
 
     stage = new Stage1();
+    stage->SetSortLayer(-1);
     AddGameObject(stage);
-
+    
+    shutter = new Shutter("Shutter");
+    shutter->SetPosition({2160.f,400.f});
+    shutter->SetSortLayer(-1);
+    AddGameObject(shutter);
+    
     // Player
     player = new Player("Player");
     player->SetPosition({ 350.f, 500.f });
-    AddGameObject(player, World);
-
-    SpawnEnemy("Stage1", { 1250.f, 500.f });
-    SpawnEnemy("Stage2", { 1413.f, 500.f});
-    SpawnEnemy("Stage3", { 2332.f, 500.f });
-    SpawnEnemy("Stage4", { 3230.f, 500.f });
-    SpawnEnemy("Stage5", { 3230.f, 500.f });
-    SpawnEnemy("Stage6", { 3230.f, 500.f });
-    SpawnEnemy("Stage7", { 3538.f, -1020.f });
+    AddGameObject(player);
     
-    
-    // Boss
-    windyPlane = new WindyPlane();
-    enemies.push_back(windyPlane);
-    windyPlane->SetActive(false);
-    AddGameObject(windyPlane);
-
     hud = new UiHUD();
     AddGameObject(hud, Ui);
 
@@ -80,23 +74,22 @@ void SceneDev1::Release()
     Scene::Release();
 }
 
-void SceneDev1::Reset()
-{
-    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
-}
-
 void SceneDev1::Enter()
 {
-	Scene::Enter();
     status = GameStatus::Game;
-    Reset();
+    xMax = 500.f; //???? ???? ????
+    worldView.setCenter(0, 360);
 
-    xMax = 500.f; //카메라 시작 지점
+    shutter->SetPosition({ 2160.f,400.f });
 
-    stageRect = stage->groundBound.getGlobalBounds(); //시작시 이동가능바닥
-    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
+    currStage = 0;
+    stageRect = stage->groundBound.getGlobalBounds(); //????? ?????????
+    xMax = 500.f; //???? ???? ????
+
+    stageRect = stage->groundBound.getGlobalBounds(); //????? ?????????
 
     player->SetActive(false);
+    isFighting = false;
 
     camCenter1 = stage->stageBound1_1.getGlobalBounds().left + (stage->stageBound1_1.getGlobalBounds().width / 2);
     camCenter2 = stage->stageBound1_2.getGlobalBounds().left + (stage->stageBound1_2.getGlobalBounds().width / 2);
@@ -104,11 +97,59 @@ void SceneDev1::Enter()
     camCenter4 = stage->stageBound1_4.getGlobalBounds().left + (stage->stageBound1_4.getGlobalBounds().width / 2);
     camCenter7 = stage->stageBound1_7.getGlobalBounds().left + (stage->stageBound1_7.getGlobalBounds().width / 2);
     camCenter8 = stage->stageBound1_8.getGlobalBounds().left + (stage->stageBound1_8.getGlobalBounds().width / 2);
+
+
+    SpawnEnemy("Stage1", { 1250.f, 500.f });
+    SpawnEnemy("Stage2", { 1413.f, 500.f });
+    SpawnEnemy("Stage3", { 2332.f, 500.f });
+    SpawnEnemy("Stage4", { 3230.f, 500.f });
+    SpawnEnemy("Stage5", { 3330.f, 500.f });
+    SpawnEnemy("Stage6", { 3330.f, 500.f });
+    SpawnEnemy("Stage7", { 3538.f, -1020.f });
+    windyPlane = new WindyPlane();
+    windyPlane->SetActive(false);
+    windyPlane->SetPosition({ stage->groundBoundBoss.getGlobalBounds().left + stage->groundBoundBoss.getGlobalBounds().width * 0.8f, stage->groundBoundBoss.getGlobalBounds().top + stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
+    enemies.push_back(windyPlane);
+    for (auto enemy : enemies)
+    {
+        enemy->Init();
+    }
+    goldBatItem->SetIsPicked(false);
+    goldBatItem->SetActive(false);
+
+    AddGameObject(windyPlane);
+
+    
+    SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
+
+
+    Scene::Enter();
+
 }
 
 void SceneDev1::Exit()
 {
 	FRAMEWORK.SetTimeScale(1.f);
+
+    //for (auto& enemy : enemies)
+    //{
+    //    RemoveGameObject(enemy);
+    //}
+    player->Reset();
+    player->life = 1;
+    player->isAlive = true;
+    
+    player->SetPosition({ 350.f, 500.f });
+    hud->Reset();
+    stage->Reset();
+    
+    SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
+
+    for (auto enemy : enemies)
+    {
+		RemoveGameObject(enemy);
+    }
+    enemies.clear();
 
     Scene::Exit();
 }
@@ -158,10 +199,16 @@ void SceneDev1::UpdateAwake(float dt)
 
 void SceneDev1::UpdateGame(float dt)
 {
-    //if (!player->GetActive() && player->life == 0)
-    //{
-    //    SetStatus(GameStatus::GameOver);
-    //}
+	if (!player->GetActive() && player->life == 0)
+	{
+        SOUND_MANAGER.StopBgm();
+        SOUND_MANAGER.PlayBgm("music/19_Continue.mp3", false);
+		hud->GameOverCount();
+		SetStatus(GameStatus::GameOver);
+	}
+	
+    
+    
     if (InputManager::GetKeyDown(sf::Keyboard::Num9))
     {
         hud->GameOverCount();
@@ -170,9 +217,12 @@ void SceneDev1::UpdateGame(float dt)
 
     if (!windyPlane->GetAlive() && !goldBatItem->IsPicked())
     {
+        SOUND_MANAGER.StopBgm();
+        SOUND_MANAGER.PlayBgm("music/04_Stage_Clear.mp3", false);
         goldBatItem->SetActive(true);
         goldBatItem->SetPosition(windyPlane->GetPosition());
     }
+   
 
     if (!enterToBossFloor && player->currStatus == Player::Status::isIdleWalk)
     {
@@ -227,6 +277,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage1", BaseBallList2);
             for (auto& BaseBall : BaseBallList2)
             {
+                BaseBall->SetPosition({ 1250.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -260,6 +312,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage2", BaseBallList2);
             for (auto& BaseBall : BaseBallList2)
             {
+                BaseBall->SetPosition({ 1413.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -294,6 +348,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage3", BaseBallList3);
             for (auto& BaseBall : BaseBallList3)
             {
+                BaseBall->SetPosition({ 2332.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -309,13 +365,13 @@ void SceneDev1::UpdateGame(float dt)
                     monsterNum -= 1;
                 }
             }
-            if (monsterNum == 0)
+            if (monsterNum == 0 && shutter->isBroken)
             {
                 ClearStage();
             }
         } 
     }
-    else if (!(stage->clearStage1_4) )
+    else if (!(stage->clearStage1_4))
     {
         if (xMax > camCenter4)
         {
@@ -326,6 +382,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage4", BaseBallList4);
             for (auto& BaseBall : BaseBallList4)
             {
+                BaseBall->SetPosition({ 3230.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -360,6 +418,8 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage5", BaseBallList5);
             for (auto& BaseBall : BaseBallList5)
             {
+                BaseBall->SetPosition({ 3330.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -393,6 +453,10 @@ void SceneDev1::UpdateGame(float dt)
             FindAll("BaseBallStage6", BaseBallList6);
             for (auto& BaseBall : BaseBallList6)
             {
+
+
+                BaseBall->SetPosition({ 3330.f, 500.f });
+
                 BaseBall->SetActive(true);
             }
         }
@@ -425,7 +489,8 @@ void SceneDev1::UpdateGame(float dt)
             std::list <GameObject*> BatList;
             FindAll("BaseBallStage7", BatList);
             for (auto& Bat : BatList)
-            {
+			{
+                Bat->SetPosition({ 3538.f, -1020.f });
                 Bat->SetActive(true);
             }
         }
@@ -462,7 +527,18 @@ void SceneDev1::UpdateGame(float dt)
 
     if (currStage == 8)
     {
-        worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, player->GetPosition().x, dt * 4.5f);
+        if (player->GetPosition().x < 2900.f)
+        {
+            worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, 2900.f, dt * 5.5f);
+        }
+        else if (player->GetPosition().x > 3800.f)
+        {
+            worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, 3800.f, dt * 5.5f);
+        }
+        else
+        {
+            worldViewCenter.x = Utils::MyMath::Lerp(worldViewCenter.x, player->GetPosition().x, dt * 4.5f);
+        }
     }
     else
     {
@@ -494,10 +570,33 @@ void SceneDev1::UpdateGame(float dt)
 
 void SceneDev1::UpdateGameover(float dt)
 {
-    //Bgm 추가
+    //Bgm ???
 
-        
 
+    if (player->life <= 0 && !player->GetActive())
+    {
+        if (InputManager::GetKeyDown(sf::Keyboard::Insert))
+        {
+            player->life = 1;
+            player->Reset();
+            hud->ResetGameOver();
+            SetStatus(GameStatus::Game);
+            
+            if (currStage == 8) { 
+                SOUND_MANAGER.StopBgm(); 
+                SOUND_MANAGER.PlayBgm("music/03_Boss_Theme.mp3", false); 
+            } else {
+                SOUND_MANAGER.StopBgm();
+                SOUND_MANAGER.PlayBgm("music/02_Stage_1_In_Seattle.mp3", false);
+            }
+        }
+
+        if (hud->gameOverCount <= 0)
+        {
+            hud->Reset();
+            SCENE_MANAGER.ChangeScene(SceneIDs::SceneTitle);
+        }
+    }
 }
 
 void SceneDev1::UpdatePause(float dt)
@@ -507,6 +606,10 @@ void SceneDev1::UpdatePause(float dt)
 
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
+    gameObjects.sort([](GameObject* lhs, GameObject* rhs){
+        return GameObject::CompareDrawOrder(lhs, rhs);
+        });
+    
 	Scene::Draw(window);
 }
 
@@ -707,14 +810,14 @@ void SceneDev1::CameraShake(float dt)
     cameraShakeTime -= dt;
 
     int shakeTimeScaled = static_cast<int>(cameraShakeTime * 10);
-    if (shakeTimeScaled % 2 == 0) // shakeTimeScaled가 짝수인 경우
+    if (shakeTimeScaled % 2 == 0) // shakeTimeScaled?? ????? ????
     {
-        // 카메라를 위로 흔들기
+        // ???? ???? ????
         worldViewCenter.y -= 0.4;
     }
     else
     {
-        // 카메라를 아래로 흔들기
+        // ???? ????? ????
         worldViewCenter.y += 0.4;
     }
 
@@ -755,6 +858,8 @@ void SceneDev1::FightOn()
             xMax = camCenter7;
             break;
         case 8:
+            SOUND_MANAGER.StopBgm();
+            SOUND_MANAGER.PlayBgm("music/03_Boss_Theme.mp3", false); 
             xMax = camCenter8;
             break;
     }
@@ -802,7 +907,6 @@ void SceneDev1::ClearStage()
             isFighting = false;
             stage->clearStage1_7 = true;
             currStage = 0;
-
             break;
         case 8:
             isFighting = false;
@@ -819,7 +923,7 @@ void SceneDev1::MoveToBoss()
     enterToBossFloor = true;
     stageRect = stage->groundBoundBoss.getGlobalBounds();
     player->SetPosition({ player->GetPosition().x, -1090.f });
-    worldViewCenter.y -= 1500.f;
+    worldViewCenter.y -= 1550.f;
     worldView.setCenter(worldViewCenter);
     enterToBossFloor = false;
 }

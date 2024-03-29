@@ -62,6 +62,7 @@ void Player::ItemPickup(const std::string& itemName)
 
 	pickupItem->SetActive(false);
 	animator.PlayQueue("Animations/player/player_GetGoldBat.csv");
+	stageClear = true;
 }
 
 void Player::Bitted()
@@ -90,7 +91,8 @@ void Player::OnDamage(int damage, int type, float positionX)
 	{
 		getHit = true;
 		hp -= damage;
-
+		SOUND_MANAGER.PlaySfx("soundEffect/weakHit.mp3");
+		
 		if (positionX > GetPosition().x)
 		{
 			hitWay = -1;
@@ -135,11 +137,6 @@ void Player::Init()
 	playerShadow.SetTexture("graphics/2_Player/redShadow.png");
 	playerShadow.SetOrigin({ 90.f, 35.f });
 
-}
-
-void Player::Reset()
-{
-	SetActive(true);
 	animator.ClearEvent();
 	std::function<void()>AttackOn = std::bind(&Player::SetAttackOn, this);
 	std::function<void()>AttackOff = std::bind(&Player::SetAttackOff, this);
@@ -169,9 +166,14 @@ void Player::Reset()
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 1, AttackOn);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, GripAttackOff);
 	animator.AddEvent("Animations/player/player_GripAttack1.csv", 4, AttackOff);
+}
 
+void Player::Reset()
+{
+	SetSortLayer(0);
+
+	SetActive(true);
 	hp = maxHp;
-
 	//등장애니메이션
 	animator.Play("Animations/player/player_Spawn.csv");
 	animator.PlayQueue("Animations/player/player_Idle.csv");
@@ -192,10 +194,15 @@ void Player::Reset()
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y);
 	OnHitEffect.setScale({ 2.f, 2.f });
 
+	isAlive = true;
+
 	combo = new ComboCommands();
 
 	combo->SetCombo();
 
+	getHit = false;
+	stageClear = false;
+	stageClearTimer = 0.f;
 	SetStatus(Status::isIdleWalk);
 }
 
@@ -210,6 +217,15 @@ void Player::Update(float dt)
 	hitBox.setPosition({ GetPosition() });
 
 	OnHitEffect.setPosition(hitBox.getPosition().x, hitBox.getPosition().y - 180.f);
+
+	if (stageClear)
+	{
+		stageClearTimer += dt;
+		if (stageClearTimer > stageClearInterval)
+		{
+			SCENE_MANAGER.ChangeScene(SceneIDs::SceneTitle);
+		}
+	}
 
 	if (getHit)
 	{
@@ -401,6 +417,8 @@ void Player::UpdateIdle(float dt)
 	{
 		if (enemy == nullptr) continue;
 
+		if (!enemy->GetActive()) continue;
+
 		if (isGrip) continue;
 
 		if (gripCoolTime > 0.f) continue;
@@ -496,6 +514,7 @@ void Player::UpdateJumping(float dt)
 			if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 			{
 				enemy->OnDamage(20, normalAttack);
+				SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
 			}
 		}
 		animator.Play("Animations/player/player_JumpAttackSK.csv"); //점프옆차기
@@ -546,13 +565,19 @@ void Player::UpdateDash(float dt)
 void Player::UpdateDashAttack(float dt)
 {
 	enemyList = sceneDev1->GetEnemyList();
-
+	bool demageDealt = false;
 	for (auto& enemy : enemyList)
 	{
 		if (enemy == nullptr) continue;
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
-			enemy->OnDamage(20, normalAttack);
+			if (!demageDealt)
+			{
+				enemy->OnDamage(20, normalAttack);
+				SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
+				bool demageDealt = true;
+			}
+
 		}
 	}
 
@@ -582,45 +607,53 @@ void Player::UpdateAttack(float dt)
 		//isAttack&&
 		if (attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()) && !enemy->isDead)
 		{
-			enemy->OnDamage(20,-1);
+			enemy->OnDamage(20, normalAttack);
+			SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
+
 			score += 10;
+
+			if (!demageDealt)
+			{
+				normalAttack += 1;
+			}
 			demageDealt = true;
 		}
 	}
 
-	if(demageDealt)
-	{
-		normalAttack += sceneDev1->GetNormalAttack()+1;
-		sceneDev1->SetNormalAttack(normalAttack);
-	}
-	
 	switch (normalAttack)
 	{
 	case 1:
 		animator.Play("Animations/player/player_Attack1.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
 		attackTime = 0.5f;
 		break;
 	case 2:
 		animator.Play("Animations/player/player_Attack2.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit2.mp3");
 		attackTime = 0.5f;
 		break;
 	case 3:
 		animator.Play("Animations/player/player_Attack3.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit3.mp3");
 		attackTime = 0.5f;
 		break;
 	case 4:
 		animator.Play("Animations/player/player_Attack4.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortHit4.mp3");
 		attackTime = 0.5f;
-		sceneDev1->SetNormalAttack(0);
+		normalAttack = 0;
 		break;
 	default:
 		animator.Play("Animations/player/player_Attack1.csv");
+		SOUND_MANAGER.PlaySfx("soundEffect/shortWind.mp3");
+		normalAttack = 0;
 		break;
 	}
 
 	attackTimeOn = true;
 	attackTime = 0.3f;
 
+	//std::cout << normalAttack << std::endl;
 
 	SetStatus(Status::isIdleWalk);
 }
@@ -636,7 +669,9 @@ void Player::UpdateKick(float dt)
 		//isAttack&&
 		if (isAttack && attackBox.getGlobalBounds().intersects(enemy->GetDamageBox()))
 		{
-			enemy->OnDamage(20, normalAttack);
+
+			enemy->OnDamage(20, 5);
+			SOUND_MANAGER.PlaySfx("soundEffect/shortHit1.mp3");
 			isAttack = false;
 		}
 	}
@@ -658,6 +693,39 @@ void Player::UpdateKick(float dt)
 	position += velocity * dt;
 	SetPosition(position);
 
+
+	trailDuration -= dt;
+
+	if (trailDuration <= 0)
+	{
+		if (trails.size() < 3)
+		{
+			sf::Sprite trail;
+			Animator trailAnimator;
+
+			trailAnimator.SetTarget(&trail);
+			trailAnimator.Play(animator.GetCurrentClipId(), animator.GetCurrentClipFrame());
+			trail.setOrigin(GetOrigin().x + 150.f, GetOrigin().y + 250.f);
+			trail.setColor(sf::Color(0, 0, 0, 100));
+			trail.setPosition(GetPosition());
+
+			if (sprite.getScale().x < 0)
+			{
+				trail.setScale(-1, 1);
+			}
+			else
+			{
+				trail.setScale(1, 1);
+			}
+			trails.push_back(trail);
+		}
+		else
+		{
+			trails.erase(trails.begin()); // 가장 오래된 잔상 삭제
+		}
+		trailDuration = 0.05f; // 잔상 유지 시간 초기화
+	}
+
 }
 
 void Player::UpdateGrip(float dt)
@@ -669,6 +737,7 @@ void Player::UpdateGrip(float dt)
 		animator.Play("Animations/player/player_GripAttack1.csv");
 		animator.PlayQueue("Animations/player/player_Grip.csv");
 		catchedEnemy->OnDamage(20, 0);
+		SOUND_MANAGER.PlaySfx("soundEffect/gripAttack1.mp3");
 		gripAttackCount += 1;
 		gripTime = 2.f;
 	}
@@ -696,7 +765,7 @@ void Player::UpdateGrip(float dt)
 		SetStatus(Status::isIdleWalk);
 	}
 
-	std::cout << gripAttackCount << std::endl;
+	//std::cout << gripAttackCount << std::endl;
 
 }
 
@@ -768,6 +837,9 @@ void Player::UpdateDead(float dt)
 			SetActive(false);
 		}
 	}
+
+
+
 	position += velocity * dt;
 	SetPosition(position);
 	/////
@@ -829,16 +901,10 @@ void Player::SetStatus(Status newStatus)
 	switch (currStatus)
 	{
 	case Status::isIdleWalk:
-		//mainScreen->SetActive(true);
-		//selectScreen->SetActive(false);
 		break;
 	case Status::isJumping:
-		//mainScreen->SetActive(false);
-		//selectScreen->SetActive(true);
 		break;
 	case Status::isDash:
-		//mainScreen->SetActive(false);
-		//selectScreen->SetActive(false);
 		break;
 	case Status::isDashAttack:
 		break;

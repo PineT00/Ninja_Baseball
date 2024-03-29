@@ -83,9 +83,6 @@ void Button::ExecuteButtonAction(ButtonIdentifier id)
 	case ButtonIdentifier::stop :
 		StopPreView(obj);
 		break;
-	case ButtonIdentifier::autoslice :
-		AutoSlice(intValues);
-		break;
 	case ButtonIdentifier::loadcsv :
 		LoadCsv();
 		break;
@@ -169,6 +166,9 @@ void Button::SetButtonColorPressed(sf::Color color)
 
 std::wstring Button::OpenFileDialog(std::wstring& filePath)
 {
+	wchar_t currentPath[1024];
+	GetCurrentDirectory(1024, currentPath);
+
 	wchar_t filename[MAX_PATH] = L"";
 
 	OPENFILENAMEW ofn;
@@ -181,13 +181,27 @@ std::wstring Button::OpenFileDialog(std::wstring& filePath)
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 	ofn.lpstrDefExt = L"";
 
+	std::vector<sf::FloatRect>& selectedAreas = sceneAnimationTool->GetSelectedAreas();
+	std::vector<Origins>& selectedAreasPivot = sceneAnimationTool->GetSelectedAreasPivot();
+	std::vector<sf::Vector2f>& customPivot = sceneAnimationTool->GetCustomPivot();
+
+	selectedAreas.clear();
+	selectedAreasPivot.clear();
+	customPivot.clear();
+	sceneAnimationTool->SetAtlasPath(emptyWstring);
+	sceneAnimationTool->SetIsAtlasPath(false);
+
 	if (GetOpenFileNameW(&ofn)) {
 		filePath = filename;
 
 		sceneAnimationTool->SetIsAtlasPath(false);
 		sceneAnimationTool->SetAtlasPath(filePath);
+
+		SetCurrentDirectory(currentPath);
 		return filePath;
 	}
+
+	SetCurrentDirectory(currentPath);
 	return L"";
 }
 
@@ -314,12 +328,6 @@ void Button::PlayPreView(PreviewCharacter* obj)
 void Button::StopPreView(PreviewCharacter* obj)
 {
 	obj->GetAnimator().Stop();
-}
-
-void Button::AutoSlice(const std::vector<int> intValues)
-{
-	// 슬라이스 후 저장 준비
-	
 }
 
 void Button::LoadCsv()

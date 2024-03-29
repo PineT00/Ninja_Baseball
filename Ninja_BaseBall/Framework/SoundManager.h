@@ -17,7 +17,7 @@ private :
 	bool isFading = false;
 
 	float sfxVolume = 100.f;
-	float bgmVolume = 100.f;
+	float bgmVolume = 70.f;
 	float crossFadeDuration = 10.f;
 	float crossFadeTimer = 0.f;
 
@@ -27,7 +27,7 @@ private :
 	float fadeDuration = 3.f;
 
 public :
-	void Init(int totalChannels = 1);
+	void Init(int totalChannels = 128);
 	void Release();
 	void Update(float dt);
 

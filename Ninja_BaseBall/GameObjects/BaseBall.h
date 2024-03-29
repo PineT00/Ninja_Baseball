@@ -18,7 +18,7 @@ public:
 protected:
    void Init() override; 
    void SetState(EnemyState Enemystate, int damageCount) override;
-   
+
 
    SceneDev1* Scenedev1;
 

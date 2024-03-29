@@ -16,6 +16,7 @@ class Enemy;
 class WindyPlane;
 class Item;
 class PickupItem;
+class Shutter;
 
 class SceneDev1 : public Scene
 {
@@ -28,6 +29,7 @@ public:
 	BaseBall* baseBall = nullptr;
 	Bat* bat = nullptr;
 	Enemy* enemy = nullptr;
+	Shutter* shutter = nullptr;
 
 	bool cameraShakeOn = false;
 	float cameraShakeTime = 1.f;
@@ -78,8 +80,6 @@ private:
 	};
 	std::vector<MonsterInfo> monsterInfos;
 	std::vector<Enemy*> enemies;
-
-	int sharedNormalAttack=0;
 public:
 	std::vector<Enemy*> GetEnemyList() { return enemies; }
 
@@ -89,7 +89,6 @@ public:
 
 	void Init() override;
 	void Release() override;
-	virtual void Reset();
 	void Enter() override;
 	void Exit() override;
 	void Update(float dt) override;
@@ -97,14 +96,12 @@ public:
 	void UpdateGame(float dt);
 	void UpdateGameover(float dt);
 	void UpdatePause(float dt);
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window) override;
 
 	GameStatus GetStatus() const { return this->status; }
 	void SetStatus(GameStatus newStatus);
 	void SpawnEnemy(const std::string& type,const sf::Vector2f& position);
 	void CameraShake(float dt);
-	void SetNormalAttack(int value){ sharedNormalAttack = value; }
-	int GetNormalAttack() const { return sharedNormalAttack; }
 	void FightOn();
 	void ClearStage();
 	void MoveToBoss();

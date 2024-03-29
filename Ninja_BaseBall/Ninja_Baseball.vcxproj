@@ -147,6 +147,7 @@
     <ClCompile Include="Framework\InputManager.cpp" />
     <ClCompile Include="Framework\SoundManager.cpp" />
     <ClCompile Include="GameObjects\Enemy.cpp" />
+    <ClCompile Include="GameObjects\Shutter.cpp" />
     <ClCompile Include="GameObjects\Spawner.cpp" />
     <ClCompile Include="GameObjects\TestPlayer.cpp" />
     <ClCompile Include="GameObjects\Tilemap.cpp" />
@@ -156,7 +157,6 @@
     <ClCompile Include="GameObjects\BaseBall.cpp" />
     <ClCompile Include="GameObjects\Item.cpp" />
     <ClCompile Include="GameObjects\PickupItem.cpp" />
-    <ClCompile Include="Scenes\SceneDevBoss.cpp" />
     <ClCompile Include="Utils\MyString.cpp" />
     <ClCompile Include="Scenes\SceneAnimationTool.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
@@ -198,6 +198,7 @@
     <ClInclude Include="Framework\InputManager.h" />
     <ClInclude Include="Framework\SoundManager.h" />
     <ClInclude Include="GameObjects\Enemy.h" />
+    <ClInclude Include="GameObjects\Shutter.h" />
     <ClInclude Include="GameObjects\Spawner.h" />
     <ClInclude Include="GameObjects\Stage1.h" />
     <ClInclude Include="GameObjects\TestPlayer.h" />
@@ -246,7 +247,6 @@
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\uri.h" />
     <ClInclude Include="rapidjson\writer.h" />
-    <ClInclude Include="Scenes\SceneDevBoss.h" />
     <ClInclude Include="Utils\MyString.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\Player2.h" />

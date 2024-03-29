@@ -21,8 +21,6 @@ protected:
 	Button* buttonStop = nullptr;
 	Button* buttonPlay = nullptr;
 	
-	// TODO : Auto Slice 기능
-	Button* buttonAutoSlice = nullptr;
 	Button* buttonLoadCsv = nullptr;
 
 	std::vector<sf::FloatRect> selectedAreas;
@@ -34,15 +32,12 @@ protected:
 	std::vector<sf::Vector2f> customPivots;
 	std::wstring atlasPath;
 
-	std::vector<std::string> guidlines = { "Select Frame Bound", "Select Pivot"};
+	//std::vector<std::string> guidlines = { "Select Frame Bound", "Select Pivot"};
 
 	SpriteGo* spriteSheet = nullptr;
 	TextGo* textFPS;
-	TextGo* textGuidline;
+	//TextGo* textGuidline;
 	InputField* inputfieldFPS = nullptr;
-	// TODO : Auto Slice 기능
-	InputField* inputfieldRow = nullptr;
-	InputField* inputfieldCol = nullptr;
 	PreviewCharacter* previewCharacter = nullptr;
 	AnimationLoopType selectedLoopType = AnimationLoopType::Single;
 

@@ -13,6 +13,7 @@ void Framework::Init(int width, int height, const std::string& name)
 
     DATATABLE_MANAGER.Init();
     SCENE_MANAGER.Init();
+    SOUND_MANAGER.Init();
     InputManager::Init();
 }
 
@@ -56,6 +57,7 @@ void Framework::Do()
 
         //Update
         InputManager::Update(GetDeltaTime());
+        SOUND_MANAGER.Update(GetDeltaTime());
         if (SCENE_MANAGER.Update(GetDeltaTime()))
         {
             SCENE_MANAGER.LateUpdate(GetDeltaTime());
@@ -78,6 +80,7 @@ void Framework::Do()
 
 void Framework::Release()
 {
+    SOUND_MANAGER.Release();
     SCENE_MANAGER.Release();
     TEXTURE_MANAGER.UnloadAll();
     FONT_MANAGER.UnloadAll();

@@ -14,8 +14,10 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
         //     
         //     break;
         case EnemyState::MOVE:
+            randX = Utils::Random::RandomRange(-1, 2);
             break;
         case EnemyState::ATTACK:
+            attackDirection = playerPos.x;
             attackTimer = 0.f;
             isAttackPlay = false;
             break;
@@ -26,11 +28,9 @@ void Enemy::SetState(EnemyState Enemystate,int damageCount)
             break;
         case EnemyState::HURT:
             hurtTimer=0.f;
-            
             break;
         case EnemyState::DEAD:
             deadTimer=0.f;
-            flicker = true;
             break;
         case EnemyState::CATCHED:
             catchedPosition=position;
@@ -90,6 +90,7 @@ void Enemy::UpdateMove(float dt)
         
         if (yDistance > acceptableYDistance) {
             moveDirection.y = (playerPos.y > currentPosition.y) ? 1.0f : -1.0f;
+            moveDirection.x = randX;
         }else if(xDistance > acceptableXDistance)
         {
             moveDirection.x = (playerPos.x > currentPosition.x) ? 1.0f : -1.0f;
@@ -121,7 +122,7 @@ void Enemy::UpdateAttack(float dt)
         if(std::abs(playerPos.y-position.y)<20)
         {
             player->OnDamage(damage,1,position.x);
-            std::cout<<"attack"<<std::endl;
+            //std::cout<<"attack"<<std::endl;
            
         }
         isAttackPlay = true;
@@ -153,14 +154,9 @@ void Enemy::UpdateHurt(float dt)
 
 void Enemy::UpdateDead(float dt)
 {
-    if(flicker)
-    {
-        sprite.setColor(flickerColor);
-    }
     deadTimer += dt;
     if(deadTimer>=deadDuration)
     {
-        flicker = false;
         SetActive(false);
         isCatch=false;
     }
@@ -175,6 +171,7 @@ void Enemy::UpdateCatched(float dt)
     }
     else
     {
+        isCatch = false;
         SetState(EnemyState::MOVE);
         SetPosition(catchedPosition);
     }
@@ -236,6 +233,7 @@ void Enemy::Release()
 
 void Enemy::Reset()
 {
+    SetSortLayer(0);
     //SpriteGo::Reset();
     scene=dynamic_cast<SceneDev1*> (SCENE_MANAGER.GetCurrentScene());
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("Player"));
@@ -248,10 +246,10 @@ void Enemy::Reset()
     attackBox.setFillColor(sf::Color::Red);
     damageBox.setFillColor(sf::Color::Blue);
     SetState(EnemyState::MOVE);
-    if (scene != nullptr)
-    {
-        SetPosition(scene->ClampByTileMap(position));
-    }
+    // if (scene != nullptr)
+    // {
+    //     SetPosition(scene->ClampByTileMap(position));
+    // }
     SetOrigin(Origins::BC);
     SetFlipX(false);
     health = maxHealth;
@@ -259,6 +257,7 @@ void Enemy::Reset()
 
 void Enemy::Draw(sf::RenderWindow& window)
 {
+
     SpriteGo::Draw(window);
 
     window.draw(enemyOnHit);
@@ -300,8 +299,7 @@ sf::FloatRect Enemy::GetDamageBox() const
 
 void Enemy::OnDamage(int damage,int count)
 {
-    damageCount=scene->GetNormalAttack();
-    //damageCount=count;
+    damageCount = count;
     if(!isDead)
     {
         health-=damage;
@@ -312,7 +310,7 @@ void Enemy::OnDamage(int damage,int count)
         }
         else
         {
-            std::cout<<"OnDamage"<<std::endl;
+
             SetState(EnemyState::HURT, damageCount);
         }
     }
@@ -323,15 +321,6 @@ void Enemy::HoldAction()
 {
     SetState(EnemyState::CATCHED);
     isCatch = true;
-
-    if(player->isGrip && !isCatch && !isDead)
-    {
-
-    }
-    else
-    {
-        return;
-    }
 }
 
 

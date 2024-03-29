@@ -39,8 +39,10 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
             break;
         case 5:
             enemyAnimator.Play(animationClipNames[9]);
+            player->normalAttack = 0;
         default:
             enemyAnimator.Play(animationClipNames[10]);
+            player->normalAttack = 0;
             break;
         }
         break;
@@ -52,6 +54,8 @@ void BaseBall::SetState(EnemyState Enemystate, int damageCount)
         break;
     }
 }
+
+
 
 BaseBall::BaseBall(BaseBallColor color, const std::string& name): Enemy(name)
 {
@@ -116,7 +120,7 @@ BaseBall* BaseBall::Create(BaseBallColor color, const std::string& stageName)
         baseBall->animationClipNames.emplace_back("animations/Enemy/WhiteBaseBall/BaseballWhite_Catch.csv");
         break;
     }
-    baseBall->speed = (Utils::Random::RandomRange(75.f, 150.f));
+    baseBall->speed = (Utils::Random::RandomRange(70.f, 120.f));
     return baseBall;
 }
 
@@ -134,12 +138,15 @@ void BaseBall::Init()
     else if (color == BaseBallColor::BLUE)
     {
         enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
-                               1, [this]()
+                               2, [this]()
                                {
-                                   //여기서 플레이어 방향쪽으로 좀 전진하고
-                                   sf::Vector2f direction = Utils::MyMath::GetNormal(playerPos - this->GetPosition());
-                                   float move = 10.0f;
-                                   this->SetPosition(this->position + direction * move);
+                                   float distance=Utils::MyMath::Distance(this->position,playerPos);
+                                    
+                                   if(distance>normalAttackDistance)
+                                   {
+                                       SetPosition(position + Utils::MyMath::GetNormal(playerPos - position) * speed * 2.f);
+                                   }
+                                 
                                });
         enemyAnimator.AddEvent("animations/Enemy/BlueBaseBall/BaseballBlue_Attack.csv",
                                4, [this]()

@@ -40,26 +40,15 @@ void SceneAnimationTool::Init()
 	textFPS->SetOrigin(Origins::MR);
 	AddGameObject(textFPS, Layers::Ui);
 
-	textGuidline = new TextGo("textguidline");
-	textGuidline->Set(font, "Select Frame Bound", 20, sf::Color::White);
-	textGuidline->SetPosition(windowSize.x * 0.2f, windowSize.y * 0.18f);
-	textGuidline->SetOrigin(Origins::BL);
-	AddGameObject(textGuidline, Layers::Ui);
+	//textGuidline = new TextGo("textguidline");
+	//textGuidline->Set(font, "Select Frame Bound", 20, sf::Color::White);
+	//textGuidline->SetPosition(windowSize.x * 0.2f, windowSize.y * 0.18f);
+	//textGuidline->SetOrigin(Origins::BL);
+	//AddGameObject(textGuidline, Layers::Ui);
 
 	inputfieldFPS = new InputField("inputfieldfps");
 	inputfieldFPS->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
 	inputfieldFPS->SetOrigin(Origins::ML);
-	AddGameObject(inputfieldFPS, Layers::Ui);
-
-	// TODO : Auto Slice ±â´É
-	inputfieldRow = new InputField("inputfieldfps");
-	inputfieldRow->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
-	inputfieldRow->SetOrigin(Origins::ML);
-	AddGameObject(inputfieldRow, Layers::Ui);
-
-	inputfieldCol = new InputField("inputfieldfps");
-	inputfieldCol->SetPosition(windowSize.x * 0.11f, windowSize.y * 0.27f);
-	inputfieldCol->SetOrigin(Origins::ML);
 	AddGameObject(inputfieldFPS, Layers::Ui);
 
 	buttonStop = new Button(Button::ButtonIdentifier::stop, "buttonstop");
@@ -77,17 +66,10 @@ void SceneAnimationTool::Init()
 	buttonSaveAnimation->SetButtonText(font, "Save\nAnimation", 15.f, sf::Color::Black, { windowSize.x * 0.75f, windowSize.y * 0.85f }, Origins::MC);
 	AddGameObject(buttonSaveAnimation, Layers::Ui);
 
-	buttonAutoSlice = new Button(Button::ButtonIdentifier::autoslice, "buttonautoslice");
-	buttonAutoSlice->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.35f }, sf::Color::White, Origins::MC);
-	buttonAutoSlice->SetButtonText(font, "Auto Slice", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.35f }, Origins::MC);
-	AddGameObject(buttonAutoSlice, Layers::Ui);
-
-
 	buttonLoadCsv = new Button(Button::ButtonIdentifier::loadcsv, "buttonloadcsv");
 	buttonLoadCsv->SetButton({ 80.f,40.f }, { windowSize.x * 0.11f, windowSize.y * 0.1f }, sf::Color::White, Origins::MC);
 	buttonLoadCsv->SetButtonText(font, "Load CSV", 15.f, sf::Color::Black, { windowSize.x * 0.11f, windowSize.y * 0.1f }, Origins::MC);
 	AddGameObject(buttonLoadCsv, Layers::Ui);
-
 
 	editorBorder.setOutlineColor(sf::Color::Red);
 	editorBorder.setFillColor(sf::Color::Transparent);
@@ -233,7 +215,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 
 			if (isCustomPivot)
 			{
-				textGuidline->SetText(guidlines[0]);
+				//textGuidline->SetText(guidlines[0]);
 				sf::Vector2f lastRect = { selectedAreas[selectedAreas.size() - 1].left, selectedAreas[selectedAreas.size() - 1].top };
 				sf::Vector2f customPivot = (ScreenToWorld((sf::Vector2i)InputManager::GetMousePos()) - lastRect);
 
@@ -249,7 +231,7 @@ void SceneAnimationTool::UpdateEvent(const sf::Event& event)
 			}
 			else
 			{
-				textGuidline->SetText(guidlines[1]);
+				//textGuidline->SetText(guidlines[1]);
 			}
 		}
 			

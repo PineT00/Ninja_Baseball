@@ -11,7 +11,6 @@ enum class SceneIDs
 	SceneAnimationTool,
 	SceneDev1,
 	TestScene,
-	SceneDevBoss,
 	COUNT,
 };
 
@@ -28,9 +27,6 @@ protected:
 	std::vector<Scene*> scenes; 
 
 	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
-
-	//SceneIDs startScene = SceneIDs::SceneDevBoss;
-	
 	SceneIDs startScene = SceneIDs::SceneTitle;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;

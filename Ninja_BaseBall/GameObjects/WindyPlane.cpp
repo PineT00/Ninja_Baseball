@@ -62,12 +62,17 @@ void WindyPlane::Init()
 
 void WindyPlane::Reset()
 {
+	SetSortLayer(0);
 	// FindGo
 	scene = dynamic_cast<SceneDev1*>(SCENE_MANAGER.GetCurrentScene());
 	player = dynamic_cast<Player*>(scene->FindGameObject("Player"));
 
+	maxHealth = 2000;
+	health = maxHealth;
+	isDead = false;
+	damage = 10;
+
 	SetOrigin(Origins::BC);
-	SetPosition({ scene->stage->groundBoundBoss.getGlobalBounds().left + scene->stage->groundBoundBoss.getGlobalBounds().width * 0.8f, scene->stage->groundBoundBoss.getGlobalBounds().top + scene->stage->groundBoundBoss.getGlobalBounds().height * 0.8f });
 
 	for (int i = 0; i < EFFECTS_COUNT; ++i)
 	{
@@ -98,29 +103,29 @@ void WindyPlane::Update(float dt)
 	// HP 마다 상태가 바뀐다.
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1))
 	{
-		hp = hp - maxHp * 0.2f;
+		health = health - maxHealth * 0.2f;
 	}
 
 	//상태마다 재생 애니메이션이 바뀐다.
-	if (hp <= 0)
+	if (health <= 0)
 	{
 		currentStatus = WindyPlaneStatus::DEATH;
 		currentSpeed = 0.f;
 	}
-	else if (hp <= maxHp * 0.2f)
+	else if (health <= maxHealth * 0.2f)
 	{
 		currentPartsStatus = BossPartsStatus::NoArm;
 		currentStatus = WindyPlaneStatus::FINAL;
 	}
-	else if (hp <= maxHp * 0.4f)
+	else if (health <= maxHealth * 0.4f)
 	{
 		currentPartsStatus = BossPartsStatus::OneArm;
 	}
-	else if (hp <= maxHp * 0.6f)
+	else if (health <= maxHealth * 0.6f)
 	{
 		currentPartsStatus = BossPartsStatus::NoProp;
 	}
-	else if (hp <= maxHp * 0.8f)
+	else if (health <= maxHealth * 0.8f)
 	{
 		currentPartsStatus = BossPartsStatus::NoWing;
 	}
@@ -163,10 +168,7 @@ void WindyPlane::Update(float dt)
 				}
 			}
 		}
-		else
-		{
-			statusTimer = 0.f;
-		}
+
 	}
 		break;
 	case BossPartsStatus::OneArm:
@@ -187,7 +189,7 @@ void WindyPlane::Update(float dt)
 
 		break;
 	case BossPartsStatus::NoArm:
-		if (!player->isGrip)
+		if (!player->isGrip && !isDead)
 		{
 			currentSpeed = speed * 3;
 		}
@@ -209,22 +211,16 @@ void WindyPlane::Update(float dt)
 	{
 		findTimer = 0.f;
 	}
+
+	// Clamp 부분
+	SetPosition(Utils::MyMath::Clamp(position, scene->stage->groundBoundBoss.getGlobalBounds()));
+
+
 	PlayAnimation(currentPartsStatus, currentStatus);
 }
 
 void WindyPlane::Draw(sf::RenderWindow& window)
 {
-	if (player->GetPosition().y < position.y)
-	{
-		SetSortLayer(1);
-		player->SetSortLayer(0);
-
-	}
-	else
-	{
-		SetSortLayer(0);
-		player->SetSortLayer(1);
-	}
 	
 	scene->ResortGameObject(player);
 	scene->ResortGameObject(this);
@@ -377,7 +373,7 @@ void WindyPlane::AttackOneTwoEvent()
 {
 	currentSpeed = speed;
 
-	if (hitCount <= 2)
+	if (hitCount >= 2)
 	{
 		currentStatus = WindyPlaneStatus::IDLE;
 	}
@@ -437,7 +433,7 @@ void WindyPlane::ApplyAttackEvent(bool isClosed, bool isRanged)
 {
 	if ((isRanged ? rangedAttackBox : isClosed ? closeAttackBox : uppercutAttackBox).getGlobalBounds().intersects(player->GetHitBox()) && !player->IsInvincible())
 	{
-		player->OnDamage(0,1,GetPosition().x);
+		player->OnDamage(damage,1,GetPosition().x);
 	}
 
 	CheckEndFrame();
@@ -452,12 +448,12 @@ void WindyPlane::OnDamage(int damage, int count)
 {
 	Enemy::OnDamage(damage, count);
 
-	hp -= damage;
-	if (hp <= 0)
+	if (health <= 0)
 	{
 		OnDie();
 		return;
 	}
+	statusTimer = statusInterval;
 
 	direction.x /= 10.f;
 	direction.y = 0.f;
@@ -473,6 +469,7 @@ void WindyPlane::OnDamagedEvent()
 
 void WindyPlane::OnDie()
 {
+	currentSpeed = 0.f;
 	currentStatus = WindyPlaneStatus::DEATH;
 }
 
@@ -485,6 +482,7 @@ void WindyPlane::OnDieEvent()
 void WindyPlane::HoldEvent()
 {
 	currentStatus = WindyPlaneStatus::IDLE;
+	statusTimer = statusInterval;
 }
 
 void WindyPlane::LoadAllEvents()
@@ -504,13 +502,18 @@ void WindyPlane::LoadAllEvents()
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::DAMAGED], 3, onDamagedEvent);
 
 	std::function<void()> attackOneTwo = std::bind(&WindyPlane::AttackOneTwoEvent, this);
-	for (int i = 12; i <= 15; ++i)
+	for (int i = 8; i <= 9; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 13; i <= 15; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
 
 	std::function<void()> attackStraight = std::bind(&WindyPlane::AttackStraightEvent, this);
-	for (int i = 19; i <= 30; ++i)
+	for (int i = 23; i <= 30; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::Wing].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
@@ -538,7 +541,12 @@ void WindyPlane::LoadAllEvents()
 	//NoWing Event
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
 
-	for (int i = 6; i <= 14; ++i)
+	for (int i = 6; i <= 8; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 12; i <= 15; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoWing].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
@@ -569,14 +577,18 @@ void WindyPlane::LoadAllEvents()
 	//NoProp Event
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
 
-	for (int i = 6; i <= 15; ++i)
+	for (int i = 7; i <= 9; ++i)
+	{
+		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
+	}
+
+	for (int i = 11; i <= 15; ++i)
 	{
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::ONETWO], i, attackOneTwo);
 	}
 
 	for (int i = 8; i <= 12; ++i)
 	{
-
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::NoProp].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
 
@@ -593,7 +605,6 @@ void WindyPlane::LoadAllEvents()
 		animator.AddEvent(clipInfos[(int)BossPartsStatus::OneArm].clips[(int)WindyPlaneStatus::STRAIGHT], i, attackStraight);
 	}
 
-
 	//NoArm Event
 	animator.AddEvent(clipInfos[(int)BossPartsStatus::NoArm].clips[(int)WindyPlaneStatus::DAMAGED], 4, onDamagedEvent);
 
@@ -604,6 +615,9 @@ void WindyPlane::LoadAllEvents()
 
 void WindyPlane::PlayAnimation(BossPartsStatus partsStatus, WindyPlaneStatus planeStatus)
 {
+	if (clipInfos[(int)currentPartsStatus].clips.size() < (int)currentStatus) return;
+	if (clipInfos[(int)currentPartsStatus].clips[(int)currentStatus] == "") return;
+
 	if (animator.GetCurrentClipId() != clipInfos[(int)currentPartsStatus].clips[(int)currentStatus])
 	{
 		currentClipId = clipInfos[(int)currentPartsStatus].clips[(int)currentStatus];

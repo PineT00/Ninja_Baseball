@@ -57,9 +57,11 @@ public:
 	int gripAttackCount = 0;
 
 	int hitWay = 0;
+	bool stageClear = false;
+	float stageClearTimer = 0.f;
+	float stageClearInterval = 4.f;
 
 protected:
-
 	Enemy* catchedEnemy = nullptr;
 	ComboCommands* combo;
 	SceneDev1* sceneDev1 = nullptr;
