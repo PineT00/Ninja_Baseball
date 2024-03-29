@@ -26,8 +26,8 @@ protected:
 
 	std::vector<Scene*> scenes; 
 
-	SceneIDs startScene = SceneIDs::SceneAnimationTool;
-	//SceneIDs startScene = SceneIDs::SceneTitle;
+	//SceneIDs startScene = SceneIDs::SceneAnimationTool;
+	SceneIDs startScene = SceneIDs::SceneTitle;
 	SceneIDs currentScene = startScene;
 	SceneIDs nextScene = SceneIDs::None;
 
